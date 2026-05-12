@@ -1,0 +1,1308 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOPO 门窗五金智能选配系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .input-section {
+            padding: 40px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .input-section h2 {
+            color: #1e293b;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input,
+        .form-group select {
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        .form-group .hint {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+            align-self: center;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .result-section {
+            padding: 40px;
+            display: none;
+        }
+        
+        .result-section.show {
+            display: block;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .result-header h2 {
+            color: #1e293b;
+            font-size: 1.5rem;
+        }
+        
+        .input-summary {
+            background: #f1f5f9;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #475569;
+        }
+        
+        .result-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        .hardware-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .hardware-table th {
+            background: #1e293b;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .hardware-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+        
+        .hardware-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        
+        .hardware-table tr:hover {
+            background: #f1f5f9;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .category-basic { background: #dbeafe; color: #1e40af; }
+        .category-height { background: #fef3c7; color: #92400e; }
+        .category-width { background: #d1fae5; color: #065f46; }
+        .category-backlock { background: #fce7f3; color: #9d174d; }
+        .category-wind { background: #e0e7ff; color: #3730a3; }
+        
+        .product-code {
+            font-family: 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .option-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        .option-highlight {
+            background: #fff7ed !important;
+        }
+        
+        .note-text {
+            font-size: 0.85rem;
+            color: #64748b;
+            font-style: italic;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .warning-box p {
+            color: #92400e;
+        }
+        
+        .info-box {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .info-box p {
+            color: #1e40af;
+        }
+        
+        .export-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .export-btn:hover {
+            background: #059669;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .input-section, .result-section {
+                padding: 25px;
+            }
+            
+            .hardware-table {
+                font-size: 0.9rem;
+            }
+            
+            .hardware-table th, .hardware-table td {
+                padding: 10px;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 HOPO 门窗五金智能选配系统</h1>
+            <p>输入门窗尺寸，一键获取专业五金配置方案</p>
+        </div>
+        
+        <div class="main-card">
+            <div class="input-section">
+                <h2>📋 请输入门窗参数</h2>
+                <form id="configForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="windowType">门窗类型</label>
+                            <select id="windowType" required>
+                                <option value="">请选择门窗类型</option>
+                                <option value="uc-tilt-turn" selected>UC槽 - 内开内倒窗</option>
+                                <option value="g24-sliding">G24窄边推拉门</option>
+                                <option value="g45-sliding">G45推拉密封窗</option>
+                                <option value="hanging-open">悬挂外开窗</option>
+                            </select>
+                            <span class="hint">目前支持UC槽内开内倒窗、G24窄边推拉门、G45推拉密封窗、悬挂外开窗</span>
+                        </div>
+                        
+                        <div class="form-group" id="slidingConfigGroup" style="display: none;">
+                            <label for="slidingConfig">配置方案</label>
+                            <select id="slidingConfig">
+                                <option value="two-panel">两轨两扇</option>
+                                <option value="four-panel">两轨四扇对碰</option>
+                            </select>
+                            <span class="hint" id="slidingConfigHint">选择推拉门的配置方案</span>
+                        </div>
+                        
+                        <div class="form-group" id="sizeRangeGroup">
+                            <label>适用范围</label>
+                            <div id="sizeRangeDisplay" style="padding: 14px 16px; background: #f1f5f9; border-radius: 10px; border: 2px solid #e2e8f0; color: #475569;">
+                                扇宽: 455 ~ 970 mm<br>扇高: 655 ~ 3000 mm
+                            </div>
+                            <span class="hint">若超出范围请联系技术支持</span>
+                        </div>
+                        
+                        <div class="form-group" id="widthInputGroup">
+                            <label for="windowWidth">门窗宽度 (mm)</label>
+                            <input type="number" id="windowWidth" min="455" max="970" placeholder="例如: 600" required>
+                            <span class="hint">输入实际尺寸</span>
+                        </div>
+                        
+                        <div class="form-group" id="heightInputGroup">
+                            <label for="windowHeight">门窗高度 (mm)</label>
+                            <input type="number" id="windowHeight" min="655" max="3000" placeholder="例如: 1200" required>
+                            <span class="hint">输入实际尺寸</span>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn-primary">🔍 查询五金配置</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="result-section" id="resultSection">
+                <div class="result-header">
+                    <h2>✅ 五金配置方案</h2>
+                    <div class="input-summary" id="inputSummary"></div>
+                </div>
+                
+                <div id="warningBox"></div>
+                <div id="infoBox"></div>
+                
+                <table class="hardware-table" id="hardwareTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 220px;">产品名称</th>
+                            <th style="width: 180px;">产品编号</th>
+                            <th style="width: 80px;">单位</th>
+                            <th style="width: 80px;">数量</th>
+                            <th>备注说明</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hardwareBody">
+                    </tbody>
+                </table>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="export-btn" onclick="exportResult()">📥 导出配置清单</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 HOPO 门窗五金智能选配系统 | 专业 · 精准 · 高效</p>
+        </div>
+    </div>
+
+    <script>
+        // ============== 配置数据 ==============
+        const CONFIG = {
+            // 基础配置范围
+            basicRange: {
+                minWidth: 455,
+                maxWidth: 720,
+                minHeight: 655,
+                maxHeight: 925
+            },
+            
+            // 基础五金配置
+            basicHardware: [
+                { name: 'PH954有基座执手', code: 'PH954.00.01C068H5', unit: '个', qty: 1, note: '开启角度90°，最大承重100kg，不含背部锁' },
+                { name: 'SP07方轴', code: 'SP07.07.26C021X', unit: '个', qty: 1, note: '' },
+                { name: '15传动器', code: 'GK20.15.38H4', unit: '个', qty: 1, note: '' },
+                { name: '角传动器', code: 'PCT20.00.38H5', unit: '个', qty: 2, note: '' },
+                { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 2, note: '' },
+                { name: '不锈钢锁座', code: 'PLP21.00.38H5', unit: '个', qty: 1, note: '' },
+                { name: '防误操作保险 L', code: 'POW20.00.223LH4', unit: '个', qty: 1, note: '' },
+                { name: '防误操作保险 R', code: 'POW20.00.223RH4', unit: '个', qty: 1, note: '' },
+                { name: '防误操作提升座L', code: 'AOWP20.00.38LX', unit: '个', qty: 1, note: '' },
+                { name: '防误操作提升座R', code: 'AOWP20.00.38RX', unit: '个', qty: 1, note: '' },
+                { name: '90度铰链组件L', code: 'CPTT10.40.38LH5', unit: '套', qty: 1, note: '' },
+                { name: '90度铰链组件R', code: 'CPTT10.40.38RH5', unit: '套', qty: 1, note: '' }
+            ],
+            
+            // 扇高增购方案
+            heightAddons: [
+                {
+                    range: { min: 925, max: 1425 },
+                    items: [
+                        { name: '250mm延长端（防撬锁点）', code: 'PK20.25.38H5', unit: '个', qty: 1, note: '扇高925mm~1425mm增配' },
+                        { name: '250mm延长端（无锁点）', code: 'PE20.25.00C38H5', unit: '个', qty: 1, note: '' },
+                        { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 1, note: '' }
+                    ]
+                },
+                {
+                    range: { min: 1425, max: 1925 },
+                    items: [
+                        { name: '500mm延长端（防撬锁点）', code: 'PK20.50.38H5', unit: '个', qty: 2, note: '扇高1425mm~1925mm增配' },
+                        { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 2, note: '' }
+                    ]
+                },
+                {
+                    range: { min: 1925, max: 2425 },
+                    items: [
+                        { name: '250mm延长端（无锁点）', code: 'PE20.25.00C38H5', unit: '个', qty: 2, note: '扇高1925mm~2425mm增配' },
+                        { name: '500mm延长端（防撬锁点）', code: 'PK20.50.38H5', unit: '个', qty: 2, note: '' },
+                        { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 2, note: '' }
+                    ]
+                },
+                {
+                    range: { min: 2425, max: 2925 },
+                    items: [
+                        { name: '500mm延长端（防撬锁点）', code: 'PK20.50.38H5', unit: '个', qty: 4, note: '扇高2425mm~2925mm增配' },
+                        { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 4, note: '' }
+                    ]
+                },
+                {
+                    range: { min: 2925, max: 3000 },
+                    items: [
+                        { name: '250mm延长端（无锁点）', code: 'PE20.25.00C38H5', unit: '个', qty: 2, note: '扇高2925mm~3000mm增配' },
+                        { name: '500mm延长端（防撬锁点）', code: 'PK20.50.38H5', unit: '个', qty: 4, note: '' },
+                        { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 4, note: '' }
+                    ]
+                }
+            ],
+            
+            // 扇宽增购方案（720mm~970mm）
+            widthAddons: {
+                range: { min: 720, max: 970 },
+                options: [
+                    {
+                        name: '方案一（推荐）',
+                        items: [
+                            { name: '250mm延长端（防撬锁点）', code: 'PK20.25.38H5', unit: '个', qty: 1, note: '扇宽720mm~970mm增配' },
+                            { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 1, note: '' }
+                        ]
+                    },
+                    {
+                        name: '方案二',
+                        items: [
+                            { name: '250mm延长端（无锁点）', code: 'PE20.25.00C38H5', unit: '个', qty: 1, note: '扇宽720mm~970mm增配' }
+                        ]
+                    }
+                ]
+            },
+            
+            // 背部锁增购方案
+            backLockAddons: [
+                {
+                    name: '方案一',
+                    items: [
+                        { name: '角传动器', code: 'PCT20.00.38H5', unit: '个', qty: 1, note: '扇高655mm~925mm增配1套' },
+                        { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 1, note: '' }
+                    ]
+                },
+                {
+                    name: '方案二（联动背部锁延长端）',
+                    baseItems: [
+                        { name: '角传动器', code: 'PCT20.00.38H5', unit: '个', qty: 1, note: '' },
+                        { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 1, note: '' }
+                    ],
+                    extendItems: [
+                        { name: '500mm延长端（防撬锁点）', code: 'PK20.50.38H5', unit: '个', qty: 1, note: '背部锁延长端' },
+                        { name: 'C槽不锈钢锁座', code: 'ALP23.00.38H5', unit: '个', qty: 1, note: '' }
+                    ],
+                    heightRules: [
+                        { range: { min: 925, max: 1425 }, sets: 1 },
+                        { range: { min: 1425, max: 1925 }, sets: 2 },
+                        { range: { min: 1925, max: 2425 }, sets: 3 },
+                        { range: { min: 2425, max: 3000 }, sets: 4 }
+                    ]
+                }
+            ],
+            
+            // 风撑增购方案
+            windBrace: {
+                minWidth: 555,
+                item: { name: 'U-C槽内开内倒阻尼风撑', code: 'PTR20.00.38H5', unit: '个', qty: 1, note: '阻尼风撑增配（扇宽555mm-625mm需截取角传动器）' }
+            },
+            
+            // G24窄边推拉门配置
+            g24Sliding: {
+                range: { minWidth: 400, maxWidth: 2500, minHeight: 600, maxHeight: 2600 },
+                // 两轨两扇配置
+                twoPanel: [
+                    { name: '窄边拉手', code: 'BH480.00.25C168H5', unit: '个', qty: 2, note: '真锁，168抑菌砂纹黑色' },
+                    { name: '转换杆', code: 'APT51.20.06X', unit: '个', qty: 2, note: '黑色，无标' },
+                    { name: '窄推拉锁杆', code: 'LPE51.13.95C031H4', unit: '个', qty: 4, note: '黑色' },
+                    { name: '窄推拉锁座', code: 'SLP51.10.031', unit: '个', qty: 4, note: '黑色' },
+                    { name: '窄推拉滑轮（轻型）', code: 'AHR51.122204.07H5', unit: '个', qty: 4, note: '轻型选配、白轮' },
+                    { name: '窄推拉滑轮（重型）', code: 'R21.224415.38', unit: '个', qty: 0, note: '重型选配、白轮' },
+                    { name: '窄推拉导向轮', code: 'RGP51.01.38X', unit: '个', qty: 4, note: '不锈钢' }
+                ],
+                // 两轨四扇对碰配置
+                fourPanel: [
+                    { name: '窄边拉手（真锁）', code: 'BH480.00.25C168H5', unit: '个', qty: 3, note: '真锁，168抑菌砂纹黑色' },
+                    { name: '窄边拉手（假锁）', code: 'BH480.01.168H5', unit: '个', qty: 1, note: '假锁、对碰扇被动扇安装' },
+                    { name: '转换杆', code: 'APT51.20.06X', unit: '个', qty: 3, note: '黑色，无标' },
+                    { name: '窄推拉锁杆', code: 'LPE51.13.95C031H4', unit: '个', qty: 6, note: '黑色' },
+                    { name: '窄推拉锁座', code: 'SLP51.10.031', unit: '个', qty: 6, note: '黑色' },
+                    { name: '窄推拉滑轮（轻型）', code: 'AHR51.122204.07H5', unit: '个', qty: 8, note: '轻型选配、白轮' },
+                    { name: '窄推拉滑轮（重型）', code: 'R21.224415.38', unit: '个', qty: 0, note: '重型选配、白轮' },
+                    { name: '窄推拉导向轮', code: 'RGP51.01.38X', unit: '个', qty: 8, note: '不锈钢' }
+                ]
+            },
+            
+            // G45推拉密封窗配置
+            g45Sliding: {
+                range: { minWidth: 500, maxWidth: 1050, minHeight: 800, maxHeight: 2600 },
+                // 配置一
+                config1: [
+                    { name: 'PH952执手', code: 'PH952.00.168WA5', unit: '个', qty: 1, note: '168抑菌砂纹黑色' },
+                    { name: 'SP07方轴', code: 'SP07.12.40C021X', unit: '个', qty: 1, note: '外露轴长40mm' },
+                    { name: '微内开侧滑传动壳(侧装)', code: 'AGC58.08.031WA4', unit: '个', qty: 1, note: '' },
+                    { name: '微内侧侧滑系统', code: 'ASS50.10.4T031WA4', unit: '套', qty: 1, note: '承重100kg' },
+                    { name: '微内开侧滑侧框滚套锁杆', code: 'LPE50.20.2T031X', unit: '个', qty: 2, note: '可根据实际扇高按需增加数量' },
+                    { name: '微内开侧滑侧框锁座', code: 'SLP50.20.38WA4', unit: '个', qty: 2, note: '' },
+                    { name: '微内开侧滑钩锁', code: 'SDT50.00.2T069X', unit: '套', qty: 1, note: '可根据实际扇高按需增加数量' },
+                    { name: '微内开侧滑勾边锁座', code: 'SLP50.03.031X', unit: '个', qty: 1, note: '根据型材结构二选一，可根据实际扇高按需增加数量' },
+                    { name: '微内开侧滑勾边可调锁座', code: 'SLP50.04.031X', unit: '个', qty: 1, note: '根据型材结构二选一' }
+                ],
+                // 配置一选配件
+                config1Optional: [
+                    { name: '微内开侧滑中间下滑轮', code: 'AHR50.13.38X', unit: '个', qty: 1, note: '选配：扇宽大于1000mm或扇重大于100kg时使用；每增加一个中间下滑轮承重增加30kg，最大承重160kg' },
+                    { name: '微内开侧滑推拉单向缓冲器', code: 'BD403.26.38X', unit: '套', qty: 1, note: '选配：单扇选配1套，对开扇选配2套' }
+                ],
+                // 配置二
+                config2: [
+                    { name: 'PH952执手', code: 'PH952.00.168WA5', unit: '个', qty: 1, note: '168抑菌砂纹黑色' },
+                    { name: 'SP07方轴', code: 'SP07.12.40C021X', unit: '个', qty: 1, note: '外露轴长40mm' },
+                    { name: '微内开侧滑传动壳(侧装)', code: 'AGC58.08.031WA4', unit: '个', qty: 1, note: '' },
+                    { name: '微内侧侧滑系统', code: 'ASS50.10.4T031WA4', unit: '套', qty: 1, note: '承重100kg' },
+                    { name: '微内开侧滑侧框滚套锁杆', code: 'LPE50.20.2T031X', unit: '个', qty: 2, note: '可根据实际扇高按需增加数量' },
+                    { name: '微内开侧滑侧框锁座', code: 'SLP50.20.38WA4', unit: '个', qty: 2, note: '' },
+                    { name: '微内开侧滑钩锁', code: 'SDT50.10.1T031X', unit: '个', qty: 1, note: '可根据实际扇高按需增加数量；扇高1.2米以下标配1套；1.2米~1.8米标配2套；1.8米~2.6米标配3套' }
+                ],
+                // 配置二选配件
+                config2Optional: [
+                    { name: '微内开侧滑中间下滑轮', code: 'AHR50.13.38X', unit: '个', qty: 1, note: '选配：扇宽大于1000mm或扇重大于100kg时使用；每增加一个中间下滑轮承重增加30kg，最大承重160kg' },
+                    { name: '微内开侧滑推拉单向缓冲器', code: 'BD403.26.38X', unit: '套', qty: 1, note: '选配：单扇选配1套，对开扇选配2套' }
+                ]
+            },
+            
+            // 悬挂外开窗配置
+            hangingOpen: {
+                range: { minWidth: 510, maxWidth: 900, minHeight: 665, maxHeight: 2000 },
+                // 基础配置
+                basic: [
+                    { name: 'SP07方轴', code: 'SP07.07.60C021X', unit: '个', qty: 1, note: '60mm长，可选其他规格' },
+                    { name: '悬挂外开传动壳', code: 'AGC50.26.06WA4', unit: '个', qty: 1, note: '有26/30/37mm中心距' },
+                    { name: 'C槽隐藏式悬挂外开（左）Pro', code: 'CTA80.20.38LWA5', unit: '套', qty: 1, note: '开启角度85°，承重80KG，左边' },
+                    { name: 'C槽隐藏式悬挂外开（右）Pro', code: 'CTA80.20.38RWA5', unit: '套', qty: 1, note: '开启角度85°，承重80KG，右边' }
+                ],
+                // 选配件
+                optional: [
+                    { name: '中间角传动器', code: 'AMCT10.00.031WA4', unit: '个', qty: 1, note: '选配：扇宽超800mm或扇高超1200mm时，推荐加装中间锁、提高安全性、锁闭力和密封性' },
+                    { name: 'ALR28滚套锁杆', code: 'ALR28.65.031WA4', unit: '个', qty: 1, note: '' },
+                    { name: 'C槽锁座', code: 'ALP10.00.031WA4', unit: '个', qty: 1, note: '' }
+                ]
+            }
+        };
+
+        // ============== 全局变量 ==============
+        let currentResult = null;
+
+        // ============== 核心匹配逻辑 ==============
+        function calculateHardware(width, height, windowType, slidingConfig) {
+            const result = {
+                basic: [],
+                heightAddons: [],
+                widthAddons: [],
+                backLock: [],
+                windBrace: [],
+                warnings: [],
+                infos: []
+            };
+            
+            // 根据门窗类型选择不同配置
+            if (windowType === 'g24-sliding') {
+                // G24窄边推拉门配置
+                const config = slidingConfig === 'four-panel' 
+                    ? CONFIG.g24Sliding.fourPanel 
+                    : CONFIG.g24Sliding.twoPanel;
+                
+                result.basic = config.map(item => ({
+                    ...item,
+                    category: 'basic',
+                    categoryName: '基础配置'
+                }));
+                
+                // 检查尺寸范围
+                if (width < CONFIG.g24Sliding.range.minWidth || width > CONFIG.g24Sliding.range.maxWidth) {
+                    result.warnings.push(`扇宽 ${width}mm 超出G24推拉门范围(400-2500mm)`);
+                }
+                if (height < CONFIG.g24Sliding.range.minHeight || height > CONFIG.g24Sliding.range.maxHeight) {
+                    result.warnings.push(`扇高 ${height}mm 超出G24推拉门范围(600-2600mm)`);
+                }
+                
+                // 添加滑轮二选一提示
+                result.infos.push('滑轮轻型/重型二选一，根据实际需求选择');
+                
+            } else if (windowType === 'g45-sliding') {
+                // G45推拉密封窗配置
+                const isConfig1 = slidingConfig === 'config1';
+                const mainConfig = isConfig1 ? CONFIG.g45Sliding.config1 : CONFIG.g45Sliding.config2;
+                const optionalConfig = isConfig1 ? CONFIG.g45Sliding.config1Optional : CONFIG.g45Sliding.config2Optional;
+                
+                result.basic = mainConfig.map(item => ({
+                    ...item,
+                    category: 'basic',
+                    categoryName: '基础配置'
+                }));
+                
+                result.backLock = optionalConfig.map(item => ({
+                    ...item,
+                    category: 'optional',
+                    categoryName: '选配件'
+                }));
+                
+                // 检查尺寸范围
+                if (width < CONFIG.g45Sliding.range.minWidth || width > CONFIG.g45Sliding.range.maxWidth) {
+                    result.warnings.push(`扇宽 ${width}mm 超出G45推拉密封窗范围(500-1050mm)`);
+                }
+                if (height < CONFIG.g45Sliding.range.minHeight || height > CONFIG.g45Sliding.range.maxHeight) {
+                    result.warnings.push(`扇高 ${height}mm 超出G45推拉密封窗范围(800-2600mm)`);
+                }
+                
+                // 配置一的勾边锁座二选一提示
+                if (isConfig1) {
+                    result.infos.push('勾边锁座/勾边可调锁座二选一，根据型材结构选择');
+                }
+                
+            } else if (windowType === 'hanging-open') {
+                // 悬挂外开窗配置
+                result.basic = CONFIG.hangingOpen.basic.map(item => ({
+                    ...item,
+                    category: 'basic',
+                    categoryName: '基础配置'
+                }));
+                
+                result.backLock = CONFIG.hangingOpen.optional.map(item => ({
+                    ...item,
+                    category: 'optional',
+                    categoryName: '选配件'
+                }));
+                
+                // 左右铰链二选一提示
+                result.infos.push('隐藏式悬挂外开（左）/（右）二选一，根据安装位置选择');
+                
+            } else {
+                // UC槽内开内倒窗配置（默认）
+                // 1. 基础配置
+                result.basic = CONFIG.basicHardware.map(item => ({
+                    ...item,
+                    category: 'basic',
+                    categoryName: '基础配置'
+                }));
+                
+                // 检查基础范围
+                const inBasicWidthRange = width >= CONFIG.basicRange.minWidth && width <= CONFIG.basicRange.maxWidth;
+                const inBasicHeightRange = height >= CONFIG.basicRange.minHeight && height <= CONFIG.basicRange.maxHeight;
+                
+                if (!inBasicWidthRange && width > CONFIG.basicRange.maxWidth && width <= CONFIG.widthAddons.range.max) {
+                    result.warnings.push(`扇宽 ${width}mm 超出基础范围(455-720mm)，需要增购扇宽匹配五金`);
+                }
+                
+                if (!inBasicHeightRange && height > CONFIG.basicRange.maxHeight) {
+                    result.warnings.push(`扇高 ${height}mm 超出基础范围(655-925mm)，需要增购扇高匹配五金`);
+                }
+                
+                // 2. 扇高增购
+                for (const addon of CONFIG.heightAddons) {
+                    if (height > addon.range.min && height <= addon.range.max) {
+                        result.heightAddons = addon.items.map(item => ({
+                            ...item,
+                            category: 'height',
+                            categoryName: '扇高增购'
+                        }));
+                        break;
+                    }
+                }
+                
+                // 3. 扇宽增购
+                if (width > CONFIG.widthAddons.range.min && width <= CONFIG.widthAddons.range.max) {
+                    const recommendedOption = CONFIG.widthAddons.options[0];
+                    result.widthAddons = recommendedOption.items.map(item => ({
+                        ...item,
+                        category: 'width',
+                        categoryName: '扇宽增购'
+                    }));
+                    result.infos.push(`扇宽增购有两种方案可选，当前显示推荐方案一。方案二可选：250mm延长端（无锁点）x1`);
+                }
+                
+                // 4. 背部锁增购（可选）
+                const backLockOption = CONFIG.backLockAddons[0];
+                result.backLock = backLockOption.items.map(item => ({
+                    ...item,
+                    category: 'backlock',
+                    categoryName: '背部锁（可选）'
+                }));
+                
+                if (height > 925) {
+                    const option2 = CONFIG.backLockAddons[1];
+                    for (const rule of option2.heightRules) {
+                        if (height > rule.range.min && height <= rule.range.max) {
+                            result.infos.push(`背部锁方案二可选：联动背部锁延长端，需增配 ${rule.sets} 套500mm延长端（防撬锁点）`);
+                            break;
+                        }
+                    }
+                }
+                
+                // 5. 风撑增购（可选）
+                if (width >= CONFIG.windBrace.minWidth) {
+                    result.windBrace = [{
+                        ...CONFIG.windBrace.item,
+                        category: 'wind',
+                        categoryName: '风撑（可选）'
+                    }];
+                }
+            }
+            
+            return result;
+        }
+
+        // ============== UI 渲染 ==============
+        function renderResult(result, width, height, windowType) {
+            const tbody = document.getElementById('hardwareBody');
+            tbody.innerHTML = '';
+            
+            // 合并所有配置项
+            let allItems = [
+                ...result.basic,
+                ...result.heightAddons,
+                ...result.widthAddons,
+                ...result.backLock,
+                ...result.windBrace
+            ];
+            
+            // 合并相同产品，处理L/R配对和延长端配对（都是二选一）
+            const mergedItems = {};
+            allItems.forEach(item => {
+                // 检测是否是L/R配对的产品
+                let baseName = item.name;
+                let isOptionPair = false;
+                let pairType = '';
+                
+                // 匹配名称末尾的 L 或 R（可能有空格）
+                const lrMatch = item.name.match(/^(.+?)\s*[LR]$/i);
+                if (lrMatch) {
+                    baseName = lrMatch[1].trim();
+                    isOptionPair = true;
+                    pairType = 'LR';
+                }
+                
+                // 匹配延长端配对：如 "250mm延长端（无锁点）" 和 "250mm延长端（防撬锁点）"
+                const extMatch = item.name.match(/^(.+?延长端)（.+）$/);
+                if (extMatch) {
+                    baseName = extMatch[1].trim();
+                    isOptionPair = true;
+                    pairType = 'EXTEND';
+                }
+                
+                // 匹配备注含"二选一"的产品：如勾边锁座和勾边可调锁座
+                if (!isOptionPair && item.note && item.note.includes('二选一')) {
+                    // 提取名称中的共同前缀（去掉最后一个括号内容或后缀差异）
+                    const bracketMatch = item.name.match(/^(.+?)(可调)?(.+)$/);
+                    if (bracketMatch) {
+                        // 尝试找到同类产品
+                        const hasPair = allItems.some(other => 
+                            other !== item && 
+                            other.note && other.note.includes('二选一') &&
+                            other.name !== item.name &&
+                            (other.name.includes(bracketMatch[1]) || item.name.includes(other.name.replace('可调', '')))
+                        );
+                        if (hasPair) {
+                            // 用更通用的基础名称
+                            baseName = item.name.replace('可调', '');
+                            isOptionPair = true;
+                            pairType = 'NOTE_OPTION';
+                        }
+                    }
+                }
+                
+                // 对于配对产品，使用基础名称作为key
+                const key = isOptionPair ? `OPTION_PAIR|${pairType}|${baseName}` : `${item.name}|${item.code}`;
+                
+                if (mergedItems[key]) {
+                    if (isOptionPair) {
+                        // 配对产品，合并编号，数量保持1，备注"二选一"
+                        mergedItems[key].codes.push(item.code);
+                        mergedItems[key].note = '二选一';
+                    } else {
+                        // 普通产品，累加数量
+                        mergedItems[key].qty += item.qty;
+                        if (item.note && !mergedItems[key].note.includes(item.note)) {
+                            mergedItems[key].note = mergedItems[key].note 
+                                ? mergedItems[key].note + '; ' + item.note 
+                                : item.note;
+                        }
+                    }
+                } else {
+                    mergedItems[key] = { 
+                        ...item, 
+                        name: isOptionPair ? baseName : item.name,
+                        codes: [item.code],
+                        note: isOptionPair ? '二选一' : item.note
+                    };
+                }
+            });
+            
+            // 转换为数组并渲染
+            Object.values(mergedItems).forEach(item => {
+                const tr = document.createElement('tr');
+                const codeDisplay = item.codes ? item.codes.join(' / ') : item.code;
+                tr.innerHTML = `
+                    <td>${item.name}</td>
+                    <td><span class="product-code">${codeDisplay}</span></td>
+                    <td>${item.unit}</td>
+                    <td><strong>${item.qty}</strong></td>
+                    <td><span class="note-text">${item.note || '-'}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // 渲染警告和提示
+            const warningBox = document.getElementById('warningBox');
+            const infoBox = document.getElementById('infoBox');
+            
+            warningBox.innerHTML = result.warnings.map(w => 
+                `<div class="warning-box"><p>⚠️ ${w}</p></div>`
+            ).join('');
+            
+            infoBox.innerHTML = result.infos.map(i => 
+                `<div class="info-box"><p>💡 ${i}</p></div>`
+            ).join('');
+            
+            // 更新输入摘要
+            const typeName = windowType === 'g24-sliding' ? 'G24窄边推拉门' : windowType === 'g45-sliding' ? 'G45推拉密封窗' : windowType === 'hanging-open' ? '悬挂外开窗' : 'UC槽内开内倒窗';
+            if (windowType === 'g24-sliding' || windowType === 'g45-sliding' || windowType === 'hanging-open') {
+                document.getElementById('inputSummary').textContent = typeName;
+            } else {
+                document.getElementById('inputSummary').textContent = 
+                    `${typeName} | 宽度: ${width}mm | 高度: ${height}mm`;
+            }
+        }
+
+        // ============== 事件处理 ==============
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('windowType').value;
+            const slidingConfig = document.getElementById('slidingConfig').value;
+            
+            // G24、G45、悬挂外开不需要输入尺寸，直接显示配置
+            let width, height;
+            if (type === 'g24-sliding' || type === 'g45-sliding' || type === 'hanging-open') {
+                width = 0;
+                height = 0;
+            } else {
+                // UC槽需要验证尺寸
+                width = parseInt(document.getElementById('windowWidth').value);
+                height = parseInt(document.getElementById('windowHeight').value);
+                
+                if (width < 455 || width > 970) {
+                    alert('门窗宽度应在 455mm ~ 970mm 范围内');
+                    return;
+                }
+                if (height < 655 || height > 3000) {
+                    alert('门窗高度应在 655mm ~ 3000mm 范围内');
+                    return;
+                }
+            }
+            
+            // 计算配置
+            currentResult = calculateHardware(width, height, type, slidingConfig);
+            
+            // 渲染结果
+            renderResult(currentResult, width, height, type);
+            
+            // 显示结果区域
+            document.getElementById('resultSection').classList.add('show');
+            
+            // 滚动到结果
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // 门窗类型切换事件
+        document.getElementById('windowType').addEventListener('change', function() {
+            const slidingConfigGroup = document.getElementById('slidingConfigGroup');
+            const slidingConfig = document.getElementById('slidingConfig');
+            const slidingConfigHint = document.getElementById('slidingConfigHint');
+            const sizeRangeGroup = document.getElementById('sizeRangeGroup');
+            const sizeRangeDisplay = document.getElementById('sizeRangeDisplay');
+            const widthInputGroup = document.getElementById('widthInputGroup');
+            const heightInputGroup = document.getElementById('heightInputGroup');
+            const windowWidth = document.getElementById('windowWidth');
+            const windowHeight = document.getElementById('windowHeight');
+            
+            if (this.value === 'g24-sliding') {
+                // G24: 显示配置选择，隐藏尺寸输入，显示适用范围
+                slidingConfigGroup.style.display = 'flex';
+                slidingConfig.innerHTML = '<option value="two-panel">两轨两扇</option><option value="four-panel">两轨四扇对碰</option>';
+                slidingConfigHint.textContent = '选择推拉门的配置方案';
+                sizeRangeGroup.style.display = 'flex';
+                sizeRangeDisplay.innerHTML = '扇宽: 400 ~ 2500 mm<br>扇高: 600 ~ 2600 mm';
+                widthInputGroup.style.display = 'none';
+                heightInputGroup.style.display = 'none';
+                windowWidth.removeAttribute('required');
+                windowHeight.removeAttribute('required');
+            } else if (this.value === 'g45-sliding') {
+                // G45: 固定配置一，隐藏尺寸输入，显示适用范围
+                slidingConfigGroup.style.display = 'none';
+                sizeRangeGroup.style.display = 'flex';
+                sizeRangeDisplay.innerHTML = '扇宽: 500 ~ 1050 mm<br>扇高: 800 ~ 2600 mm';
+                widthInputGroup.style.display = 'none';
+                heightInputGroup.style.display = 'none';
+                windowWidth.removeAttribute('required');
+                windowHeight.removeAttribute('required');
+            } else if (this.value === 'hanging-open') {
+                // 悬挂外开: 隐藏尺寸输入，显示适用范围
+                slidingConfigGroup.style.display = 'none';
+                sizeRangeGroup.style.display = 'flex';
+                sizeRangeDisplay.innerHTML = '扇宽: 510 ~ 900 mm<br>扇高: 665 ~ 2000 mm';
+                widthInputGroup.style.display = 'none';
+                heightInputGroup.style.display = 'none';
+                windowWidth.removeAttribute('required');
+                windowHeight.removeAttribute('required');
+            } else {
+                slidingConfigGroup.style.display = 'none';
+                // UC槽: 显示尺寸输入，隐藏适用范围
+                slidingConfigGroup.style.display = 'none';
+                sizeRangeGroup.style.display = 'none';
+                widthInputGroup.style.display = 'flex';
+                heightInputGroup.style.display = 'flex';
+                windowWidth.setAttribute('required', 'required');
+                windowHeight.setAttribute('required', 'required');
+                windowWidth.min = 455;
+                windowWidth.max = 970;
+                windowHeight.min = 655;
+                windowHeight.max = 3000;
+            }
+        });
+
+        // 导出功能
+        function exportResult() {
+            if (!currentResult) return;
+            
+            const width = document.getElementById('windowWidth').value;
+            const height = document.getElementById('windowHeight').value;
+            
+            // 合并所有项目
+            let allItems = [
+                ...currentResult.basic,
+                ...currentResult.heightAddons,
+                ...currentResult.widthAddons,
+                ...currentResult.backLock,
+                ...currentResult.windBrace
+            ];
+            
+            // 合并相同产品，处理L/R配对和延长端配对（都是二选一）
+            const mergedItems = {};
+            allItems.forEach(item => {
+                // 检测是否是L/R配对的产品
+                let baseName = item.name;
+                let isOptionPair = false;
+                let pairType = '';
+                
+                const lrMatch = item.name.match(/^(.+?)\s*[LR]$/i);
+                if (lrMatch) {
+                    baseName = lrMatch[1].trim();
+                    isOptionPair = true;
+                    pairType = 'LR';
+                }
+                
+                // 匹配延长端配对
+                const extMatch = item.name.match(/^(.+?延长端)（.+）$/);
+                if (extMatch) {
+                    baseName = extMatch[1].trim();
+                    isOptionPair = true;
+                    pairType = 'EXTEND';
+                }
+                
+                const key = isOptionPair ? `OPTION_PAIR|${pairType}|${baseName}` : `${item.name}|${item.code}`;
+                
+                if (mergedItems[key]) {
+                    if (isOptionPair) {
+                        mergedItems[key].codes.push(item.code);
+                        mergedItems[key].note = '二选一';
+                    } else {
+                        mergedItems[key].qty += item.qty;
+                        if (item.note && !mergedItems[key].note.includes(item.note)) {
+                            mergedItems[key].note = mergedItems[key].note 
+                                ? mergedItems[key].note + '; ' + item.note 
+                                : item.note;
+                        }
+                    }
+                } else {
+                    mergedItems[key] = { 
+                        ...item, 
+                        name: isOptionPair ? baseName : item.name,
+                        codes: [item.code],
+                        note: isOptionPair ? '二选一' : item.note
+                    };
+                }
+            });
+            
+            let text = `HOPO 门窗五金配置清单\n`;
+            text += `========================\n\n`;
+            text += `门窗类型: UC槽内开内倒窗\n`;
+            text += `门窗宽度: ${width}mm\n`;
+            text += `门窗高度: ${height}mm\n\n`;
+            text += `========================\n\n`;
+            
+            text += `【五金配置清单】\n`;
+            Object.values(mergedItems).forEach(item => {
+                const codeDisplay = item.codes ? item.codes.join(' / ') : item.code;
+                const noteDisplay = item.note ? ` (${item.note})` : '';
+                text += `${item.name} | ${codeDisplay} | ${item.qty}${item.unit}${noteDisplay}\n`;
+            });
+            
+            if (currentResult.warnings.length > 0) {
+                text += `\n【注意事项】\n`;
+                currentResult.warnings.forEach(w => {
+                    text += `⚠️ ${w}\n`;
+                });
+            }
+            
+            if (currentResult.infos.length > 0) {
+                text += `\n【补充说明】\n`;
+                currentResult.infos.forEach(i => {
+                    text += `💡 ${i}\n`;
+                });
+            }
+            
+            text += `\n========================\n`;
+            text += `生成时间: ${new Date().toLocaleString()}\n`;
+            text += `HOPO 门窗五金智能选配系统\n`;
+            
+            // 下载文件
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `HOPO五金配置_${width}x${height}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        // ============== Excel导入配置库 ==============
+        var EXCEL_CONFIG_PLANS = [{"group":"内开内倒配置方案","name":"欧标C槽隐藏式90°微调内开内倒窗配置方案（主推）","items":[{"name":"PH312执手","code":"PH312.26.1T168H3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，52.1mm高","category":"基础配置","serial":"1-1"},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距，可选6.5mm中心距","category":"基础配置","serial":""},{"name":"PH922执手","code":"PH922.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，59.8mm高","category":"基础配置","serial":"1-2"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"基础配置","serial":""},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距，可选6.5mm中心距","category":"基础配置","serial":""},{"name":"PH940儿童锁执手","code":"PH940.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，59.8mm高","category":"基础配置","serial":"1-3"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"基础配置","serial":""},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距，可选6.5mm中心距","category":"基础配置","serial":""},{"name":"PH401无基座执手","code":"PH401.00.168H2","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，50.8mm高","category":"基础配置","serial":"1-4"},{"name":"免铣槽传动壳","code":"AGC50.00.021H4","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"传动组件(Pro)","code":"AD21.00.021H4","unit":"套","qty":1,"note":"","category":"基础配置","serial":"2"},{"name":"铰链组件左（Pro）","code":"CATT51.35.P1T38LH5","unit":"套","qty":1,"note":"开启角度90°，承重100KG，左边\n扇宽475-1000mm，扇高595-2600mm；可选项（原表数量为0）","category":"基础配置","serial":"3"},{"name":"铰链组件右（Pro）","code":"CATT51.35.P1T38RH5","unit":"套","qty":1,"note":"开启角度90°，承重100KG，右边\n扇宽475-1000mm，扇高595-2600mm","category":"基础配置","serial":""},{"name":"中间角传动器","code":"AMCT20.00.021H4","unit":"个","qty":1,"note":"当扇宽超800mm，扇高超1200mm时，推荐加装中间锁、提高安全性、锁闭力和密封性\n锁杆、锁座数量可根据实际扇高尺寸增加","category":"选配件","serial":"1"},{"name":"ALR28滚套锁杆","code":"ALR28.65.021H4","unit":"个","qty":1,"note":"","category":"选配件","serial":"2"},{"name":"C槽锁座","code":"ALP10.00.021","unit":"个","qty":1,"note":"","category":"选配件","serial":"3"},{"name":"C槽风撑","code":"ATR20.09C38X","unit":"个","qty":1,"note":"90°内开内倒选配，阻尼可调风撑","category":"选配件","serial":"4"}]},{"group":"内开内倒配置方案","name":"欧标C槽隐藏式180°微调内开内倒窗配置方案（主推）","items":[{"name":"PH312执手","code":"PH312.26.1T168H3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，52.1mm高","category":"基础配置","serial":"1-1"},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距，可选6.5mm中心距","category":"基础配置","serial":""},{"name":"PH922执手","code":"PH922.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，59.8mm高","category":"基础配置","serial":"1-2"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"基础配置","serial":""},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距，可选6.5mm中心距","category":"基础配置","serial":""},{"name":"PH940儿童锁执手","code":"PH940.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，59.8mm高","category":"基础配置","serial":"1-3"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"基础配置","serial":""},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距，可选6.5mm中心距","category":"基础配置","serial":""},{"name":"PH401无基座执手","code":"PH401.00.168H2","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，50.8mm高","category":"基础配置","serial":"1-4"},{"name":"免铣槽传动壳","code":"AGC50.00.021H4","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"传动组件(Pro)","code":"AD21.00.021H4","unit":"套","qty":1,"note":"","category":"基础配置","serial":"2"},{"name":"C槽 180°内开内倒铰链（左）","code":"CATT55.20.38LH5","unit":"套","qty":1,"note":"开启角度180°，承重100KG，左边\n扇宽480-1000mm，扇高595-2600mm；可选项（原表数量为0）","category":"基础配置","serial":"3"},{"name":"C槽 180°内开内倒铰链（右）","code":"CATT55.20.38RH5","unit":"套","qty":1,"note":"开启角度180°，承重100KG，右边\n扇宽480-1000mm，扇高595-2600mm","category":"基础配置","serial":""},{"name":"中间角传动器","code":"AMCT20.00.021H4","unit":"个","qty":1,"note":"当扇宽超800mm，扇高超1200mm时，推荐加装中间锁、提高安全性、锁闭力和密封性\n锁杆、锁座数量可根据实际扇高尺寸增加","category":"选配件","serial":"1"},{"name":"ALR28滚套锁杆","code":"ALR28.65.021H4","unit":"个","qty":1,"note":"","category":"选配件","serial":"2"},{"name":"C槽锁座","code":"ALP10.00.021","unit":"个","qty":1,"note":"","category":"选配件","serial":"3"}]},{"group":"内开内倒配置方案","name":"欧标C槽隐藏式90°小摇臂微调内开内倒窗配置方案（主推）","items":[{"name":"PH312执手","code":"PH312.26.1T168H3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，52.1mm高","category":"基础配置","serial":"1-1"},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距，可选6.5mm中心距","category":"基础配置","serial":""},{"name":"PH922执手","code":"PH922.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，59.8mm高","category":"基础配置","serial":"1-2"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"基础配置","serial":""},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距，可选6.5mm中心距","category":"基础配置","serial":""},{"name":"PH940儿童锁执手","code":"PH940.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，59.8mm高","category":"基础配置","serial":"1-3"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"基础配置","serial":""},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距，可选6.5mm中心距","category":"基础配置","serial":""},{"name":"PH401无基座执手","code":"PH401.00.168H2","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，50.8mm高","category":"基础配置","serial":"1-4"},{"name":"免铣槽传动壳","code":"AGC50.00.021H4","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"传动组件(Pro)","code":"AD21.00.021H4","unit":"套","qty":1,"note":"","category":"基础配置","serial":"2"},{"name":"小摇臂内开内倒铰链组件(左)","code":"CATT51.30.1T021LX","unit":"套","qty":1,"note":"开启角度90°，承重80KG\n扇宽370-510mm，扇高595-2600mm；可选项（原表数量为0）","category":"基础配置","serial":"3"},{"name":"小摇臂内开内倒铰链组件(右)","code":"CATT51.30.1T021RX","unit":"套","qty":1,"note":"","category":"基础配置","serial":""},{"name":"中间角传动器","code":"AMCT20.00.021H4","unit":"个","qty":1,"note":"当扇宽超800mm，扇高超1200mm时，推荐加装中间锁、提高安全性、锁闭力和密封性\n锁杆、锁座数量可根据实际扇高尺寸增加","category":"选配件","serial":"1"},{"name":"ALR28滚套锁杆","code":"ALR28.65.021H4","unit":"个","qty":1,"note":"","category":"选配件","serial":"2"},{"name":"C槽锁座","code":"ALP10.00.021","unit":"个","qty":1,"note":"","category":"选配件","serial":"3"},{"name":"C槽风撑","code":"ATR20.09C38X","unit":"个","qty":1,"note":"90°内开内倒选配，阻尼可调风撑","category":"选配件","serial":"4"}]},{"group":"内开内倒配置方案","name":"欧标C槽90°隐藏式SAS快装内开内倒方案（非主推）","items":[{"name":"PH312无基座执手","code":"PH312.26.1T168H3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，52.1mm高","category":"基础配置","serial":"1-1"},{"name":"SP07方轴（配螺丝）","code":"SP07.07.2T26C021X","unit":"个","qty":1,"note":"外露轴长26mm，带25mm长M4沉头螺丝*2","category":"基础配置","serial":""},{"name":"SAS内开内倒传动壳","code":"AGC53.13.014H4","unit":"个","qty":1,"note":"13mm中心距","category":"基础配置","serial":""},{"name":"PH922执手","code":"PH922.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，59.8mm高","category":"基础配置","serial":"1-2"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm长","category":"基础配置","serial":""},{"name":"SAS内开内倒传动壳","code":"AGC53.13.014H4","unit":"个","qty":1,"note":"13mm中心距","category":"基础配置","serial":""},{"name":"PH401无基座执手","code":"PH401.00.168H2","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，50.8mm高","category":"基础配置","serial":"1-3"},{"name":"快装免铣槽传动壳","code":"AGC53.00.021H4","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"SAS快装内开内倒（左）","code":"CTT53.00.38LH5","unit":"套","qty":1,"note":"开启角度90°，承重100KG\n扇宽525-1000mm，扇高780-2600mm；可选项（原表数量为0）","category":"基础配置","serial":"2"},{"name":"SAS快装内开内倒（右）","code":"CTT53.00.38RH5","unit":"套","qty":1,"note":"","category":"基础配置","serial":""},{"name":"传动铝杆  1000mm","code":"H.1909.20.10C019","unit":"支","qty":1,"note":"数量为变量配置、按需配备","category":"基础配置","serial":"3"},{"name":"中间锁角传动器","code":"AMCT53.00.223X","unit":"个","qty":1,"note":"快装内倒中间锁选配选配，当扇宽超800mm，扇高超1200mm时，推荐加装中间锁、提高安全性、锁闭力和密封性","category":"快装选配件","serial":"4"},{"name":"附加锁杆","code":"ALR53.00.38H4","unit":"个","qty":1,"note":"","category":"快装选配件","serial":"5"},{"name":"不锈钢锁座","code":"ALP18.00.38H5","unit":"个","qty":1,"note":"","category":"快装选配件","serial":"6"},{"name":"SAS磁力辅助器","code":"AB100.01.01H4","unit":"套","qty":2,"note":"磁吸辅助关窗","category":"快装选配件","serial":"7"}]},{"group":"内开内倒配置方案","name":"常规欧标C槽90°隐藏式内开内倒窗配置方案（非主推）","items":[{"name":"PH922执手","code":"PH922.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，59.8mm高","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"基础配置","serial":"2"},{"name":"传动壳","code":"AGC50.13.021","unit":"个","qty":1,"note":"13mm中心距，仅可搭配有基座执手使用","category":"基础配置","serial":"3"},{"name":"传动组件","code":"AD20.00.021","unit":"套","qty":1,"note":"","category":"基础配置","serial":"4"},{"name":"铰链组件（左）","code":"CATT51.35.38L","unit":"套","qty":1,"note":"开启角度90°、承重100KG，左边\n适用扇宽510-1000mm，扇高560-2600mm；可选项（原表数量为0）","category":"基础配置","serial":"5"},{"name":"铰链组件（右）","code":"CATT51.35.38R","unit":"套","qty":1,"note":"开启角度90°、承重100KG，右边\n适用扇宽510-1000mm，扇高560-2600mm","category":"基础配置","serial":""},{"name":"中间角传动器","code":"AMCT10.00.021","unit":"个","qty":1,"note":"","category":"选配件","serial":"1"},{"name":"滚套锁杆（可延伸）","code":"ALR23.00.021","unit":"个","qty":1,"note":"当扇宽超800mm，扇高超1200mm时，推荐加装中间锁、提高安全性、锁闭力和密封性","category":"选配件","serial":"2"},{"name":"C槽锁座","code":"ALP10.00.021","unit":"个","qty":1,"note":"","category":"选配件","serial":"3"},{"name":"C槽风撑","code":"ATR20.09C38X","unit":"个","qty":1,"note":"90°内开内倒选配，阻尼可调风撑","category":"选配件","serial":"4"}]},{"group":"内开内倒配置方案","name":"合页式欧标C槽180°内开内倒窗配置方案（非主推）","items":[{"name":"PH922执手","code":"PH922.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，59.8mm高","category":"基础配置","serial":"1-1"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"基础配置","serial":""},{"name":"传动壳","code":"AGC50.13.021","unit":"支","qty":1,"note":"13mm中心距，仅可搭配有基座执手使用","category":"基础配置","serial":""},{"name":"AH505拨叉执手","code":"AH505.22.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色","category":"基础配置","serial":"1-2"},{"name":"转换组件","code":"AFT20.00.38","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"传动组件","code":"AD20.00.021","unit":"套","qty":1,"note":"","category":"基础配置","serial":"2"},{"name":"30摇臂组件","code":"ASA50.30.021","unit":"套","qty":1,"note":"30摇臂扇宽450-470mm，扇高560-2000mm，承重90kg","category":"基础配置","serial":"5-1"},{"name":"35摇臂组件","code":"ASA50.35.021","unit":"套","qty":1,"note":"35摇臂扇宽470-595mm，扇高560-2000mm，承重90kg","category":"基础配置","serial":"5-2"},{"name":"50摇臂组件","code":"ASA50.50.021","unit":"套","qty":1,"note":"50摇臂扇宽595-1000mm，扇高560-2000mm，承重90kg","category":"基础配置","serial":"5-3"},{"name":"合页组件","code":"AHA60.00.011","unit":"套","qty":1,"note":"011银色，042氧深古铜 ，068喷涂砂纹黑，07白色","category":"基础配置","serial":"6"},{"name":"中间角传动器","code":"AMCT10.00.021","unit":"个","qty":1,"note":"当扇宽超800mm，扇高超1200mm时，推荐加装中间锁、提高安全性、锁闭力和密封性","category":"选配件","serial":"7"},{"name":"滚套锁杆（可延伸）","code":"ALR23.00.021","unit":"个","qty":1,"note":"","category":"选配件","serial":"8"},{"name":"C槽锁座","code":"ALP10.00.021","unit":"个","qty":1,"note":"","category":"选配件","serial":"9"},{"name":"附加承重器（左）","code":"ADD21.00.011LH2","unit":"套","qty":1,"note":"承重180KG，90°PRO内开内倒高承重选配，可根据窗型实际开启方向选择左右，二选一；可选项（原表数量为0）","category":"其他可选配件","serial":"1"},{"name":"附加承重器（右）","code":"ADD21.00.011RH2","unit":"套","qty":1,"note":"","category":"其他可选配件","serial":""},{"name":"小槽传动组件","code":"AD23.00.021H4","unit":"套","qty":1,"note":"搭配C槽180°内开内倒铰链，适配10-14小槽方案，不可微调","category":"其他可选配件","serial":"2"}]},{"group":"内平开窗配置方案","name":"欧标C槽隐藏式内平开窗配置方案（主推）","items":[{"name":"PH922执手","code":"PH922.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，59.8mm高","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"基础配置","serial":"2"},{"name":"传动壳","code":"AGC38.10.011H5","unit":"个","qty":1,"note":"10.5mm中心距","category":"基础配置","serial":"3"},{"name":"C槽安全锁杆","code":"ALR21.01.021H4","unit":"个","qty":2,"note":"","category":"基础配置","serial":"4"},{"name":"C槽安全锁座","code":"ALP33.00.021H4","unit":"个","qty":2,"note":"","category":"基础配置","serial":"5"},{"name":"180°内平开铰链","code":"CATH51.00.38H5","unit":"付","qty":1,"note":"开启角度180°，承重100KG\n扇宽200-1300mm，扇高550-2800mm","category":"基础配置","serial":"6-1"},{"name":"90度内平开铰链（左）","code":"CATH52.00.38LH5","unit":"付","qty":1,"note":"开启角度90°，承重80KG，左边\n扇宽300-1000mm，扇高400-2600mm；可选项（原表数量为0）","category":"基础配置","serial":"6-2"},{"name":"90度内平开铰链（右）","code":"CATH52.00.38RH5","unit":"付","qty":1,"note":"开启角度90°，承重80KG，右边\n扇宽300-1000mm，扇高400-2600mm","category":"基础配置","serial":""}]},{"group":"双内平开窗纱扇选配方案","name":"内开纱扇方案一","items":[{"name":"502MA执手","code":"MAL502.021.011H5","unit":"个","qty":1,"note":"065抑菌砂纹黑色，可选011银色、047新深古铜色","category":"基础配置","serial":"1-1"},{"name":"500MA执手","code":"MAL500.021.011","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选011银色、047新深古铜色；可选项（原表数量为0）","category":"基础配置","serial":"1-2"},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":1,"note":"19mm长，可选其他规格长度","category":"基础配置","serial":"2-1"},{"name":"转换杆","code":"APT20.00.021","unit":"个","qty":1,"note":"","category":"基础配置","serial":"2-2"},{"name":"C槽安全锁杆","code":"ALR21.01.021H4","unit":"个","qty":2,"note":"","category":"基础配置","serial":"3"},{"name":"C槽安全锁座","code":"ALP33.00.021H4","unit":"个","qty":2,"note":"","category":"基础配置","serial":"4"},{"name":"22型纱扇铰链","code":"CATH22.00.38H5","unit":"付","qty":1,"note":"开启角度90°，承重15KG","category":"基础配置","serial":"5-1"},{"name":"框扇平齐轻型铰链","code":"CATH21.00.38","unit":"付","qty":1,"note":"开启角度90°，承重25KG","category":"基础配置","serial":"5-2"},{"name":"框扇平齐180度轻型铰链","code":"CATH24.00.1T38H5","unit":"付","qty":1,"note":"开启角度180°，承重15KG","category":"基础配置","serial":"5-3"}]},{"group":"双内平开窗纱扇选配方案","name":"内开纱扇方案二","items":[{"name":"双内开纱窗锁座","code":"ALP42.00.223X","unit":"个","qty":1,"note":"纱扇锁带钥匙，可拆卸纱扇；非标槽口类型适配，根据实际型材结构适配","category":"基础配置","serial":"1"},{"name":"双内开纱窗合页","code":"AMH59.00.223X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"2"},{"name":"双内开纱扇锁","code":"MAL503.17.223X","unit":"个","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"双内开垫片","code":"SHS10.00.225X","unit":"个","qty":"按需","note":"","category":"基础配置","serial":"4"}]},{"group":"双内平开窗纱扇选配方案","name":"内平开其他配件","items":[{"name":"180度可调内平开铰链（左）","code":"CATH51.10.38LH5","unit":"付","qty":1,"note":"承重100KG，开启角度180°，左边\n适用扇宽：200-1300mm、扇高：550-2800mm\n铰链可适配多种型材槽口安装，如欧标C槽、10-14槽、12-16槽；可选项（原表数量为0）","category":"基础配置","serial":"1"},{"name":"180度可调内平开铰链（右）","code":"CATH51.10.38RH5","unit":"付","qty":1,"note":"承重100KG，开启角度180°，右边\n适用扇宽：200-1300mm、扇高：550-2800mm\n铰链可适配多种型材槽口安装，如欧标C槽、10-14槽、12-16槽","category":"基础配置","serial":"2"},{"name":"90°内开玻扇轻型铰链","code":"CATH21.50.38H5","unit":"付","qty":1,"note":"开启角度90°，承重50KG\n适配扇宽：450-900mm，扇高：＜2000mm","category":"基础配置","serial":"3"},{"name":"防沉块","code":"AAS10.00.01","unit":"个","qty":1,"note":"选配，防沉套件方案一","category":"基础配置","serial":"4-1"},{"name":"C槽翻转支撑座","code":"ASP20.00.021","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"防沉块","code":"AAS10.10.06X","unit":"个","qty":1,"note":"选配，防沉套件方案二","category":"基础配置","serial":"4-2"},{"name":"C槽框支撑块","code":"AFS10.00.01","unit":"个","qty":1,"note":"","category":"基础配置","serial":""}]},{"group":"外开窗纱一体配置方案","name":"HOPO经济款外开窗纱一体（主推）","items":[{"name":"PH922执手","code":"PH922.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，59.8mm高","category":"内开纱窗","serial":"1-1"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"内开纱窗","serial":""},{"name":"PH312执手","code":"PH312.00.1T168H3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，52.1mm高","category":"内开纱窗","serial":"1-2"},{"name":"SP07方轴（配螺丝）","code":"SP07.07.2T26C021X","unit":"个","qty":1,"note":"外露轴长26mm，带25mm长M4沉头螺丝*2","category":"内开纱窗","serial":""},{"name":"E系列传动壳","code":"AGC38.10.011H5","unit":"个","qty":1,"note":"10.5mm中心距","category":"内开纱窗","serial":"2"},{"name":"C槽安全锁杆","code":"ALR21.01.021H4","unit":"个","qty":2,"note":"","category":"内开纱窗","serial":"3"},{"name":"C槽安全锁座","code":"ALP13.00.021","unit":"个","qty":2,"note":"","category":"内开纱窗","serial":"4"},{"name":"纱扇较链","code":"CATH29.00.38H5","unit":"付","qty":1,"note":"承重15KG，开启角度180°","category":"内开纱窗","serial":"5"},{"name":"PH923执手 (左)","code":"PH923.00.168LH5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，34mm高；可选项（原表数量为0）","category":"外开玻璃扇","serial":"6-1"},{"name":"PH923执手 (右)","code":"PH923.00.168RH5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，34mm高","category":"外开玻璃扇","serial":""},{"name":"SP07方轴","code":"SP07.12.60C021X","unit":"个","qty":1,"note":"外露轴长60mm，可选其他规格长度","category":"外开玻璃扇","serial":""},{"name":"PH313执手  (左)","code":"PH313.00.1T168LH3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，33.8mm高；可选项（原表数量为0）","category":"外开玻璃扇","serial":"6-2"},{"name":"PH313执手 (右)","code":"PH313.00.1T168RH3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，33.8mm高","category":"外开玻璃扇","serial":""},{"name":"SP07方轴（配螺丝）","code":"SP07.07.2T65C021X","unit":"个","qty":1,"note":"外露轴长65mm，带60mm长M4沉头螺丝*2","category":"外开玻璃扇","serial":""},{"name":"AGC38传动壳","code":"AGC38.25.011H5","unit":"个","qty":1,"note":"25mm中心距；可选项（原表数量为0）","category":"外开玻璃扇","serial":"7"},{"name":"AGC38传动壳","code":"AGC38.30.011H5","unit":"个","qty":1,"note":"30mm中心距","category":"外开玻璃扇","serial":""},{"name":"AGC38传动壳","code":"AGC38.35.011H5","unit":"个","qty":1,"note":"35mm中心距；可选项（原表数量为0）","category":"外开玻璃扇","serial":""},{"name":"C槽安全锁杆","code":"ALR21.01.021H4","unit":"个","qty":2,"note":"","category":"外开玻璃扇","serial":"8"},{"name":"C槽安全锁座","code":"ALP13.00.021","unit":"个","qty":2,"note":"","category":"外开玻璃扇","serial":"9"},{"name":"FH22摩擦铰链","code":"FH22.2216.15C38H5","unit":"付","qty":1,"note":"开启角度90°，承重60KG","category":"外开玻璃扇","serial":"10"},{"name":"ADD31防坠器","code":"ADD31.00.31C068H2","unit":"个","qty":1,"note":"250KG","category":"选配件","serial":"11"}]},{"group":"外开窗纱一体配置方案","name":"HOPO冰晶系列外开窗纱一体（主推）","items":[{"name":"PH950执手","code":"PH950.00.062HPRO5","unit":"个","qty":1,"note":"062冰晶黑，66.6mm高","category":"内开纱窗","serial":"1-1"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"内开纱窗","serial":""},{"name":"PH341无基座执手","code":"PH341.00.062HPRO3","unit":"个","qty":1,"note":"062冰晶黑色，58.9mm高","category":"内开纱窗","serial":"1-2"},{"name":"SP07方轴（配螺丝）","code":"SP07.07.2T26C021X","unit":"个","qty":1,"note":"外露轴长26mm，带25mm长M4沉头螺丝*2","category":"内开纱窗","serial":""},{"name":"多功能传动壳","code":"AGC37.10.062H5","unit":"个","qty":1,"note":"10.5mm中心距","category":"内开纱窗","serial":"2"},{"name":"双点锁座","code":"ALP62.00.062H4","unit":"个","qty":2,"note":"","category":"内开纱窗","serial":"3"},{"name":"双点锁杆","code":"ALR62.00.062H4","unit":"个","qty":2,"note":"","category":"内开纱窗","serial":"4"},{"name":"纱扇较链","code":"CATH31.00.38H5","unit":"付","qty":1,"note":"","category":"内开纱窗","serial":"5"},{"name":"PH951执手(左)","code":"PH951.00.062LHPRO5","unit":"个","qty":1,"note":"062冰晶黑色，左边，33.7mm高；可选项（原表数量为0）","category":"外开玻璃扇","serial":"6-1"},{"name":"PH951执手(右)","code":"PH951.00.062RHPRO5","unit":"个","qty":1,"note":"062冰晶黑色，右边，33.7mm高","category":"外开玻璃扇","serial":""},{"name":"SP07方轴","code":"SP07.12.60C021X","unit":"个","qty":1,"note":"外露轴长60mm，可选其他规格长度","category":"外开玻璃扇","serial":""},{"name":"PH342无基座执手(左)","code":"PH342.00.062LHPRO3","unit":"个","qty":1,"note":"062冰晶黑色，左边，33.9mm高；可选项（原表数量为0）","category":"外开玻璃扇","serial":"6-2"},{"name":"PH342无基座执手(右)","code":"PH342.00.062RHPRO3","unit":"个","qty":1,"note":"062冰晶黑色，右边，33.9mm高","category":"外开玻璃扇","serial":""},{"name":"SP07方轴（配螺丝）","code":"SP07.07.2T65C021X","unit":"个","qty":1,"note":"外露轴长65mm，带60mm长M4沉头螺丝*2","category":"外开玻璃扇","serial":""},{"name":"多功能传动壳","code":"AGC37.30.062H5","unit":"个","qty":1,"note":"30mm中心距","category":"外开玻璃扇","serial":"7"},{"name":"双点锁座","code":"ALP62.00.062H4","unit":"个","qty":2,"note":"","category":"外开玻璃扇","serial":"8"},{"name":"双点锁杆","code":"ALR62.00.062H4","unit":"个","qty":2,"note":"","category":"外开玻璃扇","serial":"9"},{"name":"FH25 C槽防尘铰链(左)","code":"FH25.2216.12C38LH5","unit":"付","qty":1,"note":"承重50KG，开启角度86°，左边；可选项（原表数量为0）","category":"外开玻璃扇","serial":"10"},{"name":"FH25 C槽防尘铰链(右)","code":"FH25.2216.12C38RH5","unit":"付","qty":1,"note":"承重50KG，开启角度86°，右边","category":"外开玻璃扇","serial":""},{"name":"ADD31防坠器","code":"ADD31.00.31C068H2","unit":"个","qty":1,"note":"250KG","category":"选配件","serial":"11"}]},{"group":"外开窗纱一体配置方案","name":"HOPO红标系列外开窗纱一体（非主推）","items":[{"name":"PH950执手","code":"PH950.00.062H8","unit":"个","qty":1,"note":"062冰晶黑色，66.6mm高","category":"内开纱窗","serial":"1-1"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"内开纱窗","serial":""},{"name":"PH341无基座执手","code":"PH341.00.062H8","unit":"个","qty":1,"note":"冰晶黑色，58.9mm高","category":"内开纱窗","serial":"1-2"},{"name":"SP07方轴（配螺丝）","code":"SP07.07.2T26C021X","unit":"个","qty":1,"note":"外露轴长26mm，带25mm长M4沉头螺丝*2","category":"内开纱窗","serial":""},{"name":"多功能传动壳","code":"AGC37.10.062H8","unit":"个","qty":1,"note":"10.5mm中心距","category":"内开纱窗","serial":"2"},{"name":"双点锁座","code":"ALP62.00.062H8","unit":"个","qty":2,"note":"","category":"内开纱窗","serial":"3"},{"name":"双点锁杆","code":"ALR62.00.062H4","unit":"个","qty":2,"note":"","category":"内开纱窗","serial":"4"},{"name":"纱扇较链","code":"CATH31.00.382H8","unit":"付","qty":1,"note":"","category":"内开纱窗","serial":"5"},{"name":"PH951执手(左)","code":"PH951.00.062LH8","unit":"个","qty":1,"note":"062冰晶黑色，左边，33.7mm高；可选项（原表数量为0）","category":"外开玻璃扇","serial":"1-1"},{"name":"PH951执手(右)","code":"PH951.00.062RH8","unit":"个","qty":1,"note":"062冰晶黑色，右边，33.7mm高","category":"外开玻璃扇","serial":""},{"name":"SP07方轴","code":"SP07.12.60C021X","unit":"个","qty":1,"note":"外露轴长60mm，可选其他规格长度","category":"外开玻璃扇","serial":""},{"name":"PH342无基座执手(左)","code":"PH342.00.062LH8","unit":"个","qty":1,"note":"062冰晶黑色，左边，33.9mm高；可选项（原表数量为0）","category":"外开玻璃扇","serial":"1-2"},{"name":"PH342无基座执手(右)","code":"PH342.00.062RH8","unit":"个","qty":1,"note":"062冰晶黑色，右边，33.9mm高","category":"外开玻璃扇","serial":""},{"name":"SP07方轴（配螺丝）","code":"SP07.07.2T65C021X","unit":"个","qty":1,"note":"外露轴长65mm，带60mm长M4沉头螺丝*2","category":"外开玻璃扇","serial":""},{"name":"多功能传动壳","code":"AGC37.30.062H8","unit":"个","qty":1,"note":"30mm中心距","category":"外开玻璃扇","serial":"2"},{"name":"双点锁座","code":"ALP62.00.062H8","unit":"个","qty":2,"note":"","category":"外开玻璃扇","serial":"3"},{"name":"双点锁杆","code":"ALR62.00.062H4","unit":"个","qty":2,"note":"","category":"外开玻璃扇","serial":"4"},{"name":"FH18 C槽较链(左)","code":"FH18.2216.15C382LH8","unit":"付","qty":1,"note":"承重80KG，开启角度90°，左边；可选项（原表数量为0）","category":"外开玻璃扇","serial":"5"},{"name":"FH18 C槽较链(右)","code":"FH18.2216.15C382RH8","unit":"付","qty":1,"note":"承重80KG，开启角度90°，右边","category":"外开玻璃扇","serial":""}]},{"group":"外开窗纱一体配置方案","name":"SAS快装外开窗纱一体方案（非主推）","items":[{"name":"PH922执手","code":"PH922.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，59.8mm高","category":"内开纱窗","serial":"1-1"},{"name":"SP07方轴","code":"SP07.12.25C021X","unit":"个","qty":1,"note":"外露轴长25mm","category":"内开纱窗","serial":""},{"name":"PH312执手","code":"PH312.00.1T168H3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，52.1mm高","category":"内开纱窗","serial":"1-2"},{"name":"SP07方轴（配螺丝）","code":"SP07.07.2T26C021X","unit":"个","qty":1,"note":"外露轴长26mm，带25mm长M4沉头螺丝*2","category":"内开纱窗","serial":""},{"name":"多功能传动壳","code":"AGC37.10.011H5","unit":"个","qty":1,"note":"10.5mm中心距，可选13mm中心距","category":"内开纱窗","serial":"2"},{"name":"快装插销","code":"ASB10.31.38H5","unit":"个","qty":2,"note":"","category":"内开纱窗","serial":"3"},{"name":"不锈钢锁座","code":"ALP18.00.38H5","unit":"个","qty":2,"note":"","category":"内开纱窗","serial":"4"},{"name":"插销座","code":"ASLP20.06.38H5","unit":"个","qty":2,"note":"","category":"内开纱窗","serial":"5"},{"name":"传动杆","code":"ASB11.30.019X","unit":"个","qty":2,"note":"300mm，太空银，扇高870~1270mm选配","category":"内开纱窗","serial":"6"},{"name":"传动杆","code":"ASB11.50.019X","unit":"个","qty":2,"note":"500mm，太空银，扇高1270~1670mm选配；可选项（原表数量为0）","category":"内开纱窗","serial":""},{"name":"传动杆","code":"ASB11.70.019X","unit":"个","qty":2,"note":"700mm，太空银，扇高1670~2070mm选配；可选项（原表数量为0）","category":"内开纱窗","serial":""},{"name":"防沉块","code":"AAS10.10.06X","unit":"个","qty":1,"note":"","category":"内开纱窗","serial":"7"},{"name":"框扇平齐180度轻型铰链","code":"CATH24.00.1T38H5","unit":"付","qty":1,"note":"承重15KG，开启角度180°","category":"内开纱窗","serial":"8"},{"name":"PH923执手 (左)","code":"PH923.00.168LH5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，34mm高；可选项（原表数量为0）","category":"外开玻璃扇","serial":"9-1"},{"name":"PH923执手 (右)","code":"PH923.00.168RH5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，34mm高","category":"外开玻璃扇","serial":""},{"name":"SP07方轴","code":"SP07.12.60C021X","unit":"个","qty":1,"note":"外露轴长60mm，可选其他规格长度","category":"外开玻璃扇","serial":""},{"name":"PH313执手  (左)","code":"PH313.00.1T168LH3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，33.8mm高；可选项（原表数量为0）","category":"外开玻璃扇","serial":"9-2"},{"name":"PH313执手 (右)","code":"PH313.00.1T168RH3","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，33.8mm高","category":"外开玻璃扇","serial":""},{"name":"SP07方轴（配螺丝）","code":"SP07.07.2T65C021X","unit":"个","qty":1,"note":"外露轴长65mm，带60mm长M4沉头螺丝*2","category":"外开玻璃扇","serial":""},{"name":"多功能传动壳","code":"AGC37.30.011H5","unit":"个","qty":1,"note":"30mm中心距","category":"外开玻璃扇","serial":"10"},{"name":"快装插销","code":"ASB10.31.38H5","unit":"个","qty":2,"note":"","category":"外开玻璃扇","serial":"11"},{"name":"不锈钢锁座","code":"ALP18.00.38H5","unit":"个","qty":2,"note":"","category":"外开玻璃扇","serial":"12"},{"name":"插销座","code":"ASLP20.06.38H5","unit":"个","qty":2,"note":"","category":"外开玻璃扇","serial":"13"},{"name":"防沉块","code":"AAS10.10.06X","unit":"个","qty":1,"note":"","category":"外开玻璃扇","serial":"14"},{"name":"传动杆","code":"ASB11.30.019X","unit":"个","qty":2,"note":"300mm，太空银，扇高870~1270mm选配","category":"外开玻璃扇","serial":"15"},{"name":"传动杆","code":"ASB11.50.019X","unit":"个","qty":2,"note":"500mm，太空银，扇高1270~1670mm选配；可选项（原表数量为0）","category":"外开玻璃扇","serial":""},{"name":"传动杆","code":"ASB11.70.019X","unit":"个","qty":2,"note":"700mm，太空银，扇高1670~2070mm选配；可选项（原表数量为0）","category":"外开玻璃扇","serial":""},{"name":"FH18 C槽铰链（左）","code":"FH18.2216.15C38LH5","unit":"付","qty":1,"note":"15英寸，承重80KG，左边；可选项（原表数量为0）","category":"外开玻璃扇","serial":"16"},{"name":"FH18 C槽铰链（右）","code":"FH18.2216.15C38RH5","unit":"付","qty":1,"note":"15英寸，承重80KG，右边","category":"外开玻璃扇","serial":""},{"name":"SAS磁力辅助器","code":"AB100.01.01H4","unit":"套","qty":4,"note":"磁吸","category":"选配件","serial":"11"},{"name":"ADD31防坠器","code":"ADD31.00.31C068H2","unit":"个","qty":1,"note":"250KG","category":"选配件","serial":"12"}]},{"group":"外开窗纱一体配置方案","name":"爆款主推单品","items":[{"name":"ADD31防坠器","code":"ADD31.00.31C068H2","unit":"个","qty":1,"note":"250KG","category":"基础配置","serial":"1"},{"name":"HSA磁力辅助器","code":"AB100.00.06H4","unit":"套","qty":1,"note":"C槽","category":"基础配置","serial":"2"},{"name":"C槽平开安全限位器","code":"AASA20.00.021","unit":"个","qty":1,"note":"执手侧安装","category":"基础配置","serial":"3"},{"name":"C槽平开限位器","code":"AASA30.00.38H5","unit":"个","qty":1,"note":"扇底部安装","category":"基础配置","serial":""},{"name":"90度可拆卸纱扇铰链","code":"CATH32.00.38H5","unit":"付","qty":1,"note":"承重15KG，开启角度90°","category":"基础配置","serial":"4"},{"name":"FH25 C槽防尘铰链(左)","code":"FH25.2216.12C38LH5","unit":"付","qty":1,"note":"左边；可选项（原表数量为0）","category":"基础配置","serial":"5"},{"name":"FH25 C槽防尘铰链(右)","code":"FH25.2216.12C38RH5","unit":"付","qty":1,"note":"右边","category":"基础配置","serial":""},{"name":"阻尼风撑","code":"ATR80.21.12C38H5","unit":"套","qty":1,"note":"内开内倒、内平开","category":"基础配置","serial":"6"}]},{"group":"外开窗纱一体配置方案","name":"平开窗其他可选配件","items":[{"name":"AH402拨叉执手","code":"AH402.00.168H5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色，57.5mm高","category":"基础配置","serial":"1"},{"name":"AH207执手","code":"AH207.00.168H5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色、047新深古铜色；方轴、拨叉两用，50.2mm高","category":"基础配置","serial":""},{"name":"AH208执手（左）","code":"AH208.00.168LH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色、047新深古铜色；方轴、拨叉两用，27.2mm高","category":"基础配置","serial":""},{"name":"AH208执手（右）","code":"AH208.00.168RH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色、047新深古铜色；方轴、拨叉两用，27.2mm高","category":"基础配置","serial":""},{"name":"AH209执手（左）","code":"AH209.00.168LH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色、047新深古铜色；方轴、拨叉两用，34.1mm高","category":"基础配置","serial":""},{"name":"AH209执手（右）","code":"AH209.00.168RH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色、047新深古铜色；方轴、拨叉两用，34.1mm高","category":"基础配置","serial":""},{"name":"PH903执手","code":"PH903.00.168H5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，65.23mm高","category":"基础配置","serial":""},{"name":"PH904执手（左）","code":"PH904.00.168LH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，34mm高","category":"基础配置","serial":""},{"name":"PH904执手（右）","code":"PH904.00.168RH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，34mm高","category":"基础配置","serial":""},{"name":"PH916执手","code":"PH916.00.168H5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色、047新深古铜色（订单式），49.6mm高","category":"基础配置","serial":""},{"name":"PH917执手（左）","code":"PH917.00.168LH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色，34.1mm高","category":"基础配置","serial":""},{"name":"PH917执手（右）","code":"PH917.00.168RH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色，34.1mm高","category":"基础配置","serial":""},{"name":"PH322执手","code":"PH322.00.168H3","unit":"个","qty":"按需","note":"无基座双高方案选配，168抑菌砂纹黑色，012银色，38mm高","category":"基础配置","serial":""},{"name":"AH200执手（内开）","code":"AH200.20.168H4","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，012银色，20外开（用在内平开窗）","category":"基础配置","serial":""},{"name":"AH200执手（外开）","code":"AH200.16.168H4","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，012银色，16外开（用在外平开窗）","category":"基础配置","serial":""},{"name":"AH201执手(内开）","code":"AH201.17.168H4","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，012银色，17内开（用在内开内倒）","category":"基础配置","serial":""},{"name":"AH201执手(外开）","code":"AH201.13.168H4","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，012银是，13外开（用在悬挂外开）","category":"基础配置","serial":""},{"name":"PH171执手","code":"PH171.00.168H5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选011银色，047新深古铜色，17.24mm高","category":"基础配置","serial":""},{"name":"PH175执手","code":"PH175.00.168H5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选011银色，17.8mm高","category":"基础配置","serial":""},{"name":"PH177执手（左）","code":"PH177.00.168LH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色，22mm高","category":"基础配置","serial":""},{"name":"PH177执手（右）","code":"PH177.00.168RH5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色，22mm高","category":"基础配置","serial":""},{"name":"PH107执手","code":"PH107.00.011H5","unit":"个","qty":"按需","note":"011银色，37.68mm高","category":"基础配置","serial":""},{"name":"PH705执手","code":"PH705.00.168H5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选012银色，047新深古铜色，56.85mm高","category":"基础配置","serial":""},{"name":"500MA执手","code":"MAL500.021.168H5","unit":"个","qty":"按需","note":"168抑菌砂纹黑色，可选011银色、047新深古铜色","category":"基础配置","serial":""},{"name":"502MA执手","code":"MAL502.021.065H5","unit":"个","qty":"按需","note":"065抑菌砂纹黑色，可选011银色、047新深古铜色","category":"基础配置","serial":""},{"name":"AGC31传动壳","code":"AGC31.23.1T011","unit":"个","qty":"按需","note":"23mm中心距","category":"基础配置","serial":"2"},{"name":"AGC31传动壳","code":"AGC31.26.011","unit":"个","qty":"按需","note":"26mm中心距","category":"基础配置","serial":""},{"name":"AGC31传动壳","code":"AGC31.30.1T011","unit":"个","qty":"按需","note":"30mm中心距","category":"基础配置","serial":""},{"name":"AGC31传动壳","code":"AGC31.35.1T011","unit":"个","qty":"按需","note":"35mm中心距","category":"基础配置","serial":""},{"name":"AGC36传动壳","code":"AGC36.20.06H4","unit":"个","qty":"按需","note":"20mm中心距","category":"基础配置","serial":""},{"name":"AGC36传动壳","code":"AGC36.23.06H4","unit":"个","qty":"按需","note":"23mm中心距","category":"基础配置","serial":""},{"name":"AGC36传动壳","code":"AGC36.30.06H4","unit":"个","qty":"按需","note":"30mm中心距","category":"基础配置","serial":""},{"name":"AGC36传动壳","code":"AGC36.35.06H4","unit":"个","qty":"按需","note":"35mm中心距","category":"基础配置","serial":""},{"name":"多功能传动壳","code":"AGC37.10.011H5","unit":"个","qty":"按需","note":"10.5mm中心距","category":"基础配置","serial":""},{"name":"多功能传动壳","code":"AGC37.13.011H5","unit":"个","qty":"按需","note":"13mm中心距","category":"基础配置","serial":""},{"name":"多功能传动壳","code":"AGC37.20.011H5","unit":"个","qty":"按需","note":"20mm中心距","category":"基础配置","serial":""},{"name":"多功能传动壳","code":"AGC37.23.011H5","unit":"个","qty":"按需","note":"23mm中心距","category":"基础配置","serial":""},{"name":"多功能传动壳","code":"AGC37.25.011H5","unit":"个","qty":"按需","note":"外露轴长25mm中心距","category":"基础配置","serial":""},{"name":"多功能传动壳","code":"AGC37.26.011H5","unit":"个","qty":"按需","note":"26mm中心距","category":"基础配置","serial":""},{"name":"多功能传动壳","code":"AGC37.30.011H5","unit":"个","qty":"按需","note":"30mm中心距","category":"基础配置","serial":""},{"name":"多功能传动壳","code":"AGC37.35.011H5","unit":"个","qty":"按需","note":"35mm中心距","category":"基础配置","serial":""},{"name":"AGC32传动壳","code":"AGC32.13.011","unit":"个","qty":"按需","note":"13mm中心距","category":"基础配置","serial":""},{"name":"AGC34偏体传动壳","code":"AGC34.13.011H5","unit":"个","qty":"按需","note":"13mm中心距","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":"按需","note":"19mm","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.23.069X","unit":"个","qty":"按需","note":"23mm","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.28.069X","unit":"个","qty":"按需","note":"28mm","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.35.069X","unit":"个","qty":"按需","note":"35mm","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.45.069X","unit":"个","qty":"按需","note":"45mm","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.65.069X","unit":"个","qty":"按需","note":"65mm","category":"基础配置","serial":""},{"name":"转换杆","code":"APT20.00.021","unit":"个","qty":"按需","note":"15-20槽","category":"基础配置","serial":""},{"name":"窄边外开转换杆","code":"APT21.00.021","unit":"个","qty":"按需","note":"窄边外开","category":"基础配置","serial":""},{"name":"DR31平开铝杆","code":"DR31.01.065H4","unit":"支","qty":"按需","note":"新氧化黑，140mm","category":"基础配置","serial":"3"},{"name":"DR31平开铝杆","code":"DR31.02.065H4","unit":"支","qty":"按需","note":"新氧化黑，190mm","category":"基础配置","serial":""},{"name":"DR31平开铝杆","code":"DR31.03.065H4","unit":"支","qty":"按需","note":"新氧化黑，290mm","category":"基础配置","serial":""},{"name":"DR31平开铝杆","code":"DR31.04.065H4","unit":"支","qty":"按需","note":"新氧化黑，390mm","category":"基础配置","serial":""},{"name":"DR31平开铝杆","code":"DR31.05.065H4","unit":"支","qty":"按需","note":"新氧化黑，490mm","category":"基础配置","serial":""},{"name":"DR31平开铝杆","code":"DR31.06.065H4","unit":"支","qty":"按需","note":"新氧化黑，590mm","category":"基础配置","serial":""},{"name":"DR31平开铝杆","code":"DR31.07.065H4","unit":"支","qty":"按需","note":"新氧化黑，690mm","category":"基础配置","serial":""},{"name":"DR31平开铝杆","code":"DR31.08.065H4","unit":"支","qty":"按需","note":"新氧化黑，790mm","category":"基础配置","serial":""},{"name":"ALR21安全锁杆","code":"ALR21.01.021H4","unit":"个","qty":"按需","note":"15-20槽","category":"基础配置","serial":""},{"name":"ALR28安全锁杆","code":"ALR28.00.021H4","unit":"个","qty":"按需","note":"15-20槽","category":"基础配置","serial":""},{"name":"ALR28滚套锁杆","code":"ALR28.65.021H4","unit":"个","qty":"按需","note":"15-20槽","category":"基础配置","serial":""},{"name":"ALR28圆柱锁杆","code":"ALR28.06.021H4","unit":"个","qty":"按需","note":"15-20槽","category":"基础配置","serial":""},{"name":"ALR28圆柱锁杆","code":"ALR28.08.021H4","unit":"个","qty":"按需","note":"15-20槽","category":"基础配置","serial":""},{"name":"滚套锁杆（可延伸）","code":"ALR23.00.021","unit":"个","qty":"按需","note":"15-20槽","category":"基础配置","serial":""},{"name":"ALR10C槽锁杆","code":"ALR10.00.021","unit":"个","qty":"按需","note":"15-20槽，锁点高度6.5mm，订单式；8mm和10mm规格已停产","category":"基础配置","serial":""},{"name":"套装锁头","code":"ALC20.00.38X","unit":"个","qty":"按需","note":"蘑菇头安全锁点，仅可配套市面上的一种类型传动铝杆，具有局限性","category":"基础配置","serial":""},{"name":"幕墙锁座","code":"AFLP10.13.021","unit":"个","qty":"按需","note":"无槽","category":"基础配置","serial":""},{"name":"小幕墙锁座","code":"AFLP10.11.021","unit":"个","qty":"按需","note":"无槽","category":"基础配置","serial":""},{"name":"无槽锁座","code":"ALP19.00.021H4","unit":"个","qty":"按需","note":"无槽平整型材使用","category":"基础配置","serial":""},{"name":"无槽锁座","code":"ALP19.01.021H4","unit":"个","qty":"按需","note":"无槽平整型材使用","category":"基础配置","serial":""},{"name":"C槽锁座","code":"ALP10.00.021","unit":"个","qty":"按需","note":"C槽","category":"基础配置","serial":""},{"name":"K槽锁座","code":"ALP30.00.021","unit":"个","qty":"按需","note":"K槽","category":"基础配置","serial":""},{"name":"C槽可调锁座","code":"AALP10.021","unit":"个","qty":"按需","note":"C槽","category":"基础配置","serial":""},{"name":"K槽可调锁座","code":"AALP20.021","unit":"个","qty":"按需","note":"K槽","category":"基础配置","serial":""},{"name":"C槽安全锁座","code":"ALP33.00.021H4","unit":"个","qty":"按需","note":"C槽","category":"基础配置","serial":""},{"name":"K槽安全锁座","code":"ALP34.00.021H4","unit":"个","qty":"按需","note":"K槽","category":"基础配置","serial":""},{"name":"C槽安全锁座","code":"ALP13.00.021","unit":"个","qty":"按需","note":"C槽","category":"基础配置","serial":""},{"name":"C槽不锈钢锁座","code":"ALP23.00.38H5","unit":"个","qty":"按需","note":"C槽","category":"基础配置","serial":""},{"name":"反装不锈钢锁杆","code":"ALR29.00.38X","unit":"个","qty":"按需","note":"C槽","category":"基础配置","serial":""},{"name":"反装不锈钢锁座","code":"ALP29.00.38H5","unit":"个","qty":"按需","note":"15-20槽","category":"基础配置","serial":""},{"name":"FH08摩擦铰链","code":"FH08.1417.10C38H5","unit":"付","qty":"按需","note":"90°外开纱扇摩擦铰链","category":"基础配置","serial":"4"},{"name":"22型纱扇铰链","code":"CATH22.00.38H5","unit":"付","qty":"按需","note":"15KG，90°C槽纱扇铰链","category":"基础配置","serial":""},{"name":"框扇平齐轻型铰链","code":"CATH21.00.38","unit":"付","qty":"按需","note":"25KG，90°C槽纱扇铰链","category":"基础配置","serial":""},{"name":"框扇平齐180度轻型铰链","code":"CATH24.00.1T38H5","unit":"付","qty":"按需","note":"15KG，180°C槽纱扇铰链","category":"基础配置","serial":""},{"name":"框扇平齐180度无槽轻型铰链","code":"CATH24.10.38H5","unit":"付","qty":"按需","note":"15KG，180°框无槽铰链","category":"基础配置","serial":""},{"name":"90°内开玻扇轻型铰链","code":"CATH21.50.38H5","unit":"付","qty":"按需","note":"C槽，50KG","category":"基础配置","serial":""},{"name":"180度内平开铰链","code":"CATH51.00.38H5","unit":"付","qty":"按需","note":"C槽，100KG","category":"基础配置","serial":""},{"name":"180°平开铰链 左","code":"CATH55.00.38LH5","unit":"付","qty":"按需","note":"C槽，100KG","category":"基础配置","serial":""},{"name":"180°平开铰链 右","code":"CATH55.00.38RH5","unit":"付","qty":"按需","note":"C槽，100KG","category":"基础配置","serial":""},{"name":"FH05 C槽摩擦铰链","code":"FH05.2216.14C38","unit":"付","qty":"按需","note":"C槽，50KG","category":"基础配置","serial":""},{"name":"FH05 K槽摩擦铰链","code":"FH05.2616.14C38H5","unit":"付","qty":"按需","note":"K槽，50KG","category":"基础配置","serial":""},{"name":"FH15 C槽摩擦铰链","code":"FH15.2216.14C38H5","unit":"付","qty":"按需","note":"14英寸，开启角度86°，承重50KG，平滑距离175mm","category":"基础配置","serial":""},{"name":"FH18 C槽铰链（左）","code":"FH18.2216.15C38LH5","unit":"付","qty":"按需","note":"C槽，80KG","category":"基础配置","serial":""},{"name":"FH18 C槽铰链（右）","code":"FH18.2216.15C38RH5","unit":"付","qty":"按需","note":"C槽，80KG","category":"基础配置","serial":""},{"name":"FH06摩擦铰链L","code":"FH06.2316.12C38L","unit":"付","qty":"按需","note":"C槽，80KG","category":"基础配置","serial":""},{"name":"FH06摩擦铰链R","code":"FH06.2316.12C38R","unit":"付","qty":"按需","note":"C槽，80KG","category":"基础配置","serial":""},{"name":"FH10上悬窗铰链","code":"FH10.2217.14C38H5","unit":"付","qty":"按需","note":"K槽/无槽","category":"基础配置","serial":""},{"name":"FH10上悬窗铰链","code":"FH10.2217.18C38H5","unit":"付","qty":"按需","note":"K槽/无槽","category":"基础配置","serial":""},{"name":"FH10上悬窗铰链","code":"FH10.2217.22C38H5","unit":"付","qty":"按需","note":"K槽/无槽","category":"基础配置","serial":""},{"name":"HFH22摩擦铰链","code":"HFH22.16.10C38","unit":"付","qty":"按需","note":"K槽/无槽，10寸，可选12/14/16/1寸8，22寸已停产","category":"基础配置","serial":""},{"name":"HFH22摩擦铰链","code":"HFH22.17.14C38","unit":"付","qty":"按需","note":"K槽/无槽，14寸，可选18寸，12/16寸已停产","category":"基础配置","serial":""},{"name":"ABH56柱式合页","code":"ABH56.00.011H5","unit":"个","qty":"按需","note":"011银色，068砂纹黑色，047新深古铜色，框扇平齐","category":"基础配置","serial":"5"},{"name":"平开中铰链","code":"AMH51.011","unit":"个","qty":"按需","note":"011银色，068砂纹黑色，047新深古铜色，非框扇平齐","category":"基础配置","serial":""},{"name":"防沉块","code":"AAS10.10.06X","unit":"个","qty":"按需","note":"防沉1","category":"基础配置","serial":"6"},{"name":"C槽框支撑块","code":"AFS10.00.01","unit":"个","qty":"按需","note":"","category":"基础配置","serial":""},{"name":"防沉块","code":"AAS10.00.01","unit":"个","qty":"按需","note":"防沉2","category":"基础配置","serial":""},{"name":"C槽翻转支撑座","code":"ASP20.00.021","unit":"个","qty":"按需","note":"","category":"基础配置","serial":""},{"name":"C槽平开安全限位器","code":"AASA20.00.021","unit":"个","qty":"按需","note":"平开限位","category":"基础配置","serial":"7"},{"name":"C槽平开限位器","code":"AASA30.00.38H5","unit":"个","qty":"按需","note":"","category":"基础配置","serial":""},{"name":"C槽防坠器","code":"ADD20.00.011","unit":"个","qty":"按需","note":"安全防坠","category":"基础配置","serial":"8"},{"name":"C槽防坠器","code":"ADD20.00.31C011","unit":"个","qty":"按需","note":"","category":"基础配置","serial":""},{"name":"C槽风撑","code":"ATR20.08C38","unit":"个","qty":"按需","note":"8寸","category":"基础配置","serial":"9"},{"name":"C槽风撑","code":"ATR20.10C38","unit":"个","qty":"按需","note":"10寸","category":"基础配置","serial":""},{"name":"C槽风撑","code":"ATR20.12C38","unit":"个","qty":"按需","note":"12寸","category":"基础配置","serial":""},{"name":"C槽风撑","code":"ATR80.12C38","unit":"个","qty":"按需","note":"12寸","category":"基础配置","serial":""},{"name":"10寸风撑","code":"TR14.13.16.10C38","unit":"个","qty":"按需","note":"10寸","category":"基础配置","serial":""},{"name":"10寸风撑","code":"TR14.13.16.12C38","unit":"个","qty":"按需","note":"12寸","category":"基础配置","serial":""},{"name":"10寸风撑","code":"TR14.13.16.16C38","unit":"个","qty":"按需","note":"16寸","category":"基础配置","serial":""},{"name":"卡介风撑","code":"SS12.08C38","unit":"套","qty":"按需","note":"8寸","category":"基础配置","serial":""},{"name":"卡介风撑","code":"SS12.10C38","unit":"套","qty":"按需","note":"10寸","category":"基础配置","serial":""},{"name":"卡介风撑","code":"SS12.12C38","unit":"套","qty":"按需","note":"12寸","category":"基础配置","serial":""},{"name":"C槽可调中间锁","code":"ALP15.00.021","unit":"套","qty":"按需","note":"铰链侧中间锁","category":"基础配置","serial":"10"},{"name":"HSA磁力辅助器","code":"AB100.00.06H4","unit":"套","qty":"按需","note":"C槽","category":"基础配置","serial":"11"},{"name":"防风扣","code":"TBL20.00.021","unit":"套","qty":"按需","note":"C槽","category":"基础配置","serial":"12"},{"name":"防护栏锁座","code":"ALP37.00.069X","unit":"个","qty":1,"note":"防护栏方案一","category":"基础配置","serial":"13"},{"name":"防护栏铰链","code":"CATH26.00.38H5","unit":"付","qty":1,"note":"","category":"基础配置","serial":""},{"name":"防护栏铝杆","code":"DR18.08.065X","unit":"支","qty":1,"note":"","category":"基础配置","serial":""},{"name":"418MA锁","code":"MAL418.10.069X","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"防护栏中间锁","code":"ALP15.01.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":""},{"name":"防沉块","code":"AAS12.00.06X","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"防护栏锁杆","code":"ALR37.00.069X","unit":"个","qty":2,"note":"防护栏方案二\n提供铝杆型材截面图，和开孔图，客户开铝杆","category":"基础配置","serial":""},{"name":"防护栏锁座","code":"ALP37.00.069X","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"防护栏铰链","code":"CATH26.00.38H5","unit":"付","qty":1,"note":"","category":"基础配置","serial":""},{"name":"418MA锁","code":"MAL418.10.069X","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"防护栏中间锁","code":"ALP15.01.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":""},{"name":"防沉块","code":"AAS12.00.06X","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"防护栏锁座","code":"ALP37.00.069X","unit":"个","qty":2,"note":"防护栏方案三","category":"基础配置","serial":""},{"name":"防护栏铰链","code":"CATH26.00.38H5","unit":"付","qty":1,"note":"","category":"基础配置","serial":""},{"name":"418MA锁","code":"MAL418.10.069X","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"防护栏中间锁","code":"ALP15.01.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":""},{"name":"防沉块","code":"AAS12.00.06X","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"双内开纱窗锁座","code":"ALP42.00.223X","unit":"个","qty":1,"note":"双内开纱扇选配","category":"基础配置","serial":"14"},{"name":"双内开纱窗合页","code":"AMH59.00.223X","unit":"套","qty":1,"note":"","category":"基础配置","serial":""},{"name":"双内开纱扇锁","code":"MAL503.17.223X","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"双内开垫片","code":"SHS10.00.225X","unit":"个","qty":"按需","note":"","category":"基础配置","serial":""}]},{"group":"HOPO欧标C槽单平开门五金配置方案（主推）","name":"单点锁体五金配置方案","items":[{"name":"605门执手组件(带锁芯孔）","code":"HSD605.168168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，带锁芯孔双高执手","category":"基础配置","serial":"1-1"},{"name":"608门执手组件(带锁芯孔）","code":"HSD608.168168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，带锁芯孔高低执手","category":"基础配置","serial":"2-2"},{"name":"22#单锁体","code":"SDL51.27.22C38","unit":"个","qty":1,"note":"27mm中心距","category":"基础配置","serial":"2-1"},{"name":"22#单锁体","code":"SDL51.32.22C38","unit":"个","qty":1,"note":"32mm中心距","category":"基础配置","serial":"2-2"},{"name":"C99锁芯","code":"C99.6030C4T029","unit":"个","qty":1,"note":"锁芯规格可选，根据型材结构尺寸选锁芯规格","category":"基础配置","serial":"3"},{"name":"C槽不分左右可调门锁座","code":"ALPD50.07.38","unit":"个","qty":1,"note":"","category":"基础配置","serial":"4"},{"name":"C槽柱式合页","code":"ABH51.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇非平齐合页","category":"基础配置","serial":"5-1"},{"name":"C槽柱式合页","code":"ABH53.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐合页","category":"基础配置","serial":"5-2"},{"name":"C槽柱式合页","code":"ABH58.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐和非平齐合页","category":"基础配置","serial":"5-3"},{"name":"AB58合页调节组件","code":"AB58.00.068X","unit":"个","qty":1,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色","category":"基础配置","serial":""}]},{"group":"HOPO欧标C槽单平开门五金配置方案（主推）","name":"多点锁体五金配置方案","items":[{"name":"605门执手组件(带锁芯孔）","code":"HSD605.168168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，带锁芯孔双高执手","category":"基础配置","serial":"1-1"},{"name":"608门执手组件(带锁芯孔）","code":"HSD608.168168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，带锁芯孔高低执手","category":"基础配置","serial":"2-2"},{"name":"K系列锁体","code":"SDLK50.28.22C025H5","unit":"个","qty":1,"note":"28mm中心距","category":"基础配置","serial":"2-1"},{"name":"K系列锁体","code":"SDLK50.33.22C025H5","unit":"个","qty":1,"note":"32.5mm中心距","category":"基础配置","serial":"2-2"},{"name":"K系列锁体","code":"SDLK50.40.22C025H5","unit":"个","qty":1,"note":"40mm中心距","category":"基础配置","serial":"2-3"},{"name":"C99锁芯","code":"C99.6030C4T029","unit":"个","qty":1,"note":"锁芯规格可选，根据型材结构尺寸选锁芯规格","category":"基础配置","serial":"3"},{"name":"C槽不分左右可调门锁座","code":"ALPD50.07.38","unit":"个","qty":1,"note":"","category":"基础配置","serial":"4"},{"name":"ALR28滚套锁杆","code":"ALR28.65.021H4","unit":"个","qty":2,"note":"","category":"基础配置","serial":"5"},{"name":"C槽锁座","code":"ALP10.00.021","unit":"个","qty":2,"note":"","category":"基础配置","serial":"6"},{"name":"C槽柱式合页","code":"ABH51.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇非平齐合页","category":"基础配置","serial":"7-1"},{"name":"C槽柱式合页","code":"ABH53.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐合页","category":"基础配置","serial":"7-2"},{"name":"C槽柱式合页","code":"ABH58.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐和非平齐合页","category":"基础配置","serial":"7-3"},{"name":"AB58合页调节组件","code":"AB58.00.068X","unit":"个","qty":1,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色","category":"基础配置","serial":""}]},{"group":"HOPO欧标C槽对开门被动扇五金配置方案","name":"被动扇方案一 （ AGC40方案）","items":[{"name":"615门执手组件(不带锁芯孔）","code":"HSD615.168168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，不带锁芯孔双高执手","category":"基础配置","serial":"1-1"},{"name":"618门执手组件(不带锁芯孔）","code":"HSD618.168168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色、047新深古铜色，不带锁芯孔高低执手；可选项（原表数量为0）","category":"基础配置","serial":"2-2"},{"name":"自锁传动壳","code":"AGC40.32.021","unit":"个","qty":1,"note":"","category":"基础配置","serial":"2"},{"name":"插销","code":"ASB20.20.021H4","unit":"个","qty":2,"note":"","category":"基础配置","serial":"3"},{"name":"C槽插销锁座","code":"ASLP20.00.021","unit":"个","qty":2,"note":"","category":"基础配置","serial":"4"},{"name":"插销锁座","code":"ASLP20.04.38","unit":"个","qty":1,"note":"下框安装，平槽低门槛或无门槛安装；可选项（原表数量为0）","category":"基础配置","serial":"5"},{"name":"C槽柱式合页","code":"ABH51.00.068H5","unit":"个","qty":1,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇非平齐合页；可选项（原表数量为0）","category":"基础配置","serial":"6-1"},{"name":"C槽柱式合页","code":"ABH53.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐合页","category":"基础配置","serial":"6-2"},{"name":"C槽柱式合页","code":"ABH58.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐和非平齐合页","category":"基础配置","serial":"6-3"},{"name":"AB58合页调节组件","code":"AB58.00.068X","unit":"个","qty":1,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色","category":"基础配置","serial":""}]},{"group":"HOPO欧标C槽对开门被动扇五金配置方案","name":"被动扇方案二（CGC20方案）","items":[{"name":"被动扇传动壳","code":"CGC20.00.012","unit":"个","qty":1,"note":"隐藏联动方案","category":"基础配置","serial":"1"},{"name":"插销","code":"ASB20.20.021H4","unit":"个","qty":2,"note":"15-20槽口","category":"基础配置","serial":"2"},{"name":"C槽插销锁座","code":"ASLP20.00.021","unit":"个","qty":2,"note":"C槽","category":"基础配置","serial":"3-1"},{"name":"C槽插销锁座","code":"ASLP20.00.021","unit":"个","qty":1,"note":"C槽","category":"基础配置","serial":"3-2"},{"name":"插销锁座","code":"ASLP20.04.38","unit":"个","qty":1,"note":"下框安装，平槽低门槛或无门槛安装","category":"基础配置","serial":""},{"name":"C槽柱式合页","code":"ABH51.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇非平齐合页","category":"基础配置","serial":"4-1"},{"name":"C槽柱式合页","code":"ABH53.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐合页","category":"基础配置","serial":"4-2"},{"name":"C槽柱式合页","code":"ABH58.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐和非平齐合页","category":"基础配置","serial":"4-3"},{"name":"AB58合页调节组件","code":"AB58.00.068X","unit":"个","qty":1,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色","category":"基础配置","serial":""}]},{"group":"HOPO欧标C槽对开门被动扇五金配置方案","name":"被动扇方案三（手动扣手方案）","items":[{"name":"C槽插销扣手","code":"ASBH20.00.06","unit":"个","qty":2,"note":"15-20槽；假中挺双槽口结构","category":"基础配置","serial":"1-1"},{"name":"C槽插销","code":"ASB20.20.021H4","unit":"个","qty":2,"note":"15-20槽；假中挺双槽口结构","category":"基础配置","serial":""},{"name":"插销扣手(1418槽)","code":"ASBH20.10.06","unit":"个","qty":2,"note":"14-18槽；假中挺双槽口结构","category":"基础配置","serial":"1-2"},{"name":"插销(1418槽)","code":"ASB20.10.021","unit":"个","qty":2,"note":"14-18槽；假中挺双槽口结构","category":"基础配置","serial":""},{"name":"C槽插销锁座","code":"ASLP20.00.021","unit":"个","qty":2,"note":"C槽","category":"基础配置","serial":"2-1"},{"name":"C槽插销锁座","code":"ASLP20.00.021","unit":"个","qty":1,"note":"C槽","category":"基础配置","serial":"2-2"},{"name":"插销锁座","code":"ASLP20.04.38","unit":"个","qty":1,"note":"下框安装，平槽低门槛或无门槛安装","category":"基础配置","serial":""},{"name":"C槽柱式合页","code":"ABH51.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇非平齐合页","category":"基础配置","serial":"3-1"},{"name":"C槽柱式合页","code":"ABH53.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐合页","category":"基础配置","serial":"3-2"},{"name":"C槽柱式合页","code":"ABH58.00.068H5","unit":"个","qty":3,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色，欧标C槽框扇平齐和非平齐合页","category":"基础配置","serial":"3-3"},{"name":"AB58合页调节组件","code":"AB58.00.068X","unit":"个","qty":1,"note":"068喷涂砂纹黑，可选011银色、047新深古铜色","category":"基础配置","serial":""}]},{"group":"HOPO无槽平开门五金配置方案","name":"单开门配置方案","items":[{"name":"605门执手组件(带锁芯孔)","code":"HSD605.168168H5","unit":"套","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047古铜色","category":"基础配置","serial":"1"},{"name":"C99锁芯","code":"C99.7030C4T029","unit":"个","qty":1,"note":"可选其他规格","category":"基础配置","serial":"2"},{"name":"连体多点锁","code":"SDLH57.25.24C384H5","unit":"个","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"门锁座","code":"ALPD53.00.384H5","unit":"套","qty":1,"note":"","category":"基础配置","serial":"4"},{"name":"延长插销","code":"ASB23.00.40C384X","unit":"支","qty":1,"note":"40：扇高范围：2090-2310 mm\n75：扇高范围：2310-2660 mm\n111：扇高范围：2660-3010 mm\n三选一","category":"基础配置","serial":"5-1"},{"name":"延长插销","code":"ASB23.00.75C384X","unit":"支","qty":1,"note":"","category":"基础配置","serial":"5-2"},{"name":"延长插销","code":"ASB23.00.111C384X","unit":"支","qty":1,"note":"","category":"基础配置","serial":"5-3"},{"name":"单扇插销座","code":"ASLP23.00.38X","unit":"个","qty":2,"note":"","category":"基础配置","serial":"6"},{"name":"平开门隐藏合页","code":"HBH103.00.38H5","unit":"个","qty":2,"note":"150KG，可根据实际扇高选配增加合页数量","category":"基础配置","serial":"7"},{"name":"阻尼风撑","code":"ATR22.00.38H5","unit":"个","qty":1,"note":"选配","category":"基础配置","serial":"8"}]},{"group":"对开门配置方案","name":"主动扇","items":[{"name":"605门执手组件(带锁芯孔)","code":"HSD605.168168H5","unit":"套","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047古铜色","category":"基础配置","serial":"1"},{"name":"C99锁芯","code":"C99.7030C4T029","unit":"个","qty":1,"note":"可选其他规格","category":"基础配置","serial":"2"},{"name":"连体多点锁","code":"SDLH57.25.24C384H5","unit":"个","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"延长插销","code":"ASB23.00.40C384X","unit":"支","qty":1,"note":"40：扇高范围：2090-2310 mm\n75：扇高范围：2310-2660 mm\n111：扇高范围：2660-3010 mm\n三选一","category":"基础配置","serial":"4-1"},{"name":"延长插销","code":"ASB23.00.75C384X","unit":"支","qty":1,"note":"","category":"基础配置","serial":"4-2"},{"name":"延长插销","code":"ASB23.00.111C384X","unit":"支","qty":1,"note":"","category":"基础配置","serial":"4-3"},{"name":"防尘插销座","code":"ASLP22.00.38X","unit":"个","qty":2,"note":"","category":"基础配置","serial":"5"},{"name":"平开门隐藏合页","code":"HBH103.00.38H5","unit":"个","qty":2,"note":"150KG，可根据实际扇高选配增加合页数量","category":"基础配置","serial":"6"},{"name":"阻尼风撑","code":"ATR22.00.38H5","unit":"个","qty":1,"note":"选配","category":"基础配置","serial":"7"}]},{"group":"对开门配置方案","name":"被动扇","items":[{"name":"615门执手组件(不带锁芯孔)","code":"HSD615.168168H5","unit":"套","qty":1,"note":"168抑菌砂纹黑色，可选012银色，047古铜色","category":"基础配置","serial":"8"},{"name":"延长插销","code":"ASB23.00.40C384X","unit":"支","qty":1,"note":"40：扇高范围：2090-2310 mm\n75：扇高范围：2310-2660 mm\n111：扇高范围：2660-3010 mm\n三选一","category":"基础配置","serial":"9-1"},{"name":"延长插销","code":"ASB23.00.75C384X","unit":"支","qty":1,"note":"","category":"基础配置","serial":"9-2"},{"name":"延长插销","code":"ASB23.00.111C384X","unit":"支","qty":1,"note":"","category":"基础配置","serial":"9-3"},{"name":"被动扇插销","code":"ASB22.25.24C384H5","unit":"个","qty":1,"note":"集成锁座功能","category":"基础配置","serial":"10"},{"name":"平开门隐藏合页","code":"HBH103.00.38H5","unit":"个","qty":2,"note":"150KG，可根据实际扇高选配增加合页数量","category":"基础配置","serial":"11"},{"name":"阻尼风撑","code":"ATR22.00.38H5","unit":"个","qty":1,"note":"选配","category":"基础配置","serial":"12"}]},{"group":"生态门","name":"NFD103系列生态门锁五金配置方案","items":[{"name":"生态门锁套件","code":"NFD103.00.45C012H3","unit":"套","qty":1,"note":"喷涂银","category":"基础配置","serial":"1-1"},{"name":"生态门锁套件","code":"NFD103.00.45CT150H3","unit":"套","qty":1,"note":"消光白","category":"基础配置","serial":"1-2"},{"name":"生态门锁套件","code":"NFD103.00.45CT151H3","unit":"套","qty":1,"note":"奶油灰","category":"基础配置","serial":"1-3"},{"name":"生态门锁套件","code":"NFD103.00.45CT152H3","unit":"套","qty":1,"note":"月光灰","category":"基础配置","serial":"1-4"},{"name":"生态门锁套件","code":"NFD103.00.45CT160H3","unit":"套","qty":1,"note":"消光黑","category":"基础配置","serial":"1-5"},{"name":"子母合页","code":"ABH60.00.38H5","unit":"个","qty":2,"note":"","category":"基础配置","serial":"2-1"},{"name":"生态门隐藏式合页","code":"HBH101.00.20C06H4","unit":"个","qty":2,"note":"黑色","category":"基础配置","serial":"2-2"}]},{"group":"生态门","name":"NFD105系列生态门锁五金配置方案","items":[{"name":"105生态门锁套件（带锁芯）","code":"NFD105.00.012H3","unit":"套","qty":1,"note":"银色，带锁芯(适用门厚38~60mm)","category":"基础配置","serial":"1-1"},{"name":"105生态门锁套件（不带锁芯）","code":"NFD105.10.012H3","unit":"套","qty":1,"note":"银色，不带锁芯(适用门厚38~60mm)","category":"基础配置","serial":"1-2"},{"name":"生态门隐藏式合页","code":"HBH101.00.20C06H4","unit":"个","qty":2,"note":"黑色","category":"基础配置","serial":"2"}]},{"group":"窄边平开门","name":"NFD104系列微边平开门五金","items":[{"name":"微边平开门锁套件","code":"NFD104.00.161H3","unit":"套","qty":1,"note":"抑菌细砂纹黑色","category":"基础配置","serial":"1"},{"name":"隐藏合页","code":"HBH100.00.38069H4","unit":"个","qty":3,"note":"黑色","category":"基础配置","serial":"2"}]},{"group":"窄边平开门","name":"NFD102系列窄边平开门五金","items":[{"name":"窄边平开门套件","code":"NFD102.1301.161H3","unit":"套","qty":1,"note":"抑菌细砂纹黑色","category":"基础配置","serial":"1-1"},{"name":"窄边平开门套件","code":"NFD102.1501.161H3","unit":"套","qty":1,"note":"抑菌细砂纹黑色","category":"基础配置","serial":"1-2"},{"name":"窄边平开门套件","code":"NFD102.1801.161H3","unit":"套","qty":1,"note":"抑菌细砂纹黑色","category":"基础配置","serial":"1-3"},{"name":"窄边平开门套件","code":"NFD102.1802.161H3","unit":"套","qty":1,"note":"抑菌细砂纹黑色","category":"基础配置","serial":"1-4"},{"name":"窄边平开门套件","code":"NFD102.1803.161H3","unit":"套","qty":1,"note":"抑菌细砂纹黑色","category":"基础配置","serial":"1-5"},{"name":"窄边平开门套件","code":"NFD102.1804.161H3","unit":"套","qty":1,"note":"抑菌细砂纹黑色","category":"基础配置","serial":"1-6"}]},{"group":"窄边平开门","name":"NFD106系列窄边平开门五金","items":[{"name":"窄边平开门套件","code":"NFD106.00.T150H4","unit":"套","qty":1,"note":"消光白","category":"基础配置","serial":"1-1"},{"name":"窄边平开门套件","code":"NFD106.00.T151H4","unit":"套","qty":1,"note":"奶油灰","category":"基础配置","serial":"1-2"},{"name":"窄边平开门套件","code":"NFD106.00.T152H4","unit":"套","qty":1,"note":"月光灰","category":"基础配置","serial":"1-3"},{"name":"窄边平开门套件","code":"NFD106.00.T153H4","unit":"套","qty":1,"note":"风雅灰","category":"基础配置","serial":"1-4"},{"name":"窄边平开门套件","code":"NFD106.00.T160H4","unit":"套","qty":1,"note":"消光黑","category":"基础配置","serial":"1-5"},{"name":"窄边平开门套件","code":"NFD106.00.T161H4","unit":"套","qty":1,"note":"抑菌细砂纹黑色","category":"基础配置","serial":"1-6"}]},{"group":"窄边平开门","name":"G62窄边推拉三联动五金控制系统方案","items":[{"name":"中轨单门缓冲套装","code":"HRD10.01.38H5","unit":"套","qty":2,"note":"两侧扇","category":"基础配置","serial":"1"},{"name":"中轨中门联动套装(左)","code":"HRD10.02.38LH5","unit":"套","qty":"2选1","note":"中间扇，左开","category":"基础配置","serial":"2"},{"name":"中轨中门联动套装(右)","code":"HRD10.02.38RH5","unit":"套","qty":"","note":"中间扇，右开","category":"基础配置","serial":""},{"name":"R43防跳轮","code":"R43.00.382H5","unit":"件","qty":4,"note":"选配","category":"基础配置","serial":"3"}]},{"group":"窄边平开门","name":"G62窄边推拉异向两联动五金控制系统方案","items":[{"name":"高轨单门缓冲套装","code":"HRD11.01.38H5","unit":"套","qty":3,"note":"","category":"基础配置","serial":"1"},{"name":"高轨对开联动套装","code":"HRD11.02.38H5","unit":"套","qty":1,"note":"","category":"基础配置","serial":"2"},{"name":"地导轮","code":"RGP58.00.382X","unit":"套","qty":2,"note":"","category":"基础配置","serial":"3"},{"name":"R43防跳轮","code":"R43.00.382H5","unit":"件","qty":8,"note":"选配","category":"基础配置","serial":"4"}]},{"group":"窄边平开门","name":"G62窄边推拉2+0联动五金控制系统方案","items":[{"name":"中轨单门缓冲套装","code":"HRD10.01.38H5","unit":"套","qty":1,"note":"","category":"基础配置","serial":"1"},{"name":"中轨中门联动套装(左)","code":"HRD10.02.38LH5","unit":"套","qty":"2选1","note":"中间扇，左开","category":"基础配置","serial":"2"},{"name":"中轨中门联动套装(右)","code":"HRD10.02.38RH5","unit":"套","qty":"","note":"中间扇，右开","category":"基础配置","serial":""},{"name":"地皮带夹","code":"RGP62.00.38031X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"R43防跳轮","code":"R43.00.382H5","unit":"件","qty":2,"note":"选配","category":"基础配置","serial":"4"}]},{"group":"窄边平开门","name":"G62窄边推拉两扇五金控制系统方案","items":[{"name":"中轨单门缓冲套装","code":"HRD10.01.38H5","unit":"套","qty":2,"note":"","category":"基础配置","serial":"1"},{"name":"地导轮","code":"RGP58.00.382X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"2"},{"name":"R43防跳轮","code":"R43.00.382H5","unit":"件","qty":4,"note":"选配","category":"基础配置","serial":"3"}]},{"group":"推拉窗系列配置方案","name":"推拉窗单点锁方案（两轨两扇）","items":[{"name":"432MA锁","code":"MAL432.12.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑、07白色","category":"基础配置","serial":"1"},{"name":"432MA锁","code":"MAL432.17.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"428MA锁","code":"MAL428.12.011H1","unit":"个","qty":2,"note":"011银色，带钥匙；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"MA锁舌","code":"MAL40.06.01C38X","unit":"个","qty":2,"note":"短弯锁舌","category":"基础配置","serial":"2"},{"name":"MA锁舌","code":"MAL40.06.02C38X","unit":"个","qty":2,"note":"短直锁舌；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"MA锁舌","code":"MAL41.06.01C38X","unit":"个","qty":2,"note":"长弯锁舌；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"MA锁舌","code":"MAL41.06.02C38X","unit":"个","qty":2,"note":"长直锁舌；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"轻型锁座","code":"SLP41.00.38","unit":"个","qty":2,"note":"带筋锁槽型材夹持式安装固定","category":"基础配置","serial":"3"},{"name":"1型锁座","code":"MALP40.01","unit":"个","qty":2,"note":"三角锁槽使用；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"2型锁座","code":"MALP40.02","unit":"个","qty":2,"note":"无槽平整型材使用；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"25#滑轮","code":"R25.152305.07H5","unit":"个","qty":4,"note":"两轮-14.8mm宽，23mm高，可调至28mm，承重90KG，可选其他规格","category":"基础配置","serial":"4"}]},{"group":"推拉窗系列配置方案","name":"推拉窗方案多点锁（两轨两扇）","items":[{"name":"420MA锁","code":"MAL420.21.011H5","unit":"个","qty":2,"note":"011银色，窄边MA锁","category":"基础配置","serial":"1-1"},{"name":"420MA扣手","code":"MBH420.10.011H5","unit":"个","qty":2,"note":"011银色，窄边MA锁 对开方案时被动扇使用；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"425MA碰锁","code":"MAL425.21.011","unit":"个","qty":2,"note":"011银色、可选045深古铜色","category":"基础配置","serial":"1-2"},{"name":"427MA锁","code":"MAL427.21.011","unit":"个","qty":2,"note":"011银色、可选065黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"4型常规MA锁","code":"MAL436.25.011","unit":"个","qty":2,"note":"011银色，168抑菌砂纹黑；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"4型常规MA锁","code":"MAL436.30.011","unit":"个","qty":2,"note":"011银色，168抑菌砂纹黑；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"七型MA扣手","code":"BH60.37.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色，与轻型MA锁搭配使用","category":"基础配置","serial":""},{"name":"422MA锁(不带锁芯）","code":"MAL422.121.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":"1-3"},{"name":"422MA锁(带锁芯）","code":"MAL422.021.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA锁(不带锁芯）","code":"MAL422.125.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA锁(带锁芯）","code":"MAL422.025.011","unit":"个","qty":2,"note":"011银色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA锁(带锁芯）","code":"MAL422.030.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA锁(不带锁芯）","code":"MAL422.130.168H5","unit":"个","qty":2,"note":"168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA扣手","code":"BH422.10.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":2,"note":"19mm","category":"基础配置","serial":"2"},{"name":"重型T字件","code":"TTC31.23.069X","unit":"个","qty":2,"note":"23mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.28.069X","unit":"个","qty":2,"note":"28mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.35.069X","unit":"个","qty":2,"note":"35mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH9.5)","code":"LPE45.07.95C069","unit":"个","qty":4,"note":"7mm直径、锁点高度9.5mm","category":"基础配置","serial":"3"},{"name":"可调锁杆TL(D7XH12)","code":"LPE45.07.12C069","unit":"个","qty":4,"note":"7mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH14)","code":"LPE45.07.14C069","unit":"个","qty":4,"note":"7mm直径、锁点高度14mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH19)","code":"LPE45.07.19C069","unit":"个","qty":4,"note":"7mm直径、锁点高度19mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP47.00.069","unit":"个","qty":4,"note":"锁点伸进量4.5mm","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":4,"note":"夹持式+螺丝固定、锁点伸进量7mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"25#滑轮","code":"R25.152305.07H5","unit":"个","qty":4,"note":"两轮-14.8mm宽，23mm高，可调至28mm，承重90KG，可选其他规格","category":"基础配置","serial":"4"}]},{"group":"推拉窗系列配置方案","name":"快装推拉窗配置方案（两轨两扇）","items":[{"name":"422MA锁(不带锁芯）","code":"MAL422.121.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色","category":"基础配置","serial":"1"},{"name":"快装T字件","code":"TTC53.15.38H2","unit":"个","qty":2,"note":"15mm长，可选30mm长","category":"基础配置","serial":"2"},{"name":"快装推拉锁杆","code":"LPE47.00.17C38H5","unit":"个","qty":4,"note":"锁点高度17mm","category":"基础配置","serial":"3"},{"name":"快装推拉锁座","code":"SLP45.00.38H5","unit":"个","qty":4,"note":"","category":"基础配置","serial":"4"},{"name":"8#滑轮","code":"R08.122207.07H5","unit":"个","qty":4,"note":"双轮，宽度12mm，最低高度22mm，可调高度7mm，承重90kg，可选其他规格","category":"基础配置","serial":"5"},{"name":"传动杆","code":"H.1909.20.10C019","unit":"个","qty":1,"note":"1000mm，长度规格可选3000mm","category":"基础配置","serial":"6"}]},{"group":"推拉窗自动碰锁方案","name":"单点自动碰锁配置方案（两轨两扇）--配置一","items":[{"name":"420MA锁","code":"MAL420.21.1T011H5","unit":"个","qty":2,"note":"011银色，可选065黑色","category":"基础配置","serial":"1"},{"name":"420MA扣手","code":"MBH420.10.011H5","unit":"个","qty":2,"note":"011银色，对开方案时被动扇使用；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"单点T字件","code":"LPES45.00.06X","unit":"个","qty":2,"note":"","category":"基础配置","serial":"2"},{"name":"推拉锁座","code":"SLP46.00.38H5","unit":"个","qty":2,"note":"","category":"基础配置","serial":"3"},{"name":"25#滑轮","code":"R25.152305.07H5","unit":"个","qty":4,"note":"两轮-14.8mm宽，23mm高，可调至28mm，承重90KG，可选其他规格","category":"基础配置","serial":"4"}]},{"group":"推拉窗自动碰锁方案","name":"单点自动碰锁配置方案（两轨两扇）--配置二","items":[{"name":"420MA锁","code":"MAL420.21.1T011H5","unit":"个","qty":2,"note":"011银色，可选065黑色","category":"基础配置","serial":"1"},{"name":"420MA扣手","code":"MBH420.10.011H5","unit":"个","qty":2,"note":"011银色，对开方案时被动扇使用；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"误操作T字件","code":"LPES43.07.50C069","unit":"个","qty":2,"note":"50mm长","category":"基础配置","serial":"2"},{"name":"重型锁座","code":"SLP47.00.069","unit":"个","qty":2,"note":"锁点伸进量4.5mm","category":"基础配置","serial":"3-1"},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":2,"note":"夹持式+螺丝固定、锁点伸进量7mm","category":"基础配置","serial":"3-2"},{"name":"25#滑轮","code":"R25.152305.07H5","unit":"个","qty":4,"note":"两轮-14.8mm宽，23mm高，可调至28mm，承重90KG，可选其他规格","category":"基础配置","serial":"4"}]},{"group":"推拉窗自动碰锁方案","name":"单点锁推拉窗自动碰锁方案（两轨两扇）--配置三","items":[{"name":"425MA碰锁","code":"MAL425.21.011","unit":"个","qty":2,"note":"011银色、可选045深古铜色","category":"基础配置","serial":"1"},{"name":"误操作T字件","code":"LPES43.07.50C069","unit":"个","qty":2,"note":"50mm长","category":"基础配置","serial":"2"},{"name":"重型锁座","code":"SLP47.00.069","unit":"个","qty":2,"note":"锁点伸进量4.5mm","category":"基础配置","serial":"3-1"},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":2,"note":"夹持式+螺丝固定、锁点伸进量7mm","category":"基础配置","serial":"3-2"},{"name":"25#滑轮","code":"R25.152305.07H5","unit":"个","qty":4,"note":"两轮-14.8mm宽，23mm高，可调至28mm，承重90KG，可选其他规格","category":"基础配置","serial":"4"}]},{"group":"推拉窗自动碰锁方案","name":"两点锁推拉窗自动碰锁方案（两轨两扇）--配置四","items":[{"name":"425MA碰锁","code":"MAL425.21.011","unit":"个","qty":2,"note":"011氧化银色、可选045深古铜色","category":"基础配置","serial":"1"},{"name":"误操作T字件","code":"LPES43.07.50C069","unit":"个","qty":2,"note":"50mm长","category":"基础配置","serial":"2"},{"name":"可调锁杆TL(D7XH9.5)","code":"LPE45.07.95C069","unit":"个","qty":2,"note":"7mm直径、锁点高度9.5mm","category":"基础配置","serial":"3"},{"name":"可调锁杆TL(D7XH12)","code":"LPE45.07.12C069","unit":"个","qty":2,"note":"7mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH14)","code":"LPE45.07.14C069","unit":"个","qty":2,"note":"7mm直径、锁点高度14mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH19)","code":"LPE45.07.19C069","unit":"个","qty":2,"note":"7mm直径、锁点高度19mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP47.00.069","unit":"个","qty":4,"note":"锁点伸进量4.5mm","category":"基础配置","serial":"4-1"},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":1,"note":"夹持式+螺丝固定、锁点伸进量7mm；可选项（原表数量为0）","category":"基础配置","serial":"4-2"},{"name":"25#滑轮","code":"R25.152305.07H5","unit":"个","qty":4,"note":"两轮-14.8mm宽，23mm高，可调至28mm，承重90KG，可选其他规格","category":"基础配置","serial":"5"}]},{"group":"推拉门系列配置方案","name":"重型推拉门（两轨两扇）","items":[{"name":"426MA锁","code":"MAL426.30.011H5","unit":"个","qty":2,"note":"011银色、可选065黑色","category":"基础配置","serial":"1-1"},{"name":"426MA锁","code":"MAL426.37.011H5","unit":"个","qty":1,"note":"011银色；可选项（原表数量为0）","category":"基础配置","serial":"1-2"},{"name":"426扣手(不带锁芯）","code":"BH426.10.011H5","unit":"个","qty":1,"note":"011银色、可选065黑色","category":"基础配置","serial":"3"},{"name":"426扣手(带锁芯）","code":"BH426.20.011H5","unit":"个","qty":1,"note":"011银色、可选065黑色","category":"基础配置","serial":"4"},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":2,"note":"19mm","category":"基础配置","serial":"5"},{"name":"重型T字件","code":"TTC31.23.069X","unit":"个","qty":2,"note":"23mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.28.069X","unit":"个","qty":2,"note":"28mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.35.069X","unit":"个","qty":2,"note":"35mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH9.5)","code":"LPE45.95.95C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度9.5mm","category":"基础配置","serial":"6"},{"name":"可调锁杆TL(D9.5XH12)","code":"LPE45.95.12C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH15)","code":"LPE45.95.15C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度15mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH17)","code":"LPE45.95.17C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度17mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH21)","code":"LPE45.95.21C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度21mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP42.01.069","unit":"个","qty":4,"note":"锁点伸进量4.5mm","category":"基础配置","serial":"7"},{"name":"13#滑轮","code":"R13.163107.07H5","unit":"个","qty":4,"note":"四轮-16mm宽，30.7mm高，可调至37.7mm，承重200KG，可选其他规格","category":"基础配置","serial":"8"}]},{"group":"推拉门系列配置方案","name":"轻型推拉门方案（两轨两扇）","items":[{"name":"427MA锁","code":"MAL427.21.011","unit":"个","qty":2,"note":"011银色、可选065黑色","category":"基础配置","serial":"1-1"},{"name":"4型常规MA锁","code":"MAL436.25.011","unit":"个","qty":2,"note":"011银色、168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"4型常规MA锁","code":"MAL436.30.011","unit":"个","qty":2,"note":"011银色、168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"七型MA扣手","code":"BH60.37.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色，与轻型MA锁搭配使用","category":"基础配置","serial":""},{"name":"422MA锁(不带锁芯）","code":"MAL422.121.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色","category":"基础配置","serial":"1-2"},{"name":"422MA锁(带锁芯）","code":"MAL422.021.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA锁(不带锁芯）","code":"MAL422.125.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA锁(带锁芯）","code":"MAL422.025.011","unit":"个","qty":2,"note":"011银色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA锁(带锁芯）","code":"MAL422.030.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"422MA扣手","code":"BH422.10.011","unit":"个","qty":2,"note":"011银色、可选168抑菌砂纹黑色","category":"基础配置","serial":""},{"name":"442MA锁(扣手带锁芯)","code":"MAL442.025.012","unit":"套","qty":1,"note":"012银色、可选168抑菌砂纹黑色","category":"基础配置","serial":"1-3"},{"name":"442MA锁(扣手不带锁芯)","code":"MAL442.125.012","unit":"套","qty":1,"note":"012银色、可选168抑菌砂纹黑色","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":2,"note":"19mm","category":"基础配置","serial":"2"},{"name":"重型T字件","code":"TTC31.23.069X","unit":"个","qty":2,"note":"23mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.28.069X","unit":"个","qty":2,"note":"28mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.35.069X","unit":"个","qty":2,"note":"35mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH9.5)","code":"LPE45.95.95C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度9.5mm","category":"基础配置","serial":"3-1"},{"name":"可调锁杆TL(D9.5XH12)","code":"LPE45.95.12C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH15)","code":"LPE45.95.15C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度15mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH17)","code":"LPE45.95.17C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度17mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH21)","code":"LPE45.95.21C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度21mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP42.01.069","unit":"个","qty":4,"note":"锁点伸进量4.5mm","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH9.5)","code":"LPE45.07.95C069","unit":"个","qty":4,"note":"7mm直径、锁点高度9.5mm","category":"基础配置","serial":"3-2"},{"name":"可调锁杆TL(D7XH12)","code":"LPE45.07.12C069","unit":"个","qty":4,"note":"7mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH14)","code":"LPE45.07.14C069","unit":"个","qty":4,"note":"7mm直径、锁点高度14mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH19)","code":"LPE45.07.19C069","unit":"个","qty":4,"note":"7mm直径、锁点高度19mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP47.00.069","unit":"个","qty":4,"note":"锁点伸进量4.5mm","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":4,"note":"夹持式+螺丝固定、锁点伸进量7mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"19#滑轮","code":"R19.163107.07H5","unit":"个","qty":2,"note":"两轮-16.2mm宽，31mm高，可调至38mm，承重130KG","category":"基础配置","serial":"4"}]},{"group":"推拉门系列配置方案","name":"推拉门双钩锁方案（两轨两扇）","items":[{"name":"BH459大拉手","code":"BH459.11.011","unit":"个","qty":4,"note":"011银色、069黑色","category":"基础配置","serial":"1"},{"name":"BH466.11大拉手","code":"BH466.11.011","unit":"个","qty":4,"note":"011银色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"BH466.11大拉手","code":"BH466.13.012","unit":"个","qty":4,"note":"012喷银、069亚黑；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"BH466.11.3T大拉手","code":"BH466.11.3T011","unit":"个","qty":4,"note":"011银色，带槽，可配合MA锁使用；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"BH470大拉手","code":"BH470.11.011","unit":"个","qty":4,"note":"011银色、065黑色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"BH472大拉手","code":"BH472.11.011","unit":"个","qty":4,"note":"011银色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"大拉手附件包","code":"BHAB466.00.023","unit":"套","qty":2,"note":"单面安装（拉手无槽）；可选项（原表数量为0）","category":"基础配置","serial":"2"},{"name":"大拉手附件包","code":"BHAB466.00.1T023","unit":"套","qty":2,"note":"单面安装（拉手带槽）；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"大拉手附件包","code":"BHAB466.05.80C023","unit":"套","qty":2,"note":"双面安装，螺丝规格M8*80mm，可选螺丝规格M8*95mm","category":"基础配置","serial":""},{"name":"双钩锁座","code":"SLP48.03.069","unit":"个","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"双钩锁体","code":"SDT46.28.22C","unit":"个","qty":1,"note":"28mm中心距","category":"基础配置","serial":"4-1"},{"name":"联动双钩锁体","code":"SDTH46.28.22C","unit":"个","qty":1,"note":"28mm中心距","category":"基础配置","serial":"4-2"},{"name":"可调锁杆TL(D9.5XH9.5)","code":"LPE45.95.95C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度9.5mm","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH12)","code":"LPE45.95.12C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH15)","code":"LPE45.95.15C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度15mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH17)","code":"LPE45.95.17C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度17mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH21)","code":"LPE45.95.21C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度21mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP42.01.069","unit":"个","qty":4,"note":"锁点伸进量4.5mm","category":"基础配置","serial":""},{"name":"防撞块","code":"BD40.01.06","unit":"个","qty":1,"note":"黑色","category":"基础配置","serial":"5"},{"name":"锁芯盖","code":"CC53.011011","unit":"套","qty":2,"note":"011银色，069黑色","category":"基础配置","serial":"6"},{"name":"C99锁芯","code":"C99.4040C4T029","unit":"个","qty":1,"note":"规格可选","category":"基础配置","serial":"7"},{"name":"13#滑轮","code":"R13.163107.07H5","unit":"个","qty":4,"note":"四轮-16mm宽，30.7mm高，可调至37.7mm，承重200KG，可选其他规格","category":"基础配置","serial":"8"}]},{"group":"推拉门系列配置方案","name":"推拉门大执手方案方案（单扇）","items":[{"name":"PH188执手","code":"PH188.00.012H5","unit":"个","qty":1,"note":"012银色，168抑菌砂纹黑色","category":"基础配置","serial":"1"},{"name":"六型扣手","code":"BH60.36.012","unit":"个","qty":1,"note":"012银色，168抑菌砂纹黑色","category":"基础配置","serial":"2"},{"name":"方轴","code":"H.0802.07.61C021","unit":"个","qty":1,"note":"61mm长，可选其他规格长度","category":"基础配置","serial":"3"},{"name":"对穿螺丝","code":"SSC4.70","unit":"套","qty":1,"note":"70mm，可选120mm长","category":"基础配置","serial":"4"},{"name":"AGC36传动壳","code":"AGC36.20.06H4","unit":"个","qty":1,"note":"20mm中心距，其他规格可选","category":"基础配置","serial":"5"},{"name":"可调锁杆TL(D9.5XH9.5)","code":"LPE45.95.95C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度9.5mm","category":"基础配置","serial":"6-1"},{"name":"可调锁杆TL(D9.5XH12)","code":"LPE45.95.12C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH15)","code":"LPE45.95.15C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度15mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH17)","code":"LPE45.95.17C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度17mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH21)","code":"LPE45.95.21C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度21mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP42.01.069","unit":"个","qty":4,"note":"锁点伸进量4.5mm","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH9.5)","code":"LPE45.07.95C069","unit":"个","qty":2,"note":"7mm直径、锁点高度9.5mm","category":"基础配置","serial":"6-2"},{"name":"可调锁杆TL(D7XH12)","code":"LPE45.07.12C069","unit":"个","qty":2,"note":"7mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH14)","code":"LPE45.07.14C069","unit":"个","qty":2,"note":"7mm直径、锁点高度14mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH19)","code":"LPE45.07.19C069","unit":"个","qty":2,"note":"7mm直径、锁点高度19mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP47.00.069","unit":"个","qty":2,"note":"锁点伸进量4.5mm","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":2,"note":"夹持式+螺丝固定、锁点伸进量7mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"13#滑轮","code":"R13.163107.07H5","unit":"个","qty":2,"note":"四轮-16mm宽，30.7mm高，可调至37.7mm，承重200KG，可选其他规格","category":"基础配置","serial":"7"}]},{"group":"贝多芬系列","name":"常规推拉门配置方案（两轨两扇）","items":[{"name":"贝多芬系列平面锁","code":"MAL12.30.011H5","unit":"个","qty":2,"note":"011银色、可选065黑色、045深古铜色","category":"基础配置","serial":"1-1"},{"name":"贝多芬系列平面扣手(不带锁芯)","code":"MBH12.10.011H5","unit":"个","qty":1,"note":"011银色、可选065黑色、045深古铜色","category":"基础配置","serial":""},{"name":"贝多芬系列平面扣手(带锁芯)","code":"MBH12.20.011H5","unit":"个","qty":1,"note":"011银色、可选065黑色、045深古铜色","category":"基础配置","serial":""},{"name":"贝多芬系列立体锁","code":"MALH10.3030.011","unit":"个","qty":2,"note":"300mm，011银色、可选065黑色","category":"基础配置","serial":"1-2"},{"name":"贝多芬系列立体扣手（不带锁芯）","code":"MABH10.130.011","unit":"个","qty":1,"note":"300mm，011银色、可选065黑色","category":"基础配置","serial":""},{"name":"贝多芬系列立体扣手（带锁芯）","code":"MABH10.030.011","unit":"个","qty":1,"note":"300mm，011银色、可选065黑色","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":2,"note":"19mm；可选项（原表数量为0）","category":"基础配置","serial":"2"},{"name":"重型T字件","code":"TTC31.23.069X","unit":"个","qty":2,"note":"23mm","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.28.069X","unit":"个","qty":2,"note":"28mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.35.069X","unit":"个","qty":2,"note":"35mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH9.5)","code":"LPE45.95.95C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度9.5mm","category":"基础配置","serial":"3"},{"name":"可调锁杆TL(D9.5XH12)","code":"LPE45.95.12C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH15)","code":"LPE45.95.15C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度15mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH17)","code":"LPE45.95.17C069H4","unit":"个","qty":4,"note":"9.5mm直径、锁点高度17mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D9.5XH21)","code":"LPE45.95.21C069","unit":"个","qty":4,"note":"9.5mm直径、锁点高度21mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP42.01.069","unit":"个","qty":4,"note":"锁点伸进量4.5mm","category":"基础配置","serial":"4"},{"name":"13#滑轮","code":"R13.163107.07H5","unit":"个","qty":4,"note":"四轮-16mm宽，30.7mm高，可调至37.7mm，承重200KG，其他规格可选","category":"基础配置","serial":"5"}]},{"group":"贝多芬系列","name":"快装推拉门方案（两轨两扇）","items":[{"name":"贝多芬系列平面锁","code":"MAL12.30.011H5","unit":"个","qty":2,"note":"011银色、可选065黑色、045深古铜色","category":"基础配置","serial":"1-1"},{"name":"贝多芬系列平面扣手(不带锁芯)","code":"MBH12.10.011H5","unit":"个","qty":1,"note":"011银色、可选065黑色、045深古铜色","category":"基础配置","serial":""},{"name":"贝多芬系列平面扣手(带锁芯)","code":"MBH12.20.011H5","unit":"个","qty":1,"note":"011银色、可选065黑色、045深古铜色","category":"基础配置","serial":""},{"name":"贝多芬系列立体锁","code":"MALH10.3030.011","unit":"个","qty":2,"note":"300mm，011银色、可选045深古铜色","category":"基础配置","serial":"1-2"},{"name":"贝多芬系列立体扣手","code":"MABH10.030.011","unit":"个","qty":1,"note":"300mm，011银色、可选045深古铜色","category":"基础配置","serial":""},{"name":"贝多芬系列立体扣手","code":"MABH10.130.011","unit":"个","qty":1,"note":"300mm，011银色、可选045深古铜色","category":"基础配置","serial":""},{"name":"快装T字件","code":"TTC53.15.38H2","unit":"个","qty":2,"note":"15mm长，可选30mm长","category":"基础配置","serial":"2"},{"name":"快装推拉锁杆","code":"LPE47.00.12C38H5","unit":"个","qty":4,"note":"锁点高度12mm，可选17mm","category":"基础配置","serial":"3"},{"name":"快装推拉锁座","code":"SLP45.00.38H5","unit":"个","qty":4,"note":"","category":"基础配置","serial":"4"},{"name":"传动杆","code":"H.1909.20.10C019","unit":"个","qty":4,"note":"1000mm，长度规格可选3000mm","category":"基础配置","serial":"5"},{"name":"防撞块","code":"BD40.01.06","unit":"个","qty":2,"note":"黑色，立体锁选配","category":"基础配置","serial":"6"},{"name":"13#滑轮","code":"R13.163107.07H5","unit":"个","qty":4,"note":"四轮-16mm宽，30.7mm高，可调至37.7mm，承重200KG，可选其他规格","category":"基础配置","serial":"7"}]},{"group":"贝多芬系列","name":"常规推拉窗（两轨两扇）","items":[{"name":"贝多芬系列平面锁","code":"MAL11.121.011H5","unit":"个","qty":2,"note":"011银色、可选045深古铜色","category":"基础配置","serial":"1"},{"name":"贝多芬系列平面锁（带锁芯）","code":"MAL11.021.011H5","unit":"个","qty":2,"note":"011银色、可选045深古铜色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"贝多芬系列平面扣手","code":"BH11.10.011H5","unit":"个","qty":2,"note":"011银色、可选045深古铜色，对开方案时被动扇使用；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":2,"note":"19mm；可选项（原表数量为0）","category":"基础配置","serial":"2"},{"name":"重型T字件","code":"TTC31.23.069X","unit":"个","qty":2,"note":"23mm","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.28.069X","unit":"个","qty":2,"note":"28mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型T字件","code":"TTC31.35.069X","unit":"个","qty":2,"note":"35mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH9.5)","code":"LPE45.07.95C069","unit":"个","qty":2,"note":"7mm直径、锁点高度9.5mm","category":"基础配置","serial":"3"},{"name":"可调锁杆TL(D7XH12)","code":"LPE45.07.12C069","unit":"个","qty":2,"note":"7mm直径、锁点高度12mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH14)","code":"LPE45.07.14C069","unit":"个","qty":2,"note":"7mm直径、锁点高度14mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"可调锁杆TL(D7XH19)","code":"LPE45.07.19C069","unit":"个","qty":2,"note":"7mm直径、锁点高度19mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"重型锁座","code":"SLP47.00.069","unit":"个","qty":2,"note":"锁点伸进量4.5mm","category":"基础配置","serial":"4"},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":2,"note":"夹持式+螺丝固定、锁点伸进量7mm；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"25#滑轮","code":"R25.152305.07H5","unit":"个","qty":4,"note":"两轮-14.8mm宽，23mm高，可调至28mm，承重90KG，可选其他规格","category":"基础配置","serial":"5"}]},{"group":"贝多芬系列","name":"快装推拉窗方案（两轨两扇）","items":[{"name":"贝多芬系列平面锁","code":"MAL11.121.011H5","unit":"个","qty":2,"note":"011银色、可选045深古铜色","category":"基础配置","serial":"1"},{"name":"贝多芬系列平面锁（带锁芯）","code":"MAL11.021.011H5","unit":"个","qty":2,"note":"011银色、可选045深古铜色；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"快装T字件","code":"TTC53.15.38H2","unit":"个","qty":2,"note":"15mm长，可选30mm长","category":"基础配置","serial":"2"},{"name":"快装推拉锁杆","code":"LPE47.00.12C38H5","unit":"个","qty":4,"note":"锁点高度12mm，可选17mm","category":"基础配置","serial":"3"},{"name":"快装推拉锁座","code":"SLP45.00.38H5","unit":"个","qty":4,"note":"","category":"基础配置","serial":"4"},{"name":"传动杆","code":"H.1909.20.10C019","unit":"个","qty":1,"note":"1000mm，长度规格可选3000mm","category":"基础配置","serial":"5"},{"name":"防撞块","code":"BD40.01.06","unit":"个","qty":2,"note":"黑色，立体锁选配","category":"基础配置","serial":"6"},{"name":"25#滑轮","code":"R25.152305.07H5","unit":"个","qty":4,"note":"两轮-14.8mm宽，23mm高，可调至28mm，承重90KG，可选其他规格","category":"基础配置","serial":"7"},{"name":"贝多芬系列平面扣手","code":"BH11.10.011H5","unit":"个","qty":1,"note":"011银色、可选045深古铜色，对开方案时被动扇选配","category":"基础配置","serial":"8"}]},{"group":"贝多芬系列","name":"其他可选滑轮","items":[{"name":"3#滑轮","code":"R03.232305.07H5","unit":"个","qty":2,"note":"两轮-22.7mm宽，22.4mm高，可调至29mm，承重90KG","category":"基础配置","serial":"1"},{"name":"8#滑轮","code":"R08.122207.07H5","unit":"个","qty":2,"note":"两轮-12m宽，22.2mm高，可调至29.2mm，承重90KG","category":"基础配置","serial":"2"},{"name":"12#滑轮","code":"R12.121805.07H5","unit":"个","qty":2,"note":"两轮-12m宽，18.1mm高，可调至23.1mm，承重80KG","category":"基础配置","serial":"3"},{"name":"13#滑轮","code":"R13.163107.07H5","unit":"个","qty":2,"note":"四轮-16mm宽，30.7mm高，可调至37.7mm，承重200KG","category":"基础配置","serial":"4"},{"name":"14#滑轮","code":"R14.163107.07H5","unit":"个","qty":2,"note":"两轮-16mm宽，30.7mm高，可调至37.7mm，承重150KG","category":"基础配置","serial":"5"},{"name":"15#滑轮","code":"R15.122305.07H5","unit":"个","qty":2,"note":"四轮-12.2m宽，22.8mm高，可调至27.8mm，承重140KG","category":"基础配置","serial":"6"},{"name":"18#滑轮","code":"R18.152507.07H5","unit":"个","qty":2,"note":"两轮-14.7mm宽，25.3mm高，可调至32.3mm，承重100KG","category":"基础配置","serial":"7"},{"name":"19#滑轮","code":"R19.163107.07H5","unit":"个","qty":2,"note":"两轮-16.2mm宽，31mm高，可调至38mm，承重130KG","category":"基础配置","serial":"8"},{"name":"21#滑轮","code":"R21.224415.38","unit":"个","qty":2,"note":"两轮-21.4mm宽，38mm高，可调至44mm，承重250KG","category":"基础配置","serial":"9"},{"name":"24#滑轮","code":"R24.152507.07H5","unit":"个","qty":2,"note":"四轮-14.8mm宽，24.8mm高，可调至31.8mm，承重170KG","category":"基础配置","serial":"10"},{"name":"25#滑轮","code":"R25.152305.07H5","unit":"个","qty":2,"note":"两轮-14.8mm宽，23mm高，可调至28mm，承重90KG","category":"基础配置","serial":"11"}]},{"group":"贝多芬系列","name":"六轨推拉窗五金配置方案","items":[{"name":"200MA执手","code":"MAL200.16.011H3","unit":"个","qty":1,"note":"011银色","category":"基础配置","serial":"1-1"},{"name":"MA锁座","code":"MALP20.00.38031X","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"推拉窗拉手","code":"BH200.00.T120H3","unit":"个","qty":1,"note":"特殊颜色120（深灰色）","category":"基础配置","serial":"1-2"},{"name":"MA锁座","code":"MALP21.00.38031X","unit":"个","qty":1,"note":"","category":"基础配置","serial":""}]},{"group":"极窄提升推拉五金配置方案（主推）","name":"单扇--窄边提升推拉两点锁方案（主推）","items":[{"name":"PH952执手","code":"PH952.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.30C021X","unit":"个","qty":1,"note":"外露轴长30mm","category":"基础配置","serial":"2"},{"name":"窄提升推拉传动器","code":"LSG71.00.12C38X","unit":"个","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"窄提升推拉滑轮","code":"LSBR71.00.021H5","unit":"套","qty":1,"note":"标配承重200KG","category":"基础配置","serial":"4"},{"name":"窄提升推拉螺纹杆","code":"LSS70.10.15C38","unit":"支","qty":1,"note":"连接杆长1500mm，可选1100/1800/2000mm长","category":"基础配置","serial":"5"},{"name":"T字件","code":"TTC29.19.069","unit":"个","qty":1,"note":"","category":"基础配置","serial":"6"},{"name":"DR20平开铝杆","code":"DR20.10.066H4","unit":"支","qty":1,"note":"","category":"基础配置","serial":"7"},{"name":"C槽安全锁座","code":"ALP33.00.021H4","unit":"个","qty":2,"note":"","category":"基础配置","serial":"8"}]},{"group":"极窄提升推拉五金配置方案（主推）","name":"单扇--窄边提升推拉多点锁方案（主推）","items":[{"name":"PH952执手","code":"PH952.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.30C021X","unit":"个","qty":1,"note":"外露轴长30mm","category":"基础配置","serial":"2"},{"name":"窄提升推拉传动器","code":"LSG71.00.12C38X","unit":"个","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"窄提升推拉滑轮","code":"LSBR71.00.021H5","unit":"套","qty":1,"note":"标配承重200KG","category":"基础配置","serial":"4"},{"name":"窄提升推拉螺纹杆","code":"LSS70.10.15C38","unit":"支","qty":1,"note":"连接杆长1500mm，可选1100/1800/2000mm长","category":"基础配置","serial":"5"},{"name":"窄提升推拉T字件","code":"TTC37.19.021X","unit":"个","qty":1,"note":"","category":"基础配置","serial":"6"},{"name":"安全锁杆","code":"LPE71.00.021X","unit":"个","qty":3,"note":"","category":"基础配置","serial":"7"},{"name":"窄提升推拉C槽锁座","code":"SLP71.00.021H4","unit":"个","qty":3,"note":"","category":"基础配置","serial":"8"}]},{"group":"G41推拉密封门五金配置方案（主推）","name":"一扇固定，一扇活动--单面执手\u0026扣手配置方案","items":[{"name":"PH188执手","code":"PH188.00.1T168H5","unit":"个","qty":2,"note":"168抑菌砂纹黑色、可选012银色","category":"基础配置","serial":"1"},{"name":"对穿螺丝","code":"SSC4.70","unit":"个","qty":2,"note":"70mm，可选120mm","category":"基础配置","serial":"2"},{"name":"扣手","code":"BH60.36.168H2","unit":"个","qty":1,"note":"168抑菌砂纹黑色、可选012银色","category":"基础配置","serial":"3"},{"name":"方轴","code":"H.0802.07.68C021","unit":"个","qty":1,"note":"总长68mm，扣手扇使用","category":"基础配置","serial":"4"},{"name":"传动壳","code":"AGC49.00.031X","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"5"},{"name":"推拉密封锁杆","code":"LPE49.00.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"6"},{"name":"推拉密封锁座","code":"SLP49.00.384LX","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"7"},{"name":"推拉密封锁座","code":"SLP49.00.384RX","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"8"},{"name":"角传动器","code":"ACT49.00.031X","unit":"个","qty":3,"note":"031黑色","category":"基础配置","serial":"9"},{"name":"滑轮组件","code":"AHR49.10.031X","unit":"套","qty":2,"note":"单扇承重160KG","category":"基础配置","serial":"10-1"},{"name":"滑轮组件","code":"AHR49.00.031X","unit":"套","qty":2,"note":"单扇承重280KG","category":"基础配置","serial":"10-2"},{"name":"推拉密封转换器","code":"APT49.10.031X","unit":"套","qty":1,"note":"窄扇型材配置","category":"基础配置","serial":"11-1"},{"name":"推拉密封转换器","code":"APT49.01.031","unit":"套","qty":1,"note":"宽扇型材配置","category":"基础配置","serial":"11-2"},{"name":"推拉密封勾企锁杆","code":"ALR49.00.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"12"},{"name":"推拉密封锁座","code":"AALP49.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"13"},{"name":"推拉密封防撞块","code":"BD40.02.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"14"},{"name":"防撞块","code":"BD40.01.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"15"}]},{"group":"G41推拉密封门五金配置方案（主推）","name":"一扇固定，一扇活动--双面执手不带锁芯配置方案","items":[{"name":"PH188执手","code":"PH188.00.1T168H5","unit":"个","qty":2,"note":"168抑菌砂纹黑色、可选012银色","category":"基础配置","serial":"1"},{"name":"对穿螺丝","code":"SSC4.70","unit":"个","qty":2,"note":"70mm，可选120mm","category":"基础配置","serial":"2"},{"name":"方轴","code":"H.0802.07.100C021","unit":"个","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"传动壳","code":"AGC49.00.031X","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"4"},{"name":"推拉密封锁杆","code":"LPE49.00.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"5"},{"name":"推拉密封锁座","code":"SLP49.00.384LX","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"6"},{"name":"推拉密封锁座","code":"SLP49.00.384RX","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"7"},{"name":"角传动器","code":"ACT49.00.031X","unit":"个","qty":3,"note":"031黑色","category":"基础配置","serial":"8"},{"name":"滑轮组件","code":"AHR49.10.031X","unit":"套","qty":2,"note":"单扇承重160KG","category":"基础配置","serial":"9"},{"name":"推拉密封转换器","code":"APT49.10.031X","unit":"套","qty":1,"note":"窄扇型材配置","category":"基础配置","serial":"10-1"},{"name":"推拉密封转换器","code":"APT49.01.031","unit":"套","qty":1,"note":"宽扇型材配置","category":"基础配置","serial":"10-2"},{"name":"推拉密封勾企锁杆","code":"ALR49.00.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"11"},{"name":"推拉密封锁座","code":"AALP49.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"12"},{"name":"推拉密封防撞块","code":"BD40.02.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"13"},{"name":"防撞块","code":"BD40.01.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"14"}]},{"group":"G41推拉密封门五金配置方案（主推）","name":"一扇固定，一扇活动--双面执手带锁芯配置方案","items":[{"name":"PH188执手","code":"PH188.00.1T168H5","unit":"个","qty":2,"note":"168抑菌砂纹黑色、可选012银色","category":"基础配置","serial":"1"},{"name":"对穿螺丝","code":"SSC4.70","unit":"个","qty":4,"note":"70mm，可选120mm","category":"基础配置","serial":"2"},{"name":"方轴","code":"H.0802.07.100C021","unit":"个","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"锁芯","code":"C98.4040C029","unit":"个","qty":1,"note":"锁芯规格可选","category":"基础配置","serial":"4"},{"name":"锁芯盖","code":"CC53.069069","unit":"套","qty":1,"note":"069黑色、可选011银色","category":"基础配置","serial":"5"},{"name":"传动壳","code":"AGC49.00.031X","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"6"},{"name":"锁芯壳","code":"AGC49.10.031X","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"7"},{"name":"推拉密封锁杆","code":"LPE49.00.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"8"},{"name":"推拉密封锁座","code":"SLP49.00.384LX","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"9"},{"name":"推拉密封锁座","code":"SLP49.00.384RX","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"10"},{"name":"角传动器","code":"ACT49.00.031X","unit":"个","qty":3,"note":"031黑色","category":"基础配置","serial":"11"},{"name":"滑轮组件","code":"AHR49.10.031X","unit":"套","qty":2,"note":"单扇承重160KG","category":"基础配置","serial":"12-1"},{"name":"滑轮组件","code":"AHR49.00.031X","unit":"套","qty":1,"note":"单扇承重280KG；可选项（原表数量为0）","category":"基础配置","serial":"12-2"},{"name":"推拉密封转换器","code":"APT49.10.031X","unit":"套","qty":1,"note":"窄扇型材配置","category":"基础配置","serial":"13-1"},{"name":"推拉密封转换器","code":"APT49.01.031","unit":"套","qty":1,"note":"宽扇型材配置；可选项（原表数量为0）","category":"基础配置","serial":"13-2"},{"name":"推拉密封勾企锁杆","code":"ALR49.00.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"14"},{"name":"推拉密封锁座","code":"AALP49.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"15"},{"name":"推拉密封防撞块","code":"BD40.02.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"16"},{"name":"防撞块","code":"BD40.01.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"17"}]},{"group":"G41推拉密封门五金配置方案（主推）","name":"双扇活动--G41 推拉密封门双面执手带锁芯和单面执手+扣手配置方案","items":[{"name":"PH188执手","code":"PH188.00.1T168H5","unit":"个","qty":3,"note":"168抑菌砂纹黑色、可选012银色","category":"基础配置","serial":"1"},{"name":"对穿螺丝","code":"SSC4.70","unit":"个","qty":6,"note":"70mm，可选120mm","category":"基础配置","serial":"2"},{"name":"扣手","code":"BH60.36.168H2","unit":"个","qty":1,"note":"168抑菌砂纹黑色、可选012银色","category":"基础配置","serial":"3"},{"name":"方轴","code":"H.0802.07.100C021","unit":"个","qty":1,"note":"总长100mm，双执手扇使用","category":"基础配置","serial":"4"},{"name":"方轴","code":"H.0802.07.68C021","unit":"个","qty":1,"note":"总长68mm，扣手扇使用","category":"基础配置","serial":"5"},{"name":"锁芯","code":"C98.4040C029","unit":"个","qty":1,"note":"锁芯规格可选","category":"基础配置","serial":"6"},{"name":"锁芯盖","code":"CC53.069069","unit":"套","qty":1,"note":"069黑色、可选011银色","category":"基础配置","serial":"7"},{"name":"传动壳","code":"AGC49.00.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"8"},{"name":"锁芯壳","code":"AGC49.10.031X","unit":"个","qty":1,"note":"031黑色","category":"基础配置","serial":"9"},{"name":"推拉密封锁杆","code":"LPE49.00.031X","unit":"个","qty":4,"note":"031黑色","category":"基础配置","serial":"10"},{"name":"推拉密封锁座","code":"SLP49.00.384LX","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"11"},{"name":"推拉密封锁座","code":"SLP49.00.384RX","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"12"},{"name":"角传动器","code":"ACT49.00.031X","unit":"个","qty":6,"note":"031黑色","category":"基础配置","serial":"13"},{"name":"滑轮组件","code":"AHR49.10.031X","unit":"套","qty":4,"note":"单扇承重160KG","category":"基础配置","serial":"14-1"},{"name":"滑轮组件","code":"AHR49.00.031X","unit":"套","qty":1,"note":"单扇承重280KG；可选项（原表数量为0）","category":"基础配置","serial":"14-2"},{"name":"推拉密封转换器","code":"APT49.10.031X","unit":"套","qty":1,"note":"窄扇型材配置","category":"基础配置","serial":"15-1"},{"name":"推拉密封转换器","code":"APT49.01.031","unit":"套","qty":1,"note":"宽扇型材配置；可选项（原表数量为0）","category":"基础配置","serial":"15-2"},{"name":"推拉密封勾企锁杆","code":"ALR49.00.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"16"},{"name":"推拉密封锁座","code":"AALP49.031X","unit":"个","qty":2,"note":"031黑色","category":"基础配置","serial":"17"},{"name":"推拉密封防撞块","code":"BD40.02.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"18"},{"name":"防撞块","code":"BD40.01.06X","unit":"套","qty":2,"note":"","category":"基础配置","serial":"19"}]},{"group":"G42双轨推拉密封五金配置方案","name":"G42-6点锁配置方案（ 一固定一开启配置）","items":[{"name":"PH952执手","code":"PH952.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.35C021X","unit":"个","qty":1,"note":"外露轴长35mm","category":"基础配置","serial":"2"},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距","category":"基础配置","serial":"3"},{"name":"双轨推拉密封窗系统(L)","code":"ASS54.20.021LH4","unit":"套","qty":1,"note":"承重150kg，左边，根据实际窗型开启方向选左右；可选项（原表数量为0）","category":"基础配置","serial":"4"},{"name":"双轨推拉密封窗系统(R)","code":"ASS54.20.021RH4","unit":"套","qty":1,"note":"承重150kg，右边，根据实际窗型开启方向选左右","category":"基础配置","serial":""},{"name":"双轨推拉密封锁杆","code":"LPE59.00.021H4","unit":"个","qty":2,"note":"扇高1.8m以下标配2套，扇高超1.8m可按需增加锁杆数量","category":"基础配置","serial":"5"},{"name":"双轨推拉密封锁座(左)","code":"SLP59.00.1T021LH4","unit":"个","qty":2,"note":"扇高1.8m以下标配2套，扇高超1.8m可按需增加锁座数量锁座配套螺丝规格为：2颗M5*8mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"6-1"},{"name":"双轨推拉密封锁座(右)","code":"SLP59.00.1T021RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封锁座(不锈钢) 左","code":"SLP61.00.38LH4","unit":"个","qty":2,"note":"扇高1.8m以下标配2套，扇高超1.8m可按需增加锁座数量\n锁座配套螺丝规格为：2颗M5*8mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"6-2"},{"name":"双轨推拉密封锁座(不锈钢) 右","code":"SLP61.00.38RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""}]},{"group":"G42双轨推拉密封五金配置方案","name":"G42-8点锁配置方案（ 一固定一开启配置）","items":[{"name":"PH952执手","code":"PH952.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.35C021X","unit":"个","qty":1,"note":"外露轴长35mm","category":"基础配置","serial":"2"},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距","category":"基础配置","serial":"3"},{"name":"双轨推拉密封窗系统(L)","code":"ASS54.20.021LH4","unit":"套","qty":1,"note":"承重150kg，左边，根据实际窗型开启方向选左右；可选项（原表数量为0）","category":"基础配置","serial":"4"},{"name":"双轨推拉密封窗系统(R)","code":"ASS54.20.021RH4","unit":"套","qty":1,"note":"承重150kg，右边，根据实际窗型开启方向选左右","category":"基础配置","serial":""},{"name":"双轨推拉密封锁杆","code":"LPE59.00.021H4","unit":"个","qty":2,"note":"扇高1.8m以下标配2套，扇高超1.8m可按需增加锁杆数量","category":"基础配置","serial":"5"},{"name":"双轨推拉密封锁座(左)","code":"SLP59.00.1T021LH4","unit":"个","qty":2,"note":"扇高1.8m以下标配2套，扇高超1.8m可按需增加锁座数量锁座配套螺丝规格为：2颗M5*8mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"6-1"},{"name":"双轨推拉密封锁座(右)","code":"SLP59.00.1T021RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封锁座(不锈钢) 左","code":"SLP61.00.38LH4","unit":"个","qty":2,"note":"扇高1.8m以下标配2套，扇高超1.8m可按需增加锁座数量锁座配套螺丝规格为：2颗M5*8mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"6-2"},{"name":"双轨推拉密封锁座(不锈钢) 右","code":"SLP61.00.38RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封角传动器","code":"ACT54.00.021H4","unit":"个","qty":1,"note":"","category":"基础配置","serial":"7"},{"name":"双轨推拉密封钩锁L(窄)","code":"SDT54.10.021LH4","unit":"个","qty":2,"note":"中心距28.5mm，±可调3.6mm，根据实际窗型开启方向选左右\n扇高1.8m以下配2套，扇高1.8m以上配3套或3套以上；可选项（原表数量为0）","category":"基础配置","serial":"8-1"},{"name":"双轨推拉密封钩锁R(窄)","code":"SDT54.10.021RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封钩锁L(窄)","code":"SDT54.20.021LH4","unit":"个","qty":2,"note":"中心距33.5mm，±可调3.6mm，根据实际窗型开启方向选左右\n扇高1.8m以下配2套，扇高1.8m以上配3套或3套以上；可选项（原表数量为0）","category":"基础配置","serial":"8-2"},{"name":"双轨推拉密封钩锁R(窄)","code":"SDT54.20.021RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""}]},{"group":"G42双轨推拉密封五金配置方案","name":"6点锁和8点锁方案选配件","items":[{"name":"双轨推拉密封中间下滑轮(左)","code":"AHR54.03.021LH5","unit":"个","qty":1,"note":"增加1个承重增加70KG","category":"基础配置","serial":"9"},{"name":"双轨推拉密封中间下滑轮(右)","code":"AHR54.03.021RH5","unit":"个","qty":"","note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封中间上滑轮(左)","code":"AHR54.04.021LH4","unit":"个","qty":1,"note":"扇宽＞1500mm，建议增加1个扇宽＞2000mm，建议增加2个","category":"基础配置","serial":"10"},{"name":"双轨推拉密封中间上滑轮(右)","code":"AHR54.04.021RH4","unit":"个","qty":"","note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封单向缓冲器","code":"BD407.00.38H5","unit":"个","qty":1,"note":"扇重≤50kg选配","category":"基础配置","serial":"11-1"},{"name":"双轨推拉密封单向缓冲器","code":"BD407.10.38H5","unit":"个","qty":1,"note":"扇重≤100kg选配","category":"基础配置","serial":"11-2"},{"name":"双轨推拉密封单向缓冲器","code":"BD407.20.38H5","unit":"个","qty":1,"note":"扇重≤150kg选配","category":"基础配置","serial":"11-3"},{"name":"双轨推拉密封对开防撞块","code":"BD54.00.021H4","unit":"个","qty":1,"note":"对开方案选配：搭配缓冲器，选1套；不搭配缓冲器，选2套","category":"基础配置","serial":"12"}]},{"group":"新配置二（套装配置）","name":"G42-6点锁方案（ 一固定一开启配置）","items":[{"name":"PH952执手","code":"PH952.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.35C021X","unit":"个","qty":1,"note":"外露轴长35mm","category":"基础配置","serial":"2"},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距","category":"基础配置","serial":"3"},{"name":"双轨推拉密封窗系统(L)","code":"ASS54.00.1T021LH4","unit":"套","qty":1,"note":"内含2套锁杆、锁座，根据实际窗型开启方向选左右锁座配套螺丝规格为：2颗M5*8mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"4"},{"name":"双轨推拉密封窗系统(R)","code":"ASS54.00.1T021RH4","unit":"套","qty":1,"note":"","category":"基础配置","serial":""}]},{"group":"新配置二（套装配置）","name":"增加锁杆、锁座数量选配","items":[{"name":"双轨推拉密封锁杆","code":"LPE59.00.021H4","unit":"个","qty":1,"note":"扇高超1.8m，可按需增加锁杆数量","category":"基础配置","serial":"5"},{"name":"双轨推拉密封锁座(左)","code":"SLP59.00.1T021LH4","unit":"个","qty":1,"note":"扇高超1.8m，可按需增加锁座数量，根据实际窗型选左右（开启方向分）\n锁座配套螺丝规格为：2颗M5*8mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"6"},{"name":"双轨推拉密封锁座(右)","code":"SLP59.00.1T021RH4","unit":"个","qty":1,"note":"","category":"基础配置","serial":""}]},{"group":"新配置二（套装配置）","name":"G42-8点锁方案（ 一固定一开启配置）","items":[{"name":"PH952执手","code":"PH952.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.35C021X","unit":"个","qty":1,"note":"外露轴长35mm","category":"基础配置","serial":"2"},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距","category":"基础配置","serial":"3"},{"name":"双轨推拉密封窗系统(L)","code":"ASS54.00.1T021LH4","unit":"套","qty":1,"note":"内含2套锁杆、锁座，根据实际窗型开启方向选左右锁座配套螺丝规格为：2颗M5*8mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"4"},{"name":"双轨推拉密封窗系统(R)","code":"ASS54.00.1T021RH4","unit":"套","qty":1,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封角传动器","code":"ACT54.00.021H4","unit":"个","qty":1,"note":"","category":"基础配置","serial":"5"},{"name":"双轨推拉密封钩锁L(窄)","code":"SDT54.10.021LH4","unit":"个","qty":2,"note":"中心距28.5mm，±可调3.6mm，根据实际窗型开启方向选左右\n扇高1.8m以下配2套，扇高1.8m以上配3套或3套以上；可选项（原表数量为0）","category":"基础配置","serial":"6-1"},{"name":"双轨推拉密封钩锁R(窄)","code":"SDT54.10.021RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封钩锁L(窄)","code":"SDT54.20.021LH4","unit":"个","qty":2,"note":"中心距33.5mm，±可调3.6mm，根据实际窗型开启方向选左右\n扇高1.8m以下配2套，扇高1.8m以上配3套或3套以上；可选项（原表数量为0）","category":"基础配置","serial":"6-2"},{"name":"双轨推拉密封钩锁R(窄)","code":"SDT54.20.021RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""}]},{"group":"新配置二（套装配置）","name":"增加锁杆、锁座数量选配","items":[{"name":"双轨推拉密封锁杆","code":"LPE59.00.021H4","unit":"个","qty":1,"note":"扇高超1.8m，可按需增加锁杆数量","category":"基础配置","serial":"7"},{"name":"双轨推拉密封锁座(左)","code":"SLP59.00.1T021LH4","unit":"个","qty":1,"note":"扇高超1.8m，可按需增加锁座数量，根据实际窗型选左右（开启方向分）\n锁座配套螺丝规格为：2颗M5*8mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"8"},{"name":"双轨推拉密封锁座(右)","code":"SLP59.00.1T021RH4","unit":"个","qty":1,"note":"","category":"基础配置","serial":""}]},{"group":"新配置二（套装配置）","name":"6点锁和8点锁方案选配件","items":[{"name":"双轨推拉密封中间下滑轮(左)","code":"AHR54.03.021LH5","unit":"个","qty":1,"note":"增加1个承重增加70KG；可选项（原表数量为0）","category":"基础配置","serial":"9"},{"name":"双轨推拉密封中间下滑轮(右)","code":"AHR54.03.021RH5","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封单向缓冲器","code":"BD407.00.38H5","unit":"个","qty":1,"note":"扇重≤50kg选配","category":"基础配置","serial":"10-1"},{"name":"双轨推拉密封单向缓冲器","code":"BD407.10.38H5","unit":"个","qty":1,"note":"扇重≤100kg选配","category":"基础配置","serial":"10-2"},{"name":"双轨推拉密封单向缓冲器","code":"BD407.20.38H5","unit":"个","qty":1,"note":"扇重≤150kg选配","category":"基础配置","serial":"10-3"}]},{"group":"新配置三（长螺丝套装配置）","name":"G42-6点锁（ 一固定一开启配置）","items":[{"name":"PH952执手","code":"PH952.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.35C021X","unit":"个","qty":1,"note":"外露轴长35mm","category":"基础配置","serial":"2"},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距","category":"基础配置","serial":"3"},{"name":"双轨推拉密封窗系统(L)","code":"ASS54.10.1T021LH4","unit":"套","qty":1,"note":"内含2套锁杆、锁座，根据实际窗型选左右（开启方向分）\n锁座配套螺丝规格为：2颗M5*16mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"4"},{"name":"双轨推拉密封窗系统(R)","code":"ASS54.10.1T021RH4","unit":"套","qty":1,"note":"","category":"基础配置","serial":""}]},{"group":"新配置三（长螺丝套装配置）","name":"选配","items":[{"name":"双轨推拉密封锁杆","code":"LPE59.00.021H4","unit":"个","qty":1,"note":"扇高超1.8m，可按需增加锁杆数量","category":"基础配置","serial":"5"},{"name":"双轨推拉密封锁座(左)","code":"SLP59.10.021LH4","unit":"个","qty":1,"note":"扇高超1.8m，可按需增加锁座数量，根据实际窗型选左右（开启方向分）\n锁座配套螺丝规格为：2颗M5*16mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"6"},{"name":"双轨推拉密封锁座(右)","code":"SLP59.10.021RH4","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"产品名称","code":"产品代码","unit":"单位","qty":"配置数量","note":"备注","category":"基础配置","serial":"序号"},{"name":"PH952执手","code":"PH952.00.168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选012银色","category":"基础配置","serial":"1"},{"name":"SP07方轴","code":"SP07.12.35C021X","unit":"个","qty":1,"note":"外露轴长35mm","category":"基础配置","serial":"2"},{"name":"传动壳","code":"AGC50.13.014H4","unit":"个","qty":1,"note":"13mm中心距","category":"基础配置","serial":"3"},{"name":"双轨推拉密封窗系统(L)","code":"ASS54.10.1T021LH4","unit":"套","qty":1,"note":"内含2套锁杆、锁座，根据实际窗型选左右（开启方向分）\n锁座配套螺丝规格为：2颗M5*16mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"4"},{"name":"双轨推拉密封窗系统(R)","code":"ASS54.10.1T021RH4","unit":"套","qty":1,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封角传动器","code":"ACT54.00.021H4","unit":"个","qty":1,"note":"","category":"基础配置","serial":"5"},{"name":"双轨推拉密封钩锁L(窄)","code":"SDT54.10.021LH4","unit":"个","qty":2,"note":"中心距28.5mm，±可调3.6mm，根据实际窗型开启方向选左右\n扇高1.8m以下配2套，扇高1.8m以上配3套或3套以上；可选项（原表数量为0）","category":"基础配置","serial":"6-1"},{"name":"双轨推拉密封钩锁R(窄)","code":"SDT54.10.021RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封钩锁L(窄)","code":"SDT54.20.021LH4","unit":"个","qty":2,"note":"中心距33.5mm，±可调3.6mm，根据实际窗型开启方向选左右\n扇高1.8m以下配2套，扇高1.8m以上配3套或3套以上；可选项（原表数量为0）","category":"基础配置","serial":"6-2"},{"name":"双轨推拉密封钩锁R(窄)","code":"SDT54.20.021RH4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""}]},{"group":"G42-8点锁方案选配（ 一固定一开启配置）","name":"增加锁杆、锁座数量选配","items":[{"name":"双轨推拉密封锁杆","code":"LPE59.00.021H4","unit":"个","qty":1,"note":"扇高超1.8m，可按需增加锁杆数量","category":"基础配置","serial":"7"},{"name":"双轨推拉密封锁座(左)","code":"SLP59.10.021LH4","unit":"个","qty":1,"note":"扇高超1.8m，可按需增加锁座数量，根据实际窗型选左右（开启方向分）\n锁座配套螺丝规格为：2颗M5*16mm长内六角凹端机米不锈钢螺钉；可选项（原表数量为0）","category":"基础配置","serial":"8"},{"name":"双轨推拉密封锁座(右)","code":"SLP59.10.021RH4","unit":"个","qty":1,"note":"","category":"基础配置","serial":""}]},{"group":"G42-8点锁方案选配（ 一固定一开启配置）","name":"6点锁和8点锁方案选配件","items":[{"name":"双轨推拉密封中间下滑轮(左)","code":"AHR54.03.021LH5","unit":"个","qty":1,"note":"增加1个承重增加70KG；可选项（原表数量为0）","category":"基础配置","serial":"9"},{"name":"双轨推拉密封中间下滑轮(右)","code":"AHR54.03.021RH5","unit":"个","qty":1,"note":"","category":"基础配置","serial":""},{"name":"双轨推拉密封单向缓冲器","code":"BD407.00.38H5","unit":"个","qty":1,"note":"扇重≤50kg选配","category":"基础配置","serial":"10-1"},{"name":"双轨推拉密封单向缓冲器","code":"BD407.10.38H5","unit":"个","qty":1,"note":"扇重≤100kg选配","category":"基础配置","serial":"10-2"},{"name":"双轨推拉密封单向缓冲器","code":"BD407.20.38H5","unit":"个","qty":1,"note":"扇重≤150kg选配","category":"基础配置","serial":"10-3"}]},{"group":"G52-65折叠","name":"G52-65外折叠（431）配置方案","items":[{"name":"N65滑轮组件","code":"ABR65.40.068H5","unit":"套","qty":1,"note":"068砂纹黑色，可选银色","category":"基础配置","serial":"1-1"},{"name":"N65折叠防脱块","code":"AB65.00.38X","unit":"套","qty":1,"note":"G52防脱型材选择配置","category":"基础配置","serial":""},{"name":"N65滑轮组件","code":"ABR65.40.1T068H5","unit":"套","qty":1,"note":"068砂纹黑色，可选银色","category":"基础配置","serial":"1-2"},{"name":"合页组件","code":"ASH65.03.068H5","unit":"个","qty":9,"note":"068砂纹黑色，可选银色","category":"基础配置","serial":"2"},{"name":"合页拉手","code":"AHH65.00.068H5","unit":"个","qty":1,"note":"068砂纹黑色，可选银色","category":"基础配置","serial":"3"},{"name":"碰扣","code":"TBL65.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"4"},{"name":"传动壳","code":"AGC65.14.021X","unit":"支","qty":2,"note":"","category":"基础配置","serial":"5"},{"name":"执手","code":"PH171.00.168H5","unit":"个","qty":2,"note":"168抑菌砂纹黑色，可选银色","category":"基础配置","serial":"6"},{"name":"方轴","code":"SP07.07.40C021X","unit":"个","qty":2,"note":"40mm","category":"基础配置","serial":"7"},{"name":"插销","code":"ASB65.10.06","unit":"套","qty":2,"note":"06黑色","category":"基础配置","serial":"8"},{"name":"605门执手组件","code":"HSD605.168168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选银色","category":"基础配置","serial":"9"},{"name":"锁体","code":"SDL51.32.22C38","unit":"个","qty":1,"note":"32mm中心距，单点锁体，可选27mm中心距","category":"基础配置","serial":"10-1"},{"name":"K系列锁体","code":"SDLK50.33.22C025H5","unit":"个","qty":1,"note":"33mm中心距，多点联动锁体，可选28、40mm中心距","category":"基础配置","serial":"10-2"},{"name":"ALR28滚套锁杆","code":"ALR28.65.021H4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"C槽可调锁座","code":"AALP10.021","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"锁芯","code":"C99.6035C4T029","unit":"个","qty":1,"note":"锁芯规格可选","category":"基础配置","serial":"11"},{"name":"门锁座","code":"ALPD50.07.38","unit":"个","qty":1,"note":"","category":"基础配置","serial":"12"}]},{"group":"G52-65折叠","name":"G52-65内折叠（431）配置方案","items":[{"name":"N65滑轮组件","code":"ABR65.40.068H5","unit":"套","qty":1,"note":"068砂纹黑色，可选银色","category":"基础配置","serial":"1-1"},{"name":"N65折叠防脱块","code":"AB65.00.38X","unit":"套","qty":1,"note":"G52防脱型材选择配置","category":"基础配置","serial":""},{"name":"N65滑轮组件","code":"ABR65.40.1T068H5","unit":"套","qty":1,"note":"068砂纹黑色，可选银色","category":"基础配置","serial":"1-2"},{"name":"合页组件","code":"ASH65.03.068H5","unit":"个","qty":10,"note":"068砂纹黑色，可选银色","category":"基础配置","serial":"2"},{"name":"碰扣","code":"TBL65.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"传动壳","code":"AGC65.14.021X","unit":"支","qty":2,"note":"","category":"基础配置","serial":"4"},{"name":"执手","code":"PH171.00.168H5","unit":"个","qty":2,"note":"168抑菌砂纹黑色，可选银色","category":"基础配置","serial":"5"},{"name":"方轴","code":"SP07.07.40C021X","unit":"个","qty":2,"note":"","category":"基础配置","serial":"6"},{"name":"插销","code":"ASB65.10.06","unit":"套","qty":2,"note":"","category":"基础配置","serial":"7"},{"name":"605门执手组件","code":"HSD605.168168H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色，可选银色","category":"基础配置","serial":"8"},{"name":"锁体","code":"SDL51.32.22C38","unit":"个","qty":1,"note":"32mm中心距，单点锁体，可选27mm中心距","category":"基础配置","serial":"9-1"},{"name":"K系列锁体","code":"SDLK50.33.22C025H5","unit":"个","qty":1,"note":"33mm中心距，多点联动锁体，可选28、40mm中心距","category":"基础配置","serial":"9-2"},{"name":"ALR28滚套锁杆","code":"ALR28.65.021H4","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"C槽可调锁座","code":"AALP10.021","unit":"个","qty":2,"note":"","category":"基础配置","serial":""},{"name":"锁芯","code":"C99.3055C4T029","unit":"个","qty":1,"note":"旋钮端会凹入基座约5mm","category":"基础配置","serial":"10"},{"name":"门锁座","code":"ALPD50.07.38","unit":"个","qty":1,"note":"","category":"基础配置","serial":"11"}]},{"group":"G50-63折叠","name":"G50-63折叠窗（431折叠）配置方案","items":[{"name":"63#插销传动壳","code":"AGC63.10.012","unit":"个","qty":3,"note":"012银色，可选069黑色","category":"基础配置","serial":"1"},{"name":"63折叠插销B","code":"ASB63.20.06X","unit":"套","qty":3,"note":"非隔热型材；可选项（原表数量为0）","category":"基础配置","serial":"2"},{"name":"63折叠窗插销","code":"ASB63.40.06X","unit":"套","qty":3,"note":"隔热型材","category":"基础配置","serial":""},{"name":"63折叠滑轮","code":"ABR63.10.012H5","unit":"套","qty":1,"note":"012银色，可选069黑色","category":"基础配置","serial":"3"},{"name":"63折叠合页","code":"ASH63.10.012X","unit":"套","qty":3,"note":"012银色，可选069黑色","category":"基础配置","serial":"4"},{"name":"碰扣","code":"TBL65.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"5"}]},{"group":"G50-63折叠","name":"G50-63折叠门（431折叠）配置方案","items":[{"name":"63折叠门插销A","code":"ASB63.10.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"1"},{"name":"63折叠插销B","code":"ASB63.20.06X","unit":"套","qty":2,"note":"非隔热型材","category":"基础配置","serial":"2"},{"name":"63折叠窗插销","code":"ASB63.40.06X","unit":"套","qty":1,"note":"隔热型材","category":"基础配置","serial":""},{"name":"63插销传动壳","code":"AGC63.10.012","unit":"个","qty":2,"note":"012银色，可选069黑色","category":"基础配置","serial":"3"},{"name":"滑轮组件","code":"ABR63.10.012H5","unit":"套","qty":1,"note":"012银色，可选069黑色","category":"基础配置","serial":"4"},{"name":"合页","code":"ASH63.10.012X","unit":"套","qty":5,"note":"012银色，可选069黑色","category":"基础配置","serial":"5"},{"name":"锁芯","code":"C99.3050C4T029","unit":"个","qty":1,"note":"其他规格可选","category":"基础配置","serial":"6"},{"name":"PH923执手(左)","code":"PH923.00.012LH5","unit":"个","qty":1,"note":"银色，左边，可选黑色","category":"基础配置","serial":"7"},{"name":"PH923执手(右)","code":"PH923.00.012RH5","unit":"个","qty":1,"note":"银色，右边，可选黑色；可选项（原表数量为0）","category":"基础配置","serial":"8"},{"name":"方轴","code":"SP07.12.70C021X","unit":"个","qty":1,"note":"70mm长，可选120mm长","category":"基础配置","serial":"9"},{"name":"对穿螺丝","code":"SSC4.70","unit":"个","qty":4,"note":"70mm长，可选120mm长","category":"基础配置","serial":"10"},{"name":"带锁双向传动壳（M6螺纹孔）","code":"DBS66.10.1T38X","unit":"个","qty":1,"note":"银色，可选黑色","category":"基础配置","serial":"11"},{"name":"锁芯盖","code":"CC53.011011","unit":"个","qty":1,"note":"银色，可选黑色","category":"基础配置","serial":"12"},{"name":"碰扣","code":"TBL65.06X","unit":"套","qty":1,"note":"","category":"基础配置","serial":"13"}]},{"group":"G21窄边推拉门","name":"G21-窄边推拉门（隔热） 双轨双扇方案一旋钮方案","items":[{"name":"窄推拉旋钮","code":"TBH51.00.211C011","unit":"个","qty":2,"note":"011银色，066黑色","category":"基础配置","serial":"1"},{"name":"窄推拉锁芯","code":"TBH51.10.011","unit":"个","qty":1,"note":"011银色、066黑色都已停产，暂无替代方案","category":"基础配置","serial":"2"},{"name":"窄推拉传动壳","code":"AGC51.03.031","unit":"支","qty":2,"note":"","category":"基础配置","serial":"3"},{"name":"窄推拉锁杆","code":"LPE51.12.031","unit":"个","qty":4,"note":"扇上安装","category":"基础配置","serial":"4"},{"name":"窄推拉锁座","code":"SLP51.00.031","unit":"个","qty":4,"note":"框上安装","category":"基础配置","serial":"5"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":8,"note":"","category":"基础配置","serial":"6"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":4,"note":"白轮，120KG","category":"基础配置","serial":"7"},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":4,"note":"","category":"基础配置","serial":"8"},{"name":"窄推拉防撞块","code":"BD40.03.06X","unit":"套","qty":1,"note":"一套四个，黑色","category":"基础配置","serial":"9"},{"name":"防撞块","code":"BD40.01.1T06","unit":"个","qty":1,"note":"HOPO 黑色 高低轨型材不适用","category":"基础配置","serial":"10"},{"name":"BH425大拉手","code":"BH425.00.40C066X","unit":"个","qty":2,"note":"选配，订单式","category":"基础配置","serial":"11"}]},{"group":"G21窄边推拉门","name":"G21-窄边推拉门（隔热） 双轨双扇方案二MA锁方案","items":[{"name":"422MA锁(带锁芯）","code":"MAL422.030.011","unit":"个","qty":1,"note":"011银色（带锁），可选168抑菌砂纹黑","category":"基础配置","serial":"1"},{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":1,"note":"011银色（不带锁），可选168抑菌砂纹黑","category":"基础配置","serial":"2"},{"name":"转换杆","code":"APT51.00.031","unit":"个","qty":2,"note":"","category":"基础配置","serial":"3"},{"name":"窄推拉锁杆","code":"LPE51.12.01C031","unit":"个","qty":4,"note":"框上安装","category":"基础配置","serial":"4"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":4,"note":"扇上安装","category":"基础配置","serial":"5"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":8,"note":"","category":"基础配置","serial":"6"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":4,"note":"白轮，120KG","category":"基础配置","serial":"7"},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":4,"note":"","category":"基础配置","serial":"8"},{"name":"窄推拉防撞块","code":"BD40.03.06X","unit":"套","qty":1,"note":"一套四个，黑色","category":"基础配置","serial":"9"},{"name":"防撞块","code":"BD40.01.1T06","unit":"个","qty":1,"note":"HOPO 黑色 高低轨型材不适用","category":"基础配置","serial":"10"},{"name":"BH425大拉手","code":"BH425.00.40C066X","unit":"个","qty":2,"note":"选配，订单式","category":"基础配置","serial":"11"}]},{"group":"G21窄边推拉门","name":"G21-窄边推拉门（隔热） 双轨四扇方案一旋钮方案","items":[{"name":"窄推拉旋钮","code":"TBH51.00.211C011","unit":"个","qty":3,"note":"011银色，066氧化黑","category":"基础配置","serial":"1"},{"name":"窄推拉锁芯","code":"TBH51.10.011","unit":"个","qty":1,"note":"011银色、066黑色都已停产，暂无替代方案","category":"基础配置","serial":"2"},{"name":"窄推拉传动壳","code":"AGC51.03.031","unit":"支","qty":3,"note":"","category":"基础配置","serial":"3"},{"name":"窄推拉锁杆","code":"LPE51.12.031","unit":"个","qty":6,"note":"扇上安装","category":"基础配置","serial":"4"},{"name":"窄推拉锁座","code":"SLP51.00.031","unit":"个","qty":6,"note":"框上安装","category":"基础配置","serial":"5"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":16,"note":"","category":"基础配置","serial":"6"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":8,"note":"白轮，120KG","category":"基础配置","serial":"7"},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":8,"note":"","category":"基础配置","serial":"8"},{"name":"窄推拉防撞块","code":"BD40.03.06X","unit":"套","qty":2,"note":"一套四个，黑色","category":"基础配置","serial":"9"},{"name":"防撞块","code":"BD40.01.1T06","unit":"个","qty":2,"note":"黑色、高低轨型材不适用","category":"基础配置","serial":"10"},{"name":"BH425大拉手","code":"BH425.00.40C066X","unit":"个","qty":4,"note":"选配，订单式","category":"基础配置","serial":"11"}]},{"group":"G21窄边推拉门","name":"G21-窄边推拉门（隔热） 双轨四扇方案二MA锁方案","items":[{"name":"窄推拉旋钮","code":"TBH51.00.211C011","unit":"个","qty":1,"note":"011银色，066黑色","category":"基础配置","serial":"1"},{"name":"窄推拉锁芯","code":"TBH51.10.011","unit":"个","qty":1,"note":"011银色、066黑色都已停产，暂无替代方案","category":"基础配置","serial":"2"},{"name":"窄推拉传动壳","code":"AGC51.03.031","unit":"支","qty":1,"note":"","category":"基础配置","serial":"3"},{"name":"窄推拉锁杆","code":"LPE51.12.031","unit":"个","qty":2,"note":"扇上安装","category":"基础配置","serial":"4"},{"name":"窄推拉锁座","code":"SLP51.00.031","unit":"个","qty":2,"note":"框上安装","category":"基础配置","serial":"5"},{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":2,"note":"011银色（不带锁），可选168抑菌砂纹黑","category":"基础配置","serial":"6"},{"name":"转换杆","code":"APT51.00.031","unit":"个","qty":2,"note":"","category":"基础配置","serial":"7"},{"name":"窄推拉锁杆","code":"LPE51.12.01C031","unit":"个","qty":4,"note":"","category":"基础配置","serial":"8"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":4,"note":"框上安装","category":"基础配置","serial":"9"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":16,"note":"扇上安装","category":"基础配置","serial":"10"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":8,"note":"白轮，120KG","category":"基础配置","serial":"11"},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":8,"note":"","category":"基础配置","serial":"12"},{"name":"窄推拉防撞块","code":"BD40.03.06X","unit":"套","qty":2,"note":"一套四个，黑色","category":"基础配置","serial":"13"},{"name":"防撞块","code":"BD40.01.1T06","unit":"个","qty":2,"note":"HOPO 黑色 高低轨型材不适用","category":"基础配置","serial":"14"},{"name":"BH425大拉手","code":"BH425.00.40C066X","unit":"个","qty":4,"note":"选配，订单式","category":"基础配置","serial":"15"}]},{"group":"G21窄边推拉门","name":"G21-L型转角三轨六扇窄边推拉门（隔热）-MA锁方案","items":[{"name":"422MA锁(带锁芯）","code":"MAL422.030.011","unit":"个","qty":2,"note":"011银色（带锁），可选168抑菌砂纹黑","category":"基础配置","serial":"1"},{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":3,"note":"011银色（不带锁），可选168抑菌砂纹黑","category":"基础配置","serial":"2"},{"name":"转换杆","code":"APT51.00.031","unit":"个","qty":4,"note":"","category":"基础配置","serial":"3"},{"name":"转换杆","code":"APT51.10.031","unit":"个","qty":1,"note":"转角扇使用","category":"基础配置","serial":"4"},{"name":"窄推拉锁杆","code":"LPE51.12.01C031","unit":"个","qty":10,"note":"","category":"基础配置","serial":"5"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":10,"note":"","category":"基础配置","serial":"6"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":24,"note":"","category":"基础配置","serial":"7"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":12,"note":"白轮，120KG","category":"基础配置","serial":"8"},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":12,"note":"","category":"基础配置","serial":"9"},{"name":"窄推拉防撞块","code":"BD40.03.06X","unit":"套","qty":2,"note":"一套四个，黑色","category":"基础配置","serial":"10"},{"name":"防撞块","code":"BD40.01.1T06","unit":"个","qty":2,"note":"HOPO 黑色 高低轨型材不适用","category":"基础配置","serial":"11"},{"name":"BH425大拉手","code":"BH425.00.40C066X","unit":"个","qty":4,"note":"选配，订单式","category":"基础配置","serial":"12"}]},{"group":"G21窄边推拉门","name":"G21-L型转角两轨四扇窄边推拉门（隔热）-旋钮方案","items":[{"name":"窄推拉旋钮","code":"TBH51.00.211C011","unit":"个","qty":2,"note":"011银色，066黑色已停产淘汰","category":"基础配置","serial":"1"},{"name":"窄推拉锁芯","code":"TBH51.10.011","unit":"个","qty":2,"note":"011银色、066黑色都已停产，暂无替代方案","category":"基础配置","serial":"2"},{"name":"窄推拉传动壳","code":"AGC51.03.031","unit":"支","qty":2,"note":"","category":"基础配置","serial":"3"},{"name":"窄推拉锁杆","code":"LPE51.12.031","unit":"个","qty":4,"note":"","category":"基础配置","serial":"4"},{"name":"窄推拉锁座","code":"SLP51.00.031","unit":"个","qty":4,"note":"","category":"基础配置","serial":"5"},{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":1,"note":"011银色（不带锁），可选168抑菌砂纹黑","category":"基础配置","serial":"6"},{"name":"转换杆","code":"APT51.10.031","unit":"个","qty":1,"note":"转角扇使用","category":"基础配置","serial":"7"},{"name":"窄推拉锁杆","code":"LPE51.12.01C031","unit":"个","qty":2,"note":"","category":"基础配置","serial":"8"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":2,"note":"","category":"基础配置","serial":"9"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":16,"note":"","category":"基础配置","serial":"10"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":8,"note":"白轮，120KG","category":"基础配置","serial":"11"},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":8,"note":"","category":"基础配置","serial":"12"},{"name":"窄推拉防撞块","code":"BD40.03.06X","unit":"套","qty":2,"note":"一套四个，黑色","category":"基础配置","serial":"13"},{"name":"防撞块","code":"BD40.01.1T06","unit":"个","qty":2,"note":"黑色 、高低轨型材不适用","category":"基础配置","serial":"14"},{"name":"BH425大拉手","code":"BH425.00.40C066X","unit":"个","qty":4,"note":"选配，订单式","category":"基础配置","serial":"15"}]},{"group":"G21窄边推拉门","name":"G21-L型转角两轨四扇窄边推拉门（隔热）-MA锁方案","items":[{"name":"422MA锁(带锁芯）","code":"MAL422.030.011","unit":"个","qty":1,"note":"011银色（带锁），可选168抑菌砂纹黑","category":"基础配置","serial":"1"},{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":2,"note":"011银色（不带锁），可选168抑菌砂纹黑","category":"基础配置","serial":"2"},{"name":"转换杆","code":"APT51.10.031","unit":"个","qty":1,"note":"转角扇使用","category":"基础配置","serial":"3"},{"name":"转换杆","code":"APT51.00.031","unit":"个","qty":2,"note":"","category":"基础配置","serial":"4"},{"name":"窄推拉锁杆","code":"LPE51.12.01C031","unit":"个","qty":6,"note":"","category":"基础配置","serial":"5"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":6,"note":"","category":"基础配置","serial":"6"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":16,"note":"","category":"基础配置","serial":"7"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":8,"note":"白轮，120KG","category":"基础配置","serial":"8"},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":8,"note":"","category":"基础配置","serial":"9"},{"name":"窄推拉防撞块","code":"BD40.03.06X","unit":"套","qty":2,"note":"一套四个，黑色","category":"基础配置","serial":"10"},{"name":"防撞块","code":"BD40.01.1T06","unit":"个","qty":2,"note":"黑色、高低轨型材不适用","category":"基础配置","serial":"11"},{"name":"BH425大拉手","code":"BH425.00.40C066X","unit":"个","qty":4,"note":"选配，订单式","category":"基础配置","serial":"12"}]},{"group":"G23窄边推拉配置方案","name":"G23-两轨两扇窄边推拉门 -仅用于室内启闭","items":[{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":2,"note":"011银色，可选168抑菌砂纹黑","category":"基础配置","serial":"1"},{"name":"转换杆","code":"APT51.00.031","unit":"个","qty":2,"note":"","category":"基础配置","serial":"2"},{"name":"窄推拉锁杆","code":"LPE51.12.01C031","unit":"个","qty":4,"note":"","category":"基础配置","serial":"3"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":4,"note":"","category":"基础配置","serial":"4"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":8,"note":"","category":"基础配置","serial":"5"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":4,"note":"白轮，轻型120KG","category":"基础配置","serial":"6"},{"name":"滑轮","code":"R21.224415.38","unit":"个","qty":4,"note":"白轮，重型250KG，HOPO标","category":"基础配置","serial":""},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":4,"note":"","category":"基础配置","serial":"7"}]},{"group":"G23窄边推拉配置方案","name":"G23-两轨四扇窄边推拉门 -仅用于室内启闭","items":[{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":3,"note":"011银色，可选168抑菌砂纹黑","category":"基础配置","serial":"1"},{"name":"转换杆","code":"APT51.00.031","unit":"个","qty":3,"note":"","category":"基础配置","serial":"2"},{"name":"窄推拉锁杆","code":"LPE51.12.01C031","unit":"个","qty":6,"note":"","category":"基础配置","serial":"3"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":6,"note":"","category":"基础配置","serial":"4"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":16,"note":"","category":"基础配置","serial":"5"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":8,"note":"白轮，轻型120KG","category":"基础配置","serial":"6"},{"name":"滑轮","code":"R21.224415.38","unit":"个","qty":8,"note":"白轮，重型250KG，HOPO标","category":"基础配置","serial":""},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":8,"note":"","category":"基础配置","serial":"7"},{"name":"防撞块","code":"BD40.01.1T06","unit":"个","qty":2,"note":"","category":"基础配置","serial":"8"}]},{"group":"G23窄边推拉配置方案","name":"G23-三轨六扇窄边推拉门-仅用于室内启闭","items":[{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":4,"note":"011银色，可选168抑菌砂纹黑","category":"基础配置","serial":"1"},{"name":"转换杆","code":"APT51.00.031","unit":"个","qty":4,"note":"","category":"基础配置","serial":"2"},{"name":"窄推拉锁杆","code":"LPE51.12.01C031","unit":"个","qty":8,"note":"","category":"基础配置","serial":"3"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":8,"note":"","category":"基础配置","serial":"4"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":16,"note":"","category":"基础配置","serial":"5"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":8,"note":"白轮，轻型120KG","category":"基础配置","serial":"6"},{"name":"滑轮","code":"R21.224415.38","unit":"个","qty":8,"note":"白轮，重型250KG，HOPO标","category":"基础配置","serial":""},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":8,"note":"","category":"基础配置","serial":"7"},{"name":"防撞块","code":"BD40.01.1T06","unit":"个","qty":2,"note":"","category":"基础配置","serial":"8"}]},{"group":"G23窄边推拉配置方案","name":"G23-两轨四扇窄边L转角推拉门-仅用于室内启闭","items":[{"name":"422MA锁(不带锁芯）","code":"MAL422.130.011","unit":"个","qty":3,"note":"011银色，可选168抑菌砂纹黑","category":"基础配置","serial":"1"},{"name":"转换杆","code":"APT51.00.031","unit":"个","qty":3,"note":"","category":"基础配置","serial":"2"},{"name":"窄推拉锁杆","code":"LPE51.12.01C031","unit":"个","qty":6,"note":"","category":"基础配置","serial":"3"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":6,"note":"","category":"基础配置","serial":"4"},{"name":"窄推拉角码","code":"ACO51.10.00","unit":"个","qty":12,"note":"","category":"基础配置","serial":"5"},{"name":"窄推拉下滑轮","code":"AHR51.142204.07","unit":"个","qty":6,"note":"白轮，轻型120KG","category":"基础配置","serial":"6"},{"name":"滑轮","code":"R21.224415.38","unit":"个","qty":6,"note":"白轮，重型250KG，HOPO标","category":"基础配置","serial":""},{"name":"窄推拉导向轮","code":"RGP51.00.38X","unit":"个","qty":6,"note":"","category":"基础配置","serial":"7"}]},{"group":"G24窄边推拉门系列配置方案","name":"G24窄边推拉（非隔热）两轨两扇拉手方案","items":[{"name":"窄边拉手","code":"BH480.00.25C168H5","unit":"个","qty":2,"note":"真锁，168抑菌砂纹黑色","category":"基础配置","serial":"1"},{"name":"转换杆","code":"APT51.20.06X","unit":"个","qty":2,"note":"黑色，无标","category":"基础配置","serial":"2"},{"name":"窄推拉锁杆","code":"LPE51.13.95C031H4","unit":"个","qty":4,"note":"黑色","category":"基础配置","serial":"3"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":4,"note":"黑色","category":"基础配置","serial":"4"},{"name":"窄推拉滑轮","code":"AHR51.122204.07H5","unit":"个","qty":4,"note":"轻型选配、白轮","category":"基础配置","serial":"5"},{"name":"滑轮","code":"R21.224415.38","unit":"个","qty":4,"note":"重型选配、白轮；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"窄推拉导向轮","code":"RGP51.01.38X","unit":"个","qty":4,"note":"不锈钢","category":"基础配置","serial":"6"}]},{"group":"G24窄边推拉门系列配置方案","name":"G24窄边推拉（非隔热）两轨四扇对碰拉手方案","items":[{"name":"窄边拉手","code":"BH480.00.25C168H5","unit":"个","qty":3,"note":"真锁，168抑菌砂纹黑色","category":"基础配置","serial":"1"},{"name":"窄边拉手","code":"BH480.01.168H5","unit":"个","qty":1,"note":"假锁、对碰扇被动扇安装","category":"基础配置","serial":"2"},{"name":"转换杆","code":"APT51.20.06X","unit":"个","qty":3,"note":"黑色，无标","category":"基础配置","serial":"3"},{"name":"窄推拉锁杆","code":"LPE51.13.95C031H4","unit":"个","qty":6,"note":"黑色","category":"基础配置","serial":"4"},{"name":"窄推拉锁座","code":"SLP51.10.031","unit":"个","qty":6,"note":"黑色","category":"基础配置","serial":"5"},{"name":"窄推拉滑轮","code":"AHR51.122204.07H5","unit":"个","qty":8,"note":"轻型选配、白轮","category":"基础配置","serial":"6"},{"name":"滑轮","code":"R21.224415.38","unit":"个","qty":8,"note":"重型选配、白轮；可选项（原表数量为0）","category":"基础配置","serial":""},{"name":"窄推拉导向轮","code":"RGP51.01.38X","unit":"个","qty":8,"note":"不锈钢","category":"基础配置","serial":"7"}]},{"group":"G30 窄边提升推拉系列配置方案","name":"G30 窄边提升推拉门/窗配置方案（两扇）","items":[{"name":"PH188执手","code":"PH188.00.012H5","unit":"个","qty":1,"note":"168抑菌砂纹黑色、012银色、044深古铜色","category":"玻扇配置","serial":"1"},{"name":"方轴","code":"H.0802.07.51C021","unit":"个","qty":2,"note":"规格可选","category":"玻扇配置","serial":"2"},{"name":"窄提升推拉滑轮组件","code":"LSBR70.00.07","unit":"套","qty":2,"note":"白轮","category":"玻扇配置","serial":"3"},{"name":"窄提升推拉传动壳","code":"AGC70.08.031","unit":"个","qty":2,"note":"电泳黑色","category":"玻扇配置","serial":"4"},{"name":"窄提升推拉锁杆","code":"LPE70.00.031","unit":"个","qty":4,"note":"电泳黑色","category":"玻扇配置","serial":"5"},{"name":"窄提升推拉锁座","code":"SLP70.00.031","unit":"个","qty":4,"note":"电泳黑色","category":"玻扇配置","serial":"6"},{"name":"螺纹杆","code":"LSS70.10.11C38","unit":"支","qty":2,"note":"1.1米螺纹杆","category":"玻扇配置","serial":"7"},{"name":"窄提升推拉导向轮","code":"RGP70.00.38X","unit":"个","qty":4,"note":"不锈钢","category":"玻扇配置","serial":"8"},{"name":"防撞块","code":"BD40.01.06","unit":"个","qty":1,"note":"黑色","category":"玻扇配置","serial":"9"},{"name":"窄提升推拉附件包","code":"TD40.02.06X","unit":"套","qty":1,"note":"黑色","category":"玻扇配置","serial":"10"},{"name":"422MA锁(不带锁芯）","code":"MAL422.121.011","unit":"个","qty":1,"note":"011氧化银色、可选168抑菌砂纹黑、045新氧化深古铜色","category":"纱窗配置","serial":"1"},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":1,"note":"19mm长，可选23/28/35/45/50/65mm长","category":"纱窗配置","serial":"2"},{"name":"可调锁杆TL(D7)","code":"LPE45.07.12C069","unit":"个","qty":2,"note":"7mm直径、锁点高度12mm","category":"纱窗配置","serial":"3"},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":2,"note":"夹持式+螺丝固定、锁点伸进量7mm","category":"纱窗配置","serial":"4"},{"name":"滑轮","code":"R12.121805.07H5","unit":"个","qty":2,"note":"两轮-12m宽，18.1mm高，可调至23.1mm，承重80KG","category":"纱窗配置","serial":"5"},{"name":"422MA锁(不带锁芯）","code":"MAL422.121.011","unit":"个","qty":1,"note":"011氧化银色、可选168抑菌砂纹黑、045新氧化深古铜色","category":"纱门配置","serial":"1"},{"name":"MA扣手","code":"BH422.10.011","unit":"个","qty":1,"note":"银色","category":"纱门配置","serial":"2"},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":1,"note":"19mm长，可选23/28/35/45/50/65mm长","category":"纱门配置","serial":"3"},{"name":"可调锁杆TL(D7)","code":"LPE45.07.12C069","unit":"个","qty":2,"note":"7mm直径、锁点高度12mm","category":"纱门配置","serial":"4"},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":2,"note":"夹持式+螺丝固定、锁点伸进量7mm","category":"纱门配置","serial":"5"},{"name":"滑轮","code":"R12.121805.07H5","unit":"个","qty":2,"note":"两轮-12m宽，18.1mm高，可调至23.1mm，承重80KG","category":"纱门配置","serial":"6"}]},{"group":"G30 窄边提升推拉系列配置方案","name":"G30 窄边提升推拉门/窗配置方案（四扇）","items":[{"name":"PH188执手","code":"PH188.00.012H5","unit":"个","qty":2,"note":"168抑菌砂纹黑色、012银色、044深古铜色","category":"基础配置","serial":"1"},{"name":"方轴","code":"H.0802.07.51C021","unit":"个","qty":4,"note":"规格可选","category":"基础配置","serial":"2"},{"name":"窄提升推拉滑轮组件","code":"LSBR70.00.07","unit":"套","qty":4,"note":"","category":"基础配置","serial":"3"},{"name":"窄提升推拉传动壳","code":"AGC70.08.031","unit":"个","qty":4,"note":"电泳黑色","category":"基础配置","serial":"4"},{"name":"窄提升推拉锁杆","code":"LPE70.00.031","unit":"个","qty":6,"note":"电泳黑色","category":"基础配置","serial":"5"},{"name":"窄提升推拉锁座","code":"SLP70.00.031","unit":"个","qty":6,"note":"电泳黑色","category":"基础配置","serial":"6"},{"name":"螺纹杆","code":"LSS70.10.11C38","unit":"支","qty":4,"note":"1.1米螺纹杆","category":"基础配置","serial":"7"},{"name":"窄提升推拉导向轮","code":"RGP70.00.38X","unit":"个","qty":8,"note":"不锈钢","category":"基础配置","serial":"8"},{"name":"防撞块","code":"BD40.01.06","unit":"个","qty":2,"note":"黑色","category":"基础配置","serial":"9"},{"name":"窄提升推拉附件包","code":"TD40.02.06X","unit":"套","qty":2,"note":"黑色","category":"基础配置","serial":"10"},{"name":"422MA锁(不带锁芯）","code":"MAL422.121.011","unit":"个","qty":1,"note":"011氧化银色、可选168抑菌砂纹黑、045新氧化深古铜色","category":"纱窗配置","serial":"1"},{"name":"MA扣手","code":"BH422.10.011","unit":"个","qty":1,"note":"银色，被动扇安装","category":"纱窗配置","serial":"2"},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":1,"note":"19mm长，可选23/28/35/45/50/65mm长","category":"纱窗配置","serial":"3"},{"name":"可调锁杆TL(D7)","code":"LPE45.07.12C069","unit":"个","qty":2,"note":"7mm直径、锁点高度12mm","category":"纱窗配置","serial":"4"},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":2,"note":"夹持式+螺丝固定、锁点伸进量7mm","category":"纱窗配置","serial":"5"},{"name":"滑轮","code":"R12.121805.07H5","unit":"个","qty":4,"note":"两轮-12m宽，18.1mm高，可调至23.1mm，承重80KG","category":"纱窗配置","serial":"6"},{"name":"422MA锁(不带锁芯）","code":"MAL422.121.011","unit":"个","qty":1,"note":"011氧化银色、可选168抑菌砂纹黑、045新氧化深古铜色","category":"纱门配置","serial":"1"},{"name":"MA扣手","code":"BH422.10.011","unit":"个","qty":3,"note":"银色，被动扇安装","category":"纱门配置","serial":"2"},{"name":"重型T字件","code":"TTC31.19.069X","unit":"个","qty":1,"note":"19mm长，可选23/28/35/45/50/65mm长","category":"纱门配置","serial":"3"},{"name":"可调锁杆TL(D7)","code":"LPE45.07.12C069","unit":"个","qty":2,"note":"7mm直径、锁点高度12mm","category":"纱门配置","serial":"4"},{"name":"重型锁座","code":"SLP47.03.069","unit":"个","qty":2,"note":"夹持式+螺丝固定、锁点伸进量7mm","category":"纱门配置","serial":"5"},{"name":"滑轮","code":"R12.121805.07H5","unit":"个","qty":4,"note":"两轮-12m宽，18.1mm高，可调至23.1mm，承重80KG","category":"纱门配置","serial":"6"}]},{"group":"G30 窄边提升推拉系列配置方案","name":"极窄三联动系列配置方案","items":[{"name":"极窄推拉三联动主体","code":"AHR52.00.031X","unit":"套","qty":1,"note":"黑色","category":"基础配置","serial":"1"},{"name":"极窄推拉导向轮","code":"RGP11.00.38X","unit":"个","qty":4,"note":"不锈钢颜色","category":"基础配置","serial":"2"},{"name":"33#滑轮四轮","code":"R33.191403.38X","unit":"个","qty":6,"note":"单个承重80KG","category":"基础配置","serial":"3-1"},{"name":"32#滑轮双轮","code":"R32.191403.38X","unit":"个","qty":6,"note":"单个承重60KG","category":"基础配置","serial":"3-2"},{"name":"单向缓冲器","code":"BD401.26.38X","unit":"套","qty":2,"note":"不锈钢颜色","category":"基础配置","serial":"4"}]}];
+
+        var currentExcelPlan = null;
+
+        function isExcelConfigType(value) {
+            return /^excel-config-\d+$/.test(value || '');
+        }
+
+        function getExcelConfigIndex(value) {
+            const match = (value || '').match(/^excel-config-(\d+)$/);
+            return match ? parseInt(match[1], 10) : -1;
+        }
+
+        function getExcelConfigPlan(value) {
+            const index = getExcelConfigIndex(value);
+            return index >= 0 ? EXCEL_CONFIG_PLANS[index] : null;
+        }
+
+        function cleanConfigLabel(text) {
+            return (text || '')
+                .replace(/（\s*非?主推\s*）/g, '')
+                .replace(/\(\s*非?主推\s*\)/g, '')
+                .replace(/\s*非?主推\s*/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function appendExcelConfigOptions() {
+            const select = document.getElementById('windowType');
+            if (!select || select.dataset.excelConfigsLoaded === 'true') return;
+
+            const groups = new Map();
+            EXCEL_CONFIG_PLANS.forEach((plan, index) => {
+                if (!groups.has(plan.group)) groups.set(plan.group, []);
+                groups.get(plan.group).push({ plan, index });
+            });
+
+            groups.forEach((entries, groupName) => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = cleanConfigLabel(groupName);
+                entries.forEach(({ plan, index }) => {
+                    const option = document.createElement('option');
+                    option.value = `excel-config-${index}`;
+                    option.textContent = cleanConfigLabel(plan.name);
+                    optgroup.appendChild(option);
+                });
+                select.appendChild(optgroup);
+            });
+
+            const hint = select.parentElement.querySelector('.hint');
+            if (hint) hint.textContent = `原有智能计算类型 + ${EXCEL_CONFIG_PLANS.length} 个新增配置方案`;
+            select.dataset.excelConfigsLoaded = 'true';
+        }
+
+        function buildExcelConfigResult(plan) {
+            const items = plan.items.map(item => {
+                const categoryName = item.category || '基础配置';
+                let note = item.note || '';
+                if (categoryName !== '基础配置') {
+                    note = note ? `${categoryName}：${note}` : categoryName;
+                }
+                if (item.serial) {
+                    note = note ? `${note}；表内序号 ${item.serial}` : `表内序号 ${item.serial}`;
+                }
+                return {
+                    name: item.name,
+                    code: item.code,
+                    unit: item.unit || '个',
+                    qty: item.qty || 1,
+                    note,
+                    category: 'basic',
+                    categoryName
+                };
+            });
+
+            return {
+                basic: items,
+                heightAddons: [],
+                widthAddons: [],
+                backLock: [],
+                windBrace: [],
+                warnings: [],
+                infos: [
+                    `配置分组：${cleanConfigLabel(plan.group)}`,
+                    '该方案按配置清单输出；尺寸范围、左右/轻重/颜色等选择请参考备注。'
+                ]
+            };
+        }
+
+        function showExcelConfigFormState(plan) {
+            document.getElementById('slidingConfigGroup').style.display = 'none';
+            document.getElementById('sizeRangeGroup').style.display = 'none';
+            document.getElementById('widthInputGroup').style.display = 'none';
+            document.getElementById('heightInputGroup').style.display = 'none';
+            document.getElementById('windowWidth').removeAttribute('required');
+            document.getElementById('windowHeight').removeAttribute('required');
+            currentExcelPlan = plan;
+        }
+
+        document.getElementById('windowType').addEventListener('change', function(e) {
+            if (!isExcelConfigType(this.value)) {
+                currentExcelPlan = null;
+                return;
+            }
+
+            const plan = getExcelConfigPlan(this.value);
+            if (!plan) return;
+            e.stopImmediatePropagation();
+            showExcelConfigFormState(plan);
+        }, true);
+
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            const type = document.getElementById('windowType').value;
+            if (!isExcelConfigType(type)) return;
+
+            const plan = getExcelConfigPlan(type);
+            if (!plan) return;
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            currentExcelPlan = plan;
+            currentResult = buildExcelConfigResult(plan);
+            renderResult(currentResult, 0, 0, type);
+            document.getElementById('inputSummary').textContent = `${cleanConfigLabel(plan.group)} | ${cleanConfigLabel(plan.name)}`;
+            document.getElementById('resultSection').classList.add('show');
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }, true);
+
+        var exportOriginalResult = exportResult;
+        exportResult = function() {
+            if (!currentExcelPlan || !currentResult) {
+                exportOriginalResult();
+                return;
+            }
+
+            const allItems = [
+                ...currentResult.basic,
+                ...currentResult.heightAddons,
+                ...currentResult.widthAddons,
+                ...currentResult.backLock,
+                ...currentResult.windBrace
+            ];
+
+            let text = `HOPO 门窗五金配置清单\n`;
+            text += `========================\n\n`;
+            text += `配置分组: ${cleanConfigLabel(currentExcelPlan.group)}\n`;
+            text += `配置方案: ${cleanConfigLabel(currentExcelPlan.name)}\n\n`;
+            text += `========================\n\n`;
+            text += `【五金配置清单】\n`;
+            allItems.forEach(item => {
+                const noteDisplay = item.note ? ` (${item.note})` : '';
+                text += `${item.name} | ${item.code} | ${item.qty}${item.unit}${noteDisplay}\n`;
+            });
+            if (currentResult.infos.length > 0) {
+                text += `\n【补充说明】\n`;
+                currentResult.infos.forEach(i => { text += `💡 ${i}\n`; });
+            }
+            text += `\n========================\n`;
+            text += `生成时间: ${new Date().toLocaleString()}\n`;
+            text += `HOPO 门窗五金智能选配系统\n`;
+
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const safeName = cleanConfigLabel(currentExcelPlan.name).replace(/[\\/:*?"<>|]/g, '_').slice(0, 80);
+            a.href = url;
+            a.download = `HOPO五金配置_${safeName}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+        appendExcelConfigOptions();
+        // ============== Excel导入配置库结束 ==============</script>
+</body>
+</html>
+
+
