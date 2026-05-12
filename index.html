@@ -1152,12 +1152,37 @@
                 .trim();
         }
 
+        function shouldShowInWindowType(plan) {
+            const group = cleanConfigLabel(plan.group);
+            const name = cleanConfigLabel(plan.name);
+            const text = `${group} ${name}`;
+            const hiddenKeywords = [
+                '爆款',
+                '单品',
+                '其他可选滑轮',
+                '其他可选配件',
+                '其他配件',
+                '可选配件',
+                '选配件',
+                '选配方案',
+                '方案选配',
+                '数量选配'
+            ];
+
+            if (name === '选配' || group === '选配') return false;
+            return !hiddenKeywords.some(keyword => text.includes(keyword));
+        }
+
         function appendExcelConfigOptions() {
             const select = document.getElementById('windowType');
             if (!select || select.dataset.excelConfigsLoaded === 'true') return;
 
             const groups = new Map();
-            EXCEL_CONFIG_PLANS.forEach((plan, index) => {
+            const visiblePlans = EXCEL_CONFIG_PLANS
+                .map((plan, index) => ({ plan, index }))
+                .filter(({ plan }) => shouldShowInWindowType(plan));
+
+            visiblePlans.forEach(({ plan, index }) => {
                 if (!groups.has(plan.group)) groups.set(plan.group, []);
                 groups.get(plan.group).push({ plan, index });
             });
@@ -1175,7 +1200,7 @@
             });
 
             const hint = select.parentElement.querySelector('.hint');
-            if (hint) hint.textContent = `原有智能计算类型 + ${EXCEL_CONFIG_PLANS.length} 个新增配置方案`;
+            if (hint) hint.textContent = `原有智能计算类型 + ${visiblePlans.length} 个新增配置方案`;
             select.dataset.excelConfigsLoaded = 'true';
         }
 
