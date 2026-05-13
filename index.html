@@ -280,6 +280,18 @@
             color: #64748b;
             font-style: italic;
         }
+
+        .option-meta {
+            display: inline-block;
+            margin-bottom: 6px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #e0f2fe;
+            color: #075985;
+            font-size: 0.78rem;
+            font-weight: 700;
+            font-style: normal;
+        }
         
         .warning-box {
             background: #fef3c7;
@@ -474,9 +486,9 @@
             '请输入门窗参数': 'Enter Window/Door Parameters',
             '门窗类型': 'Window/Door Type',
             '请选择门窗类型': 'Select window/door type',
-            'UC槽 - 内开内倒窗': 'C Groove - Tilt-turn Window',
+            'UC槽 - 内开内倒窗': 'UC groove - Tilt-turn Window',
             '悬挂外开窗': 'Top-hung Outward Opening Window',
-            '目前支持UC槽内开内倒窗、悬挂外开窗及新增配置方案': 'Supports C groove tilt-turn windows, top-hung outward opening windows, and added configurations',
+            '目前支持UC槽内开内倒窗、悬挂外开窗及新增配置方案': 'Supports UC groove tilt-turn windows, top-hung outward opening windows, and added configurations',
             '配置方案': 'Configuration Plan',
             '两轨两扇': 'Two-track two-sash',
             '两轨四扇对碰': 'Two-track four-sash meeting stile',
@@ -505,7 +517,7 @@
             '注意事项': 'Notes',
             '补充说明': 'Additional Notes',
             '生成时间': 'Generated at',
-            'UC槽内开内倒窗': 'C Groove Tilt-turn Window',
+            'UC槽内开内倒窗': 'UC groove tilt-turn window',
             '基础配置': 'Basic Configuration',
             '选配件': 'Optional Accessories',
             '快装选配件': 'Quick-install Optional Accessories',
@@ -547,6 +559,7 @@
             '扇高': 'Sash height',
             '增配': 'additional configuration',
             '可选项': 'optional item',
+            '选配': 'optional',
             '原表数量为0': 'original sheet quantity is 0',
             '开启角度': 'Opening angle',
             '最大承重': 'Max load',
@@ -573,6 +586,7 @@
             '安装': 'installation',
             '选择': 'selection',
             '可选': 'optional',
+            '可': 'can',
             '颜色': 'color',
             '规格': 'specification',
             '长度': 'length',
@@ -588,7 +602,218 @@
             '根据实际': 'according to actual',
             '数量': 'quantity',
             '范围': 'range',
-            '方案': 'plan'
+            '方案': 'plan',
+            'UC槽': 'UC groove',
+            'C槽': 'C groove',
+            '主推': 'recommended',
+            '非主推': 'alternative',
+            '抑菌砂纹黑色': 'antibacterial textured black',
+            '抑菌砂纹黑': 'antibacterial textured black',
+            '抑菌砂纹': 'antibacterial textured finish',
+            '抑菌细砂纹': 'antibacterial fine textured finish',
+            '喷涂砂纹黑': 'powder-coated textured black',
+            '砂纹黑色': 'textured black',
+            '砂纹黑': 'textured black',
+            '砂纹': 'textured finish',
+            '新深古铜色': 'new dark bronze',
+            '深古铜色': 'dark bronze',
+            '新氧化深古铜色': 'new anodized dark bronze',
+            '新氧化黑': 'new anodized black',
+            '氧化银色': 'anodized silver',
+            '银色': 'silver',
+            '冰晶': 'ice crystal finish',
+            '冰晶系列': 'ice crystal series',
+            '冰晶黑色': 'ice crystal black',
+            '冰晶黑': 'ice crystal black',
+            '红标系列': 'red-label series',
+            '红标': 'red label',
+            '高': 'high',
+            '长': 'long',
+            '宽': 'wide',
+            '直径': 'diameter',
+            '超': 'exceeds',
+            '当': 'when',
+            '时': 'when',
+            '推荐加装': 'recommended to add',
+            '加装': 'add',
+            '中间锁': 'middle lock',
+            '提高': 'improve',
+            '和': 'and',
+            '可根据实际': 'can be adjusted according to actual',
+            '可根据': 'can be adjusted according to',
+            '实际': 'actual',
+            '尺寸': 'size',
+            '增加': 'increase',
+            '可按需增加': 'can be added as needed',
+            '阻尼可调': 'adjustable damping',
+            '内倒': 'tilt',
+            '内开': 'inward opening',
+            '外开': 'outward opening',
+            '外开玻璃': 'outward opening glass sash',
+            '外开玻璃扇': 'outward opening glass sash',
+            '内开纱窗': 'inward opening screen window',
+            '快装': 'quick-install',
+            '免铣槽': 'milling-free groove',
+            '配螺丝': 'with screws',
+            '螺丝固定': 'screw-fixed',
+            '螺丝': 'screws',
+            '螺钉': 'screws',
+            '沉头螺丝': 'countersunk screws',
+            '长内六角凹端机米': 'long hex socket cup-point set screw',
+            '机米': 'set screw',
+            '带': 'with',
+            '不带': 'without',
+            '滚套锁杆': 'roller locking rod',
+            '滚套': 'roller sleeve',
+            '滚': 'roller',
+            '传动铝杆': 'transmission aluminum rod',
+            '数量为变量配置': 'quantity is variable',
+            '按需配备': 'configure as needed',
+            '变量配置': 'variable configuration',
+            '平开铝杆': 'casement aluminum rod',
+            '双轨': 'double-track',
+            '两轨': 'two-track',
+            '三轨': 'three-track',
+            '单轨': 'single-track',
+            '窄边': 'slim',
+            '极窄': 'ultra-slim',
+            '系列': 'series',
+            'E系列': 'E series',
+            '窄推拉': 'slim sliding',
+            '窄提升': 'slim lift-sliding',
+            '窄': 'slim',
+            '密封窗系统': 'sealing window system',
+            '密封窗': 'sealing window',
+            '密封门': 'sealing door',
+            '密封钩锁': 'sealing hook lock',
+            '密封': 'sealing',
+            '多功能': 'multifunctional',
+            '组件': 'component',
+            '框': 'frame',
+            '槽': 'groove',
+            '门': 'door',
+            '窗': 'window',
+            '纱': 'screen',
+            '轮': 'roller',
+            '两轮': 'two-wheel',
+            '四轮': 'four-wheel',
+            '导向轮': 'guide roller',
+            '重型': 'heavy-duty',
+            '轻型': 'light-duty',
+            '可调至': 'adjustable to',
+            '伸进量': 'engagement depth',
+            '夹持式': 'clamp type',
+            '点锁': 'point lock',
+            '双点': 'two-point',
+            '单点': 'single-point',
+            '防沉块': 'anti-sag block',
+            '防护栏': 'guardrail',
+            '防撞块': 'anti-bump block',
+            '安全': 'security',
+            '附加': 'additional',
+            '附加锁杆': 'additional locking rod',
+            '附加承重器': 'additional load-bearing device',
+            '转换杆': 'transfer rod',
+            '杆': 'rod',
+            '磁力辅助器': 'magnetic assist device',
+            '磁吸辅助关窗': 'magnetic assist for window closing',
+            '仅可搭配': 'only compatible with',
+            '适用': 'applicable to',
+            '可延伸': 'extendable',
+            '合页式': 'hinge-type',
+            '合页': 'hinge',
+            '较链': 'hinge',
+            '防坠器': 'anti-fall device',
+            '防尘': 'dustproof',
+            '拨叉': 'fork',
+            '摇臂': 'stay arm',
+            '氧深古铜': 'anodized dark bronze',
+            '白色': 'white',
+            '其他可选配件': 'other optional accessories',
+            '可根据窗型实际开启方向选择左右': 'select left/right according to the actual window opening direction',
+            '小槽': 'small groove',
+            '搭配': 'compatible with',
+            '适配': 'compatible with',
+            '不可微调': 'not adjustable',
+            '转换组件': 'transfer component',
+            '转换': 'transfer',
+            '度': 'degree',
+            '型': 'type',
+            '框扇平齐': 'frame-sash flush',
+            '框扇': 'frame and sash',
+            '平齐': 'flush',
+            '双内开': 'double inward opening',
+            '双内开纱窗': 'double inward opening screen window',
+            '180度可调': '180-degree adjustable',
+            '90度': '90-degree',
+            '玻扇': 'glass sash',
+            '防沉套件': 'anti-sag kit',
+            '套件': 'kit',
+            '翻转支撑座': 'tilt support base',
+            '框支撑块': 'frame support block',
+            '一体': 'integrated',
+            '窗纱一体': 'integrated window and screen',
+            '外开窗纱一体': 'integrated outward opening window and screen',
+            '经济款': 'economy version',
+            '方案一': 'plan 1',
+            '方案二': 'plan 2',
+            '垫片': 'spacer',
+            '纱扇锁带钥匙': 'screen sash lock with key',
+            '带钥匙': 'with key',
+            '可拆卸': 'removable',
+            '非标': 'non-standard',
+            '槽口类型': 'groove type',
+            '槽口': 'groove',
+            '结构': 'structure',
+            '根据实际型材结构适配': 'adapt according to the actual profile structure',
+            '多种': 'multiple',
+            '安装': 'installation',
+            '如': 'such as',
+            '其他配件': 'other accessories',
+            '其他': 'other',
+            '纱扇锁': 'screen sash lock',
+            '内平开窗': 'inward casement window',
+            '内平开': 'inward casement',
+            '双内平开窗纱扇选配方案': 'double inward casement window screen sash optional plan',
+            '内开纱扇方案一': 'inward screen sash plan 1',
+            '纱扇': 'screen sash',
+            '其他规格长度': 'other length specifications',
+            'T字件': 'T connector',
+            '摩擦': 'friction',
+            '订单式': 'made to order',
+            '延长': 'extension',
+            '孔': 'hole',
+            '颗': 'pcs',
+            '件': 'pcs',
+            '型材配置': 'profile configuration',
+            '折叠': 'folding',
+            '扣手': 'pull grip',
+            '窗型开启方向选': 'select according to window opening direction',
+            '使用': 'use',
+            '仅用于室内启闭': 'for indoor opening and closing only',
+            '仅': 'only',
+            '用于': 'used for',
+            '室内': 'indoor',
+            '启闭': 'opening and closing',
+            '停产淘汰': 'discontinued',
+            '暂无替代方案': 'no replacement available',
+            '转角扇使用': 'for corner sash',
+            '被动扇安装': 'installed on passive sash',
+            '对碰扇': 'meeting sash',
+            '真锁': 'active lock',
+            '假锁': 'dummy lock',
+            '一套四个': 'one set includes four pcs',
+            '高低轨型材不适用': 'not applicable to high-low track profiles',
+            '不适用': 'not applicable',
+            '型材': 'profile',
+            '选项组': 'choice group',
+            '当前选项': 'current option',
+            '请选择其中一项': 'choose one option',
+            '同一序列号': 'same sequence number',
+            '存在多个可选项': 'has multiple selectable items',
+            '序列号': 'sequence number',
+            '序号': 'No.',
+            '该方案已按Excel序列号整理，带选项组提示的行表示同一序列下的可选项。': 'This plan has been organized by Excel sequence numbers. Rows with choice-group hints are selectable items under the same sequence.'
         };
 
         let currentLanguage = localStorage.getItem('hopoLanguage') || 'zh';
@@ -602,6 +827,10 @@
             return String(text || '').replace(/\s+/g, ' ').trim();
         }
 
+        function replaceResidualChinese(text) {
+            return String(text).replace(/[\u4e00-\u9fff]+/g, match => MANUAL_TRANSLATIONS[match] || '');
+        }
+
         function translateDisplayText(text) {
             if (currentLanguage !== 'en' || text === null || text === undefined) return text;
             let output = String(text);
@@ -611,15 +840,15 @@
             const manualTerms = Object.keys(MANUAL_TRANSLATIONS).sort((a, b) => b.length - a.length);
             manualTerms.forEach(term => {
                 if (!term || term === normalized) return;
-                output = output.replace(new RegExp(escapeRegExp(term), 'g'), MANUAL_TRANSLATIONS[term]);
+                output = output.replace(new RegExp(escapeRegExp(term), 'g'), ` ${MANUAL_TRANSLATIONS[term]} `);
             });
 
             TRANSLATION_TERMS.forEach(({ zh, en }) => {
                 if (!zh || !en) return;
-                output = output.replace(new RegExp(escapeRegExp(zh), 'g'), en);
+                output = output.replace(new RegExp(escapeRegExp(zh), 'g'), ` ${en} `);
             });
 
-            return output
+            output = output
                 .replace(/（/g, ' (')
                 .replace(/）/g, ')')
                 .replace(/，/g, ', ')
@@ -632,9 +861,18 @@
                 .replace(/([A-Za-z0-9])([\u4e00-\u9fff])/g, '$1 $2')
                 .replace(/([a-z])(\d)/g, '$1 $2')
                 .replace(/(\d)([a-z])/g, '$1 $2')
+                .replace(/(\d(?:\.\d+)?\s*mm)([A-Za-z])/g, '$1 $2')
                 .replace(/(\d+°)([A-Za-z])/g, '$1 $2')
                 .replace(/(\d)([A-Z][a-z])/g, '$1 $2')
                 .replace(/([a-z])([A-Z])/g, '$1 $2')
+                .replace(/\s+/g, ' ')
+                .trim();
+
+            return replaceResidualChinese(output)
+                .replace(/\s+([,.;:)])/g, '$1')
+                .replace(/([(])\s+/g, '$1')
+                .replace(/,\s*,/g, ',')
+                .replace(/:\s*,/g, ':')
                 .replace(/\s+/g, ' ')
                 .trim();
         }
@@ -714,8 +952,14 @@
             }
             const zhButton = document.getElementById('langZh');
             const enButton = document.getElementById('langEn');
-            if (zhButton) zhButton.classList.toggle('active', currentLanguage === 'zh');
-            if (enButton) enButton.classList.toggle('active', currentLanguage === 'en');
+            if (zhButton) {
+                zhButton.textContent = currentLanguage === 'en' ? 'Chinese' : '中文';
+                zhButton.classList.toggle('active', currentLanguage === 'zh');
+            }
+            if (enButton) {
+                enButton.textContent = 'English';
+                enButton.classList.toggle('active', currentLanguage === 'en');
+            }
         }
 
         function updateSelectLanguage() {
@@ -1119,6 +1363,36 @@
         }
 
         // ============== UI 渲染 ==============
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function localizedPair(pair) {
+            if (!pair) return '';
+            return currentLanguage === 'en' ? pair.en : pair.zh;
+        }
+
+        function getLocalizedItemName(item) {
+            return translateDisplayText(item.name);
+        }
+
+        function getLocalizedItemNote(item) {
+            const parts = [];
+            if (item.optionMeta) parts.push(localizedPair(item.optionMeta));
+            if (item.note) parts.push(item.note);
+            const note = parts.filter(Boolean).join(currentLanguage === 'en' ? '; ' : '；');
+            return note ? translateDisplayText(note) : '-';
+        }
+
+        function getLocalizedOptionLabel(item) {
+            return item.optionLabel ? localizedPair(item.optionLabel) : '';
+        }
+
         function renderResult(result, width, height, windowType) {
             lastRenderContext = { result, width, height, windowType };
             const tbody = document.getElementById('hardwareBody');
@@ -1133,88 +1407,94 @@
                 ...result.windBrace
             ];
             
-            // 合并相同产品，处理L/R配对和延长端配对（都是二选一）
-            const mergedItems = {};
-            allItems.forEach(item => {
-                // 检测是否是L/R配对的产品
-                let baseName = item.name;
-                let isOptionPair = false;
-                let pairType = '';
-                
-                // 匹配名称末尾的 L 或 R（可能有空格）
-                const lrMatch = item.name.match(/^(.+?)\s*[LR]$/i);
-                if (lrMatch) {
-                    baseName = lrMatch[1].trim();
-                    isOptionPair = true;
-                    pairType = 'LR';
-                }
-                
-                // 匹配延长端配对：如 "250mm延长端（无锁点）" 和 "250mm延长端（防撬锁点）"
-                const extMatch = item.name.match(/^(.+?延长端)（.+）$/);
-                if (extMatch) {
-                    baseName = extMatch[1].trim();
-                    isOptionPair = true;
-                    pairType = 'EXTEND';
-                }
-                
-                // 匹配备注含"二选一"的产品：如勾边锁座和勾边可调锁座
-                if (!isOptionPair && item.note && item.note.includes('二选一')) {
-                    // 提取名称中的共同前缀（去掉最后一个括号内容或后缀差异）
-                    const bracketMatch = item.name.match(/^(.+?)(可调)?(.+)$/);
-                    if (bracketMatch) {
-                        // 尝试找到同类产品
-                        const hasPair = allItems.some(other => 
-                            other !== item && 
-                            other.note && other.note.includes('二选一') &&
-                            other.name !== item.name &&
-                            (other.name.includes(bracketMatch[1]) || item.name.includes(other.name.replace('可调', '')))
-                        );
-                        if (hasPair) {
-                            // 用更通用的基础名称
-                            baseName = item.name.replace('可调', '');
-                            isOptionPair = true;
-                            pairType = 'NOTE_OPTION';
+            let itemsToRender = allItems;
+            if (!result.preserveRows) {
+                // 合并相同产品，处理L/R配对和延长端配对（都是二选一）
+                const mergedItems = {};
+                allItems.forEach(item => {
+                    // 检测是否是L/R配对的产品
+                    let baseName = item.name;
+                    let isOptionPair = false;
+                    let pairType = '';
+                    
+                    // 匹配名称末尾的 L 或 R（可能有空格）
+                    const lrMatch = item.name.match(/^(.+?)\s*[LR]$/i);
+                    if (lrMatch) {
+                        baseName = lrMatch[1].trim();
+                        isOptionPair = true;
+                        pairType = 'LR';
+                    }
+                    
+                    // 匹配延长端配对：如 "250mm延长端（无锁点）" 和 "250mm延长端（防撬锁点）"
+                    const extMatch = item.name.match(/^(.+?延长端)（.+）$/);
+                    if (extMatch) {
+                        baseName = extMatch[1].trim();
+                        isOptionPair = true;
+                        pairType = 'EXTEND';
+                    }
+                    
+                    // 匹配备注含"二选一"的产品：如勾边锁座和勾边可调锁座
+                    if (!isOptionPair && item.note && item.note.includes('二选一')) {
+                        // 提取名称中的共同前缀（去掉最后一个括号内容或后缀差异）
+                        const bracketMatch = item.name.match(/^(.+?)(可调)?(.+)$/);
+                        if (bracketMatch) {
+                            // 尝试找到同类产品
+                            const hasPair = allItems.some(other => 
+                                other !== item && 
+                                other.note && other.note.includes('二选一') &&
+                                other.name !== item.name &&
+                                (other.name.includes(bracketMatch[1]) || item.name.includes(other.name.replace('可调', '')))
+                            );
+                            if (hasPair) {
+                                // 用更通用的基础名称
+                                baseName = item.name.replace('可调', '');
+                                isOptionPair = true;
+                                pairType = 'NOTE_OPTION';
+                            }
                         }
                     }
-                }
-                
-                // 对于配对产品，使用基础名称作为key
-                const key = isOptionPair ? `OPTION_PAIR|${pairType}|${baseName}` : `${item.name}|${item.code}`;
-                
-                if (mergedItems[key]) {
-                    if (isOptionPair) {
-                        // 配对产品，合并编号，数量保持1，备注"二选一"
-                        mergedItems[key].codes.push(item.code);
-                        mergedItems[key].note = '二选一';
+                    
+                    // 对于配对产品，使用基础名称作为key
+                    const key = isOptionPair ? `OPTION_PAIR|${pairType}|${baseName}` : `${item.name}|${item.code}`;
+                    
+                    if (mergedItems[key]) {
+                        if (isOptionPair) {
+                            // 配对产品，合并编号，数量保持1，备注"二选一"
+                            mergedItems[key].codes.push(item.code);
+                            mergedItems[key].note = '二选一';
+                        } else {
+                            // 普通产品，累加数量
+                            mergedItems[key].qty += item.qty;
+                            if (item.note && !mergedItems[key].note.includes(item.note)) {
+                                mergedItems[key].note = mergedItems[key].note 
+                                    ? mergedItems[key].note + '; ' + item.note 
+                                    : item.note;
+                            }
+                        }
                     } else {
-                        // 普通产品，累加数量
-                        mergedItems[key].qty += item.qty;
-                        if (item.note && !mergedItems[key].note.includes(item.note)) {
-                            mergedItems[key].note = mergedItems[key].note 
-                                ? mergedItems[key].note + '; ' + item.note 
-                                : item.note;
-                        }
+                        mergedItems[key] = { 
+                            ...item, 
+                            name: isOptionPair ? baseName : item.name,
+                            codes: [item.code],
+                            note: isOptionPair ? '二选一' : item.note
+                        };
                     }
-                } else {
-                    mergedItems[key] = { 
-                        ...item, 
-                        name: isOptionPair ? baseName : item.name,
-                        codes: [item.code],
-                        note: isOptionPair ? '二选一' : item.note
-                    };
-                }
-            });
+                });
+                itemsToRender = Object.values(mergedItems);
+            }
             
             // 转换为数组并渲染
-            Object.values(mergedItems).forEach(item => {
+            itemsToRender.forEach(item => {
                 const tr = document.createElement('tr');
                 const codeDisplay = item.codes ? item.codes.join(' / ') : item.code;
+                const optionLabel = getLocalizedOptionLabel(item);
+                const optionMarkup = optionLabel ? `<div class="option-meta">${escapeHtml(optionLabel)}</div>` : '';
                 tr.innerHTML = `
-                    <td>${translateDisplayText(item.name)}</td>
-                    <td><span class="product-code">${codeDisplay}</span></td>
+                    <td>${optionMarkup}${escapeHtml(getLocalizedItemName(item))}</td>
+                    <td><span class="product-code">${escapeHtml(codeDisplay)}</span></td>
                     <td>${translateUnit(item.unit)}</td>
                     <td><strong>${item.qty}</strong></td>
-                    <td><span class="note-text">${item.note ? translateDisplayText(item.note) : '-'}</span></td>
+                    <td><span class="note-text">${escapeHtml(getLocalizedItemNote(item))}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1415,8 +1695,9 @@
             text += `【${translateDisplayText('五金配置清单')}】\n`;
             Object.values(mergedItems).forEach(item => {
                 const codeDisplay = item.codes ? item.codes.join(' / ') : item.code;
-                const noteDisplay = item.note ? ` (${translateDisplayText(item.note)})` : '';
-                text += `${translateDisplayText(item.name)} | ${codeDisplay} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
+                const note = getLocalizedItemNote(item);
+                const noteDisplay = note && note !== '-' ? ` (${note})` : '';
+                text += `${getLocalizedItemName(item)} | ${codeDisplay} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
             });
             
             if (currentResult.warnings.length > 0) {
@@ -1537,26 +1818,101 @@
             select.dataset.excelConfigsLoaded = 'true';
         }
 
-        function buildExcelConfigResult(plan) {
-            const items = plan.items.map(item => {
+        function getSerialBase(serial) {
+            return String(serial || '').split('-')[0].trim();
+        }
+
+        function itemLooksSelectable(item) {
+            const text = `${item.name || ''} ${item.note || ''}`;
+            return /可选|选配|二选一|原表数量为0|左|右|轻型|重型|带锁|不带锁|规格|颜色|按需|订单式/.test(text);
+        }
+
+        function buildExcelOptionItems(rawItems) {
+            let activeSerial = '';
+            const taggedItems = rawItems.map((item, index) => {
+                const explicitSerial = String(item.serial || '').trim();
+                if (explicitSerial) activeSerial = explicitSerial;
+                const effectiveSerial = explicitSerial || activeSerial;
                 const categoryName = item.category || '基础配置';
-                let note = item.note || '';
-                if (categoryName !== '基础配置') {
-                    note = note ? `${categoryName}：${note}` : categoryName;
+                return {
+                    ...item,
+                    sourceIndex: index,
+                    categoryName,
+                    effectiveSerial,
+                    serialBase: getSerialBase(effectiveSerial)
+                };
+            });
+
+            const groups = new Map();
+            taggedItems.forEach(item => {
+                if (!item.serialBase) return;
+                const key = `${item.categoryName}|${item.serialBase}`;
+                if (!groups.has(key)) {
+                    groups.set(key, { base: item.serialBase, items: [], options: new Map() });
                 }
-                if (item.serial) {
-                    note = note ? `${note}；表内序号 ${item.serial}` : `表内序号 ${item.serial}`;
-                }
+                const group = groups.get(key);
+                group.items.push(item);
+                const optionKey = item.effectiveSerial || item.serialBase;
+                if (!group.options.has(optionKey)) group.options.set(optionKey, []);
+                group.options.get(optionKey).push(item);
+            });
+
+            groups.forEach(group => {
+                group.optionLabels = Array.from(group.options.keys());
+                group.hasMultipleOptions = group.optionLabels.length > 1;
+                group.hasSelectableItems = group.items.length > 1 && group.items.some(itemLooksSelectable);
+            });
+
+            return taggedItems.map(item => {
+                const group = item.serialBase ? groups.get(`${item.categoryName}|${item.serialBase}`) : null;
+                const isChoiceGroup = group && (group.hasMultipleOptions || group.hasSelectableItems);
+                const optionChoices = group ? group.optionLabels.join(' / ') : '';
+                const optionChoicesEn = group ? group.optionLabels.map(label => translateDisplayText(label)).join(' / ') : '';
+                const serialEn = translateDisplayText(item.effectiveSerial);
+                const optionMeta = isChoiceGroup
+                    ? {
+                        zh: group.hasMultipleOptions
+                            ? `选项组 ${item.serialBase}：请选择其中一项（${optionChoices}）；当前选项 ${item.effectiveSerial}`
+                            : `同一序列号 ${item.serialBase} 存在多个可选项，请按项目需求选择`,
+                        en: group.hasMultipleOptions
+                            ? `Choice group ${translateDisplayText(item.serialBase)}: choose one option (${optionChoicesEn}); current option ${serialEn}`
+                            : `Sequence ${translateDisplayText(item.serialBase)} has multiple selectable items; choose according to project requirements`
+                    }
+                    : null;
+                const optionLabel = item.effectiveSerial
+                    ? {
+                        zh: `序列号 ${item.effectiveSerial}`,
+                        en: `Sequence ${serialEn}`
+                    }
+                    : null;
+
                 return {
                     name: item.name,
                     code: item.code,
                     unit: item.unit || '个',
                     qty: item.qty || 1,
-                    note,
+                    note: item.note || '',
                     category: 'basic',
-                    categoryName
+                    categoryName: item.categoryName,
+                    optionMeta,
+                    optionLabel
                 };
             });
+        }
+
+        function buildExcelConfigResult(plan) {
+            const items = buildExcelOptionItems(plan.items).map(item => {
+                let note = item.note || '';
+                if (item.categoryName !== '基础配置') {
+                    note = note ? `${item.categoryName}：${note}` : item.categoryName;
+                }
+                return {
+                    ...item,
+                    note
+                };
+            });
+
+            const hasOptionGroups = items.some(item => item.optionMeta);
 
             return {
                 basic: items,
@@ -1564,10 +1920,12 @@
                 widthAddons: [],
                 backLock: [],
                 windBrace: [],
+                preserveRows: true,
                 warnings: [],
                 infos: [
                     `配置分组：${cleanConfigLabel(plan.group)}`,
-                    '该方案按配置清单输出；尺寸范围、左右/轻重/颜色等选择请参考备注。'
+                    '该方案按配置清单输出；尺寸范围、左右/轻重/颜色等选择请参考备注。',
+                    ...(hasOptionGroups ? ['该方案已按Excel序列号整理，带选项组提示的行表示同一序列下的可选项。'] : [])
                 ]
             };
         }
@@ -1633,8 +1991,11 @@
             text += `========================\n\n`;
             text += `【${translateDisplayText('五金配置清单')}】\n`;
             allItems.forEach(item => {
-                const noteDisplay = item.note ? ` (${translateDisplayText(item.note)})` : '';
-                text += `${translateDisplayText(item.name)} | ${item.code} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
+                const optionLabel = getLocalizedOptionLabel(item);
+                const nameDisplay = optionLabel ? `${optionLabel} - ${getLocalizedItemName(item)}` : getLocalizedItemName(item);
+                const note = getLocalizedItemNote(item);
+                const noteDisplay = note && note !== '-' ? ` (${note})` : '';
+                text += `${nameDisplay} | ${item.code} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
             });
             if (currentResult.infos.length > 0) {
                 text += `\n【${translateDisplayText('补充说明')}】\n`;
