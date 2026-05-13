@@ -832,17 +832,13 @@
             '型材': 'profile',
             '选项组': 'choice group',
             '当前选项': 'current option',
-            '请选择其中一项': 'choose one option',
-            '同组选项': 'same option group',
-            '同组存在多个可选项，请按项目需求选择': 'This group has multiple selectable items; choose according to project requirements',
             '存在多个可选项': 'has multiple selectable items',
             '序号': 'No.',
             '单扇': 'single sash',
             '两扇': 'two sashes',
             '四扇': 'four sashes',
             '联动背部锁延长端': 'linked back-lock extension',
-            '扇宽555mm-625mm需截取角传动器': 'for sash width 555mm-625mm, the corner transmission device must be cut',
-            '该方案已按同组可选项整理，带选项组提示的行表示同一组可选项。': 'This plan has been organized by option groups. Rows with choice-group hints are selectable items in the same group.'
+            '扇宽555mm-625mm需截取角传动器': 'for sash width 555mm-625mm, the corner transmission device must be cut'
         };
 
         let currentLanguage = localStorage.getItem('hopoLanguage') || 'zh';
@@ -1350,11 +1346,7 @@
         }
 
         function getLocalizedItemNote(item) {
-            const parts = [];
-            if (item.optionMeta) parts.push(localizedPair(item.optionMeta));
-            if (item.note) parts.push(item.note);
-            const note = parts.filter(Boolean).join(currentLanguage === 'en' ? '; ' : '；');
-            return note ? translateDisplayText(note) : '-';
+            return item.note ? translateDisplayText(item.note) : '-';
         }
 
         function renderResult(result, width, height, windowType) {
@@ -1662,64 +1654,9 @@
             select.dataset.excelConfigsLoaded = 'true';
         }
 
-        function getSerialBase(serial) {
-            return String(serial || '').split('-')[0].trim();
-        }
-
-        function itemLooksSelectable(item) {
-            const text = `${item.name || ''} ${item.note || ''}`;
-            return /可选|选配|二选一|原表数量为0|左|右|轻型|重型|带锁|不带锁|规格|颜色|按需|订单式/.test(text);
-        }
-
         function buildExcelOptionItems(rawItems) {
-            let activeSerial = '';
-            const taggedItems = rawItems.map((item, index) => {
-                const explicitSerial = String(item.serial || '').trim();
-                if (explicitSerial) activeSerial = explicitSerial;
-                const effectiveSerial = explicitSerial || activeSerial;
+            return rawItems.map(item => {
                 const categoryName = item.category || '基础配置';
-                return {
-                    ...item,
-                    sourceIndex: index,
-                    categoryName,
-                    effectiveSerial,
-                    serialBase: getSerialBase(effectiveSerial)
-                };
-            });
-
-            const groups = new Map();
-            taggedItems.forEach(item => {
-                if (!item.serialBase) return;
-                const key = `${item.categoryName}|${item.serialBase}`;
-                if (!groups.has(key)) {
-                    groups.set(key, { base: item.serialBase, items: [], options: new Map() });
-                }
-                const group = groups.get(key);
-                group.items.push(item);
-                const optionKey = item.effectiveSerial || item.serialBase;
-                if (!group.options.has(optionKey)) group.options.set(optionKey, []);
-                group.options.get(optionKey).push(item);
-            });
-
-            groups.forEach(group => {
-                group.optionLabels = Array.from(group.options.keys());
-                group.hasMultipleOptions = group.optionLabels.length > 1;
-                group.hasSelectableItems = group.items.length > 1 && group.items.some(itemLooksSelectable);
-            });
-
-            return taggedItems.map(item => {
-                const group = item.serialBase ? groups.get(`${item.categoryName}|${item.serialBase}`) : null;
-                const isChoiceGroup = group && (group.hasMultipleOptions || group.hasSelectableItems);
-                const optionMeta = isChoiceGroup
-                    ? {
-                        zh: group.hasMultipleOptions
-                            ? '同组选项：请选择其中一项'
-                            : '同组存在多个可选项，请按项目需求选择',
-                        en: group.hasMultipleOptions
-                            ? 'Choice group: choose one option'
-                            : 'This group has multiple selectable items; choose according to project requirements'
-                    }
-                    : null;
 
                 return {
                     name: item.name,
@@ -1728,8 +1665,7 @@
                     qty: item.qty || 1,
                     note: item.note || '',
                     category: 'basic',
-                    categoryName: item.categoryName,
-                    optionMeta
+                    categoryName
                 };
             });
         }
@@ -1746,8 +1682,6 @@
                 };
             });
 
-            const hasOptionGroups = items.some(item => item.optionMeta);
-
             return {
                 basic: items,
                 heightAddons: [],
@@ -1758,8 +1692,7 @@
                 warnings: [],
                 infos: [
                     `配置分组：${cleanConfigLabel(plan.group)}`,
-                    '该方案按配置清单输出；尺寸范围、左右/轻重/颜色等选择请参考备注。',
-                    ...(hasOptionGroups ? ['该方案已按同组可选项整理，带选项组提示的行表示同一组可选项。'] : [])
+                    '该方案按配置清单输出；尺寸范围、左右/轻重/颜色等选择请参考备注。'
                 ]
             };
         }
