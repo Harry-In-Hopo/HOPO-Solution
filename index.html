@@ -940,14 +940,9 @@
             const sizeRangeDisplay = document.getElementById('sizeRangeDisplay');
             if (sizeRangeDisplay && sizeRangeDisplay.closest('#sizeRangeGroup')?.style.display !== 'none') {
                 const selectedType = document.getElementById('windowType')?.value;
-                if (selectedType === 'g24-sliding') {
-                    sizeRangeDisplay.innerHTML = translateSizeRange('400 ~ 2500 mm', '600 ~ 2600 mm');
-                } else if (selectedType === 'g45-sliding') {
-                    sizeRangeDisplay.innerHTML = translateSizeRange('500 ~ 1050 mm', '800 ~ 2600 mm');
-                } else if (selectedType === 'hanging-open') {
-                    sizeRangeDisplay.innerHTML = translateSizeRange('510 ~ 900 mm', '665 ~ 2000 mm');
-                } else {
-                    sizeRangeDisplay.innerHTML = translateSizeRange('455 ~ 970 mm', '655 ~ 3000 mm');
+                if (selectedType && !isExcelConfigType(selectedType)) {
+                    const plan = getStaticPlan(selectedType);
+                    sizeRangeDisplay.innerHTML = translateSizeRange(plan.width.label, plan.height.label);
                 }
             }
             const zhButton = document.getElementById('langZh');
@@ -981,13 +976,6 @@
                     if (plan) child.label = localizeConfigLabel(plan.group);
                 }
             });
-            const slidingConfig = document.getElementById('slidingConfig');
-            if (slidingConfig) {
-                Array.from(slidingConfig.options).forEach(option => {
-                    if (option.value === 'two-panel') option.textContent = translateDisplayText('两轨两扇');
-                    if (option.value === 'four-panel') option.textContent = translateDisplayText('两轨四扇对碰');
-                });
-            }
             const hint = document.getElementById('windowTypeHint');
             if (hint && Array.isArray(window.EXCEL_CONFIG_PLANS)) {
                 const visibleCount = window.EXCEL_CONFIG_PLANS.filter(plan => shouldShowInWindowType(plan)).length;
@@ -1118,69 +1106,6 @@
                 item: { name: 'U-C槽内开内倒阻尼风撑', code: 'PTR20.00.38H5', unit: '个', qty: 1, note: '阻尼风撑增配（扇宽555mm-625mm需截取角传动器）' }
             },
             
-            // G24窄边推拉门配置
-            g24Sliding: {
-                range: { minWidth: 400, maxWidth: 2500, minHeight: 600, maxHeight: 2600 },
-                // 两轨两扇配置
-                twoPanel: [
-                    { name: '窄边拉手', code: 'BH480.00.25C168H5', unit: '个', qty: 2, note: '真锁，168抑菌砂纹黑色' },
-                    { name: '转换杆', code: 'APT51.20.06X', unit: '个', qty: 2, note: '黑色，无标' },
-                    { name: '窄推拉锁杆', code: 'LPE51.13.95C031H4', unit: '个', qty: 4, note: '黑色' },
-                    { name: '窄推拉锁座', code: 'SLP51.10.031', unit: '个', qty: 4, note: '黑色' },
-                    { name: '窄推拉滑轮（轻型）', code: 'AHR51.122204.07H5', unit: '个', qty: 4, note: '轻型选配、白轮' },
-                    { name: '窄推拉滑轮（重型）', code: 'R21.224415.38', unit: '个', qty: 0, note: '重型选配、白轮' },
-                    { name: '窄推拉导向轮', code: 'RGP51.01.38X', unit: '个', qty: 4, note: '不锈钢' }
-                ],
-                // 两轨四扇对碰配置
-                fourPanel: [
-                    { name: '窄边拉手（真锁）', code: 'BH480.00.25C168H5', unit: '个', qty: 3, note: '真锁，168抑菌砂纹黑色' },
-                    { name: '窄边拉手（假锁）', code: 'BH480.01.168H5', unit: '个', qty: 1, note: '假锁、对碰扇被动扇安装' },
-                    { name: '转换杆', code: 'APT51.20.06X', unit: '个', qty: 3, note: '黑色，无标' },
-                    { name: '窄推拉锁杆', code: 'LPE51.13.95C031H4', unit: '个', qty: 6, note: '黑色' },
-                    { name: '窄推拉锁座', code: 'SLP51.10.031', unit: '个', qty: 6, note: '黑色' },
-                    { name: '窄推拉滑轮（轻型）', code: 'AHR51.122204.07H5', unit: '个', qty: 8, note: '轻型选配、白轮' },
-                    { name: '窄推拉滑轮（重型）', code: 'R21.224415.38', unit: '个', qty: 0, note: '重型选配、白轮' },
-                    { name: '窄推拉导向轮', code: 'RGP51.01.38X', unit: '个', qty: 8, note: '不锈钢' }
-                ]
-            },
-            
-            // G45推拉密封窗配置
-            g45Sliding: {
-                range: { minWidth: 500, maxWidth: 1050, minHeight: 800, maxHeight: 2600 },
-                // 配置一
-                config1: [
-                    { name: 'PH952执手', code: 'PH952.00.168WA5', unit: '个', qty: 1, note: '168抑菌砂纹黑色' },
-                    { name: 'SP07方轴', code: 'SP07.12.40C021X', unit: '个', qty: 1, note: '外露轴长40mm' },
-                    { name: '微内开侧滑传动壳(侧装)', code: 'AGC58.08.031WA4', unit: '个', qty: 1, note: '' },
-                    { name: '微内侧侧滑系统', code: 'ASS50.10.4T031WA4', unit: '套', qty: 1, note: '承重100kg' },
-                    { name: '微内开侧滑侧框滚套锁杆', code: 'LPE50.20.2T031X', unit: '个', qty: 2, note: '可根据实际扇高按需增加数量' },
-                    { name: '微内开侧滑侧框锁座', code: 'SLP50.20.38WA4', unit: '个', qty: 2, note: '' },
-                    { name: '微内开侧滑钩锁', code: 'SDT50.00.2T069X', unit: '套', qty: 1, note: '可根据实际扇高按需增加数量' },
-                    { name: '微内开侧滑勾边锁座', code: 'SLP50.03.031X', unit: '个', qty: 1, note: '根据型材结构二选一，可根据实际扇高按需增加数量' },
-                    { name: '微内开侧滑勾边可调锁座', code: 'SLP50.04.031X', unit: '个', qty: 1, note: '根据型材结构二选一' }
-                ],
-                // 配置一选配件
-                config1Optional: [
-                    { name: '微内开侧滑中间下滑轮', code: 'AHR50.13.38X', unit: '个', qty: 1, note: '选配：扇宽大于1000mm或扇重大于100kg时使用；每增加一个中间下滑轮承重增加30kg，最大承重160kg' },
-                    { name: '微内开侧滑推拉单向缓冲器', code: 'BD403.26.38X', unit: '套', qty: 1, note: '选配：单扇选配1套，对开扇选配2套' }
-                ],
-                // 配置二
-                config2: [
-                    { name: 'PH952执手', code: 'PH952.00.168WA5', unit: '个', qty: 1, note: '168抑菌砂纹黑色' },
-                    { name: 'SP07方轴', code: 'SP07.12.40C021X', unit: '个', qty: 1, note: '外露轴长40mm' },
-                    { name: '微内开侧滑传动壳(侧装)', code: 'AGC58.08.031WA4', unit: '个', qty: 1, note: '' },
-                    { name: '微内侧侧滑系统', code: 'ASS50.10.4T031WA4', unit: '套', qty: 1, note: '承重100kg' },
-                    { name: '微内开侧滑侧框滚套锁杆', code: 'LPE50.20.2T031X', unit: '个', qty: 2, note: '可根据实际扇高按需增加数量' },
-                    { name: '微内开侧滑侧框锁座', code: 'SLP50.20.38WA4', unit: '个', qty: 2, note: '' },
-                    { name: '微内开侧滑钩锁', code: 'SDT50.10.1T031X', unit: '个', qty: 1, note: '可根据实际扇高按需增加数量；扇高1.2米以下标配1套；1.2米~1.8米标配2套；1.8米~2.6米标配3套' }
-                ],
-                // 配置二选配件
-                config2Optional: [
-                    { name: '微内开侧滑中间下滑轮', code: 'AHR50.13.38X', unit: '个', qty: 1, note: '选配：扇宽大于1000mm或扇重大于100kg时使用；每增加一个中间下滑轮承重增加30kg，最大承重160kg' },
-                    { name: '微内开侧滑推拉单向缓冲器', code: 'BD403.26.38X', unit: '套', qty: 1, note: '选配：单扇选配1套，对开扇选配2套' }
-                ]
-            },
-            
             // 悬挂外开窗配置
             hangingOpen: {
                 range: { minWidth: 510, maxWidth: 900, minHeight: 665, maxHeight: 2000 },
@@ -1203,162 +1128,176 @@
         // ============== 全局变量 ==============
         let currentResult = null;
 
-        // ============== 核心匹配逻辑 ==============
-        function calculateHardware(width, height, windowType, slidingConfig) {
-            const result = {
+        const RESULT_BUCKETS = ['basic', 'heightAddons', 'widthAddons', 'backLock', 'windBrace'];
+
+        const STATIC_PLANS = {
+            'uc-tilt-turn': {
+                label: 'UC槽内开内倒窗',
+                requiresSize: true,
+                width: { min: 455, max: 970, label: '455 ~ 970 mm' },
+                height: { min: 655, max: 3000, label: '655 ~ 3000 mm' },
+                build: buildUcTiltTurnResult
+            },
+            'hanging-open': {
+                label: '悬挂外开窗',
+                requiresSize: false,
+                width: { min: 510, max: 900, label: '510 ~ 900 mm' },
+                height: { min: 665, max: 2000, label: '665 ~ 2000 mm' },
+                build: buildHangingOpenResult
+            }
+        };
+
+        function createResult(extra = {}) {
+            return {
                 basic: [],
                 heightAddons: [],
                 widthAddons: [],
                 backLock: [],
                 windBrace: [],
                 warnings: [],
-                infos: []
+                infos: [],
+                ...extra
             };
-            
-            // 根据门窗类型选择不同配置
-            if (windowType === 'g24-sliding') {
-                // G24窄边推拉门配置
-                const config = slidingConfig === 'four-panel' 
-                    ? CONFIG.g24Sliding.fourPanel 
-                    : CONFIG.g24Sliding.twoPanel;
-                
-                result.basic = config.map(item => ({
-                    ...item,
-                    category: 'basic',
-                    categoryName: '基础配置'
-                }));
-                
-                // 检查尺寸范围
-                if (width < CONFIG.g24Sliding.range.minWidth || width > CONFIG.g24Sliding.range.maxWidth) {
-                    result.warnings.push(`扇宽 ${width}mm 超出G24推拉门范围(400-2500mm)`);
+        }
+
+        function getStaticPlan(windowType) {
+            return STATIC_PLANS[windowType] || STATIC_PLANS['uc-tilt-turn'];
+        }
+
+        function tagItems(items, category, categoryName) {
+            return items.map(item => ({
+                ...item,
+                category,
+                categoryName
+            }));
+        }
+
+        function getResultItems(result) {
+            return RESULT_BUCKETS.flatMap(bucket => result?.[bucket] || []);
+        }
+
+        function mergeResultItems(items, preserveRows = false) {
+            if (preserveRows) return items;
+
+            const mergedItems = {};
+            items.forEach(item => {
+                let baseName = item.name;
+                let isOptionPair = false;
+                let pairType = '';
+
+                const lrMatch = item.name.match(/^(.+?)\s*[LR]$/i);
+                if (lrMatch) {
+                    baseName = lrMatch[1].trim();
+                    isOptionPair = true;
+                    pairType = 'LR';
                 }
-                if (height < CONFIG.g24Sliding.range.minHeight || height > CONFIG.g24Sliding.range.maxHeight) {
-                    result.warnings.push(`扇高 ${height}mm 超出G24推拉门范围(600-2600mm)`);
+
+                const extMatch = item.name.match(/^(.+?延长端)（.+）$/);
+                if (extMatch) {
+                    baseName = extMatch[1].trim();
+                    isOptionPair = true;
+                    pairType = 'EXTEND';
                 }
-                
-                // 添加滑轮二选一提示
-                result.infos.push('滑轮轻型/重型二选一，根据实际需求选择');
-                
-            } else if (windowType === 'g45-sliding') {
-                // G45推拉密封窗配置
-                const isConfig1 = slidingConfig === 'config1';
-                const mainConfig = isConfig1 ? CONFIG.g45Sliding.config1 : CONFIG.g45Sliding.config2;
-                const optionalConfig = isConfig1 ? CONFIG.g45Sliding.config1Optional : CONFIG.g45Sliding.config2Optional;
-                
-                result.basic = mainConfig.map(item => ({
-                    ...item,
-                    category: 'basic',
-                    categoryName: '基础配置'
-                }));
-                
-                result.backLock = optionalConfig.map(item => ({
-                    ...item,
-                    category: 'optional',
-                    categoryName: '选配件'
-                }));
-                
-                // 检查尺寸范围
-                if (width < CONFIG.g45Sliding.range.minWidth || width > CONFIG.g45Sliding.range.maxWidth) {
-                    result.warnings.push(`扇宽 ${width}mm 超出G45推拉密封窗范围(500-1050mm)`);
-                }
-                if (height < CONFIG.g45Sliding.range.minHeight || height > CONFIG.g45Sliding.range.maxHeight) {
-                    result.warnings.push(`扇高 ${height}mm 超出G45推拉密封窗范围(800-2600mm)`);
-                }
-                
-                // 配置一的勾边锁座二选一提示
-                if (isConfig1) {
-                    result.infos.push('勾边锁座/勾边可调锁座二选一，根据型材结构选择');
-                }
-                
-            } else if (windowType === 'hanging-open') {
-                // 悬挂外开窗配置
-                result.basic = CONFIG.hangingOpen.basic.map(item => ({
-                    ...item,
-                    category: 'basic',
-                    categoryName: '基础配置'
-                }));
-                
-                result.backLock = CONFIG.hangingOpen.optional.map(item => ({
-                    ...item,
-                    category: 'optional',
-                    categoryName: '选配件'
-                }));
-                
-                // 左右铰链二选一提示
-                result.infos.push('隐藏式悬挂外开（左）/（右）二选一，根据安装位置选择');
-                
-            } else {
-                // UC槽内开内倒窗配置（默认）
-                // 1. 基础配置
-                result.basic = CONFIG.basicHardware.map(item => ({
-                    ...item,
-                    category: 'basic',
-                    categoryName: '基础配置'
-                }));
-                
-                // 检查基础范围
-                const inBasicWidthRange = width >= CONFIG.basicRange.minWidth && width <= CONFIG.basicRange.maxWidth;
-                const inBasicHeightRange = height >= CONFIG.basicRange.minHeight && height <= CONFIG.basicRange.maxHeight;
-                
-                if (!inBasicWidthRange && width > CONFIG.basicRange.maxWidth && width <= CONFIG.widthAddons.range.max) {
-                    result.warnings.push(`扇宽 ${width}mm 超出基础范围(455-720mm)，需要增购扇宽匹配五金`);
-                }
-                
-                if (!inBasicHeightRange && height > CONFIG.basicRange.maxHeight) {
-                    result.warnings.push(`扇高 ${height}mm 超出基础范围(655-925mm)，需要增购扇高匹配五金`);
-                }
-                
-                // 2. 扇高增购
-                for (const addon of CONFIG.heightAddons) {
-                    if (height > addon.range.min && height <= addon.range.max) {
-                        result.heightAddons = addon.items.map(item => ({
-                            ...item,
-                            category: 'height',
-                            categoryName: '扇高增购'
-                        }));
-                        break;
-                    }
-                }
-                
-                // 3. 扇宽增购
-                if (width > CONFIG.widthAddons.range.min && width <= CONFIG.widthAddons.range.max) {
-                    const recommendedOption = CONFIG.widthAddons.options[0];
-                    result.widthAddons = recommendedOption.items.map(item => ({
-                        ...item,
-                        category: 'width',
-                        categoryName: '扇宽增购'
-                    }));
-                    result.infos.push(`扇宽增购有两种方案可选，当前显示推荐方案一。方案二可选：250mm延长端（无锁点）x1`);
-                }
-                
-                // 4. 背部锁增购（可选）
-                const backLockOption = CONFIG.backLockAddons[0];
-                result.backLock = backLockOption.items.map(item => ({
-                    ...item,
-                    category: 'backlock',
-                    categoryName: '背部锁（可选）'
-                }));
-                
-                if (height > 925) {
-                    const option2 = CONFIG.backLockAddons[1];
-                    for (const rule of option2.heightRules) {
-                        if (height > rule.range.min && height <= rule.range.max) {
-                            result.infos.push(`背部锁方案二可选：联动背部锁延长端，需增配 ${rule.sets} 套500mm延长端（防撬锁点）`);
-                            break;
+
+                if (!isOptionPair && item.note && item.note.includes('二选一')) {
+                    const bracketMatch = item.name.match(/^(.+?)(可调)?(.+)$/);
+                    if (bracketMatch) {
+                        const hasPair = items.some(other =>
+                            other !== item &&
+                            other.note &&
+                            other.note.includes('二选一') &&
+                            other.name !== item.name &&
+                            (other.name.includes(bracketMatch[1]) || item.name.includes(other.name.replace('可调', '')))
+                        );
+                        if (hasPair) {
+                            baseName = item.name.replace('可调', '');
+                            isOptionPair = true;
+                            pairType = 'NOTE_OPTION';
                         }
                     }
                 }
-                
-                // 5. 风撑增购（可选）
-                if (width >= CONFIG.windBrace.minWidth) {
-                    result.windBrace = [{
-                        ...CONFIG.windBrace.item,
-                        category: 'wind',
-                        categoryName: '风撑（可选）'
-                    }];
+
+                const key = isOptionPair ? `OPTION_PAIR|${pairType}|${baseName}` : `${item.name}|${item.code}`;
+                if (mergedItems[key]) {
+                    if (isOptionPair) {
+                        mergedItems[key].codes.push(item.code);
+                        mergedItems[key].note = '二选一';
+                    } else {
+                        mergedItems[key].qty += item.qty;
+                        const existingNote = mergedItems[key].note || '';
+                        if (item.note && !existingNote.includes(item.note)) {
+                            mergedItems[key].note = existingNote
+                                ? existingNote + '; ' + item.note
+                                : item.note;
+                        }
+                    }
+                    return;
+                }
+
+                mergedItems[key] = {
+                    ...item,
+                    name: isOptionPair ? baseName : item.name,
+                    codes: [item.code],
+                    note: isOptionPair ? '二选一' : item.note
+                };
+            });
+
+            return Object.values(mergedItems);
+        }
+
+        // ============== 核心匹配逻辑 ==============
+        function calculateHardware(width, height, windowType) {
+            return getStaticPlan(windowType).build(width, height);
+        }
+
+        function buildHangingOpenResult() {
+            return createResult({
+                basic: tagItems(CONFIG.hangingOpen.basic, 'basic', '基础配置'),
+                backLock: tagItems(CONFIG.hangingOpen.optional, 'optional', '选配件'),
+                infos: ['隐藏式悬挂外开（左）/（右）二选一，根据安装位置选择']
+            });
+        }
+
+        function buildUcTiltTurnResult(width, height) {
+            const result = createResult({
+                basic: tagItems(CONFIG.basicHardware, 'basic', '基础配置')
+            });
+
+            const inBasicWidthRange = width >= CONFIG.basicRange.minWidth && width <= CONFIG.basicRange.maxWidth;
+            const inBasicHeightRange = height >= CONFIG.basicRange.minHeight && height <= CONFIG.basicRange.maxHeight;
+
+            if (!inBasicWidthRange && width > CONFIG.basicRange.maxWidth && width <= CONFIG.widthAddons.range.max) {
+                result.warnings.push(`扇宽 ${width}mm 超出基础范围(455-720mm)，需要增购扇宽匹配五金`);
+            }
+
+            if (!inBasicHeightRange && height > CONFIG.basicRange.maxHeight) {
+                result.warnings.push(`扇高 ${height}mm 超出基础范围(655-925mm)，需要增购扇高匹配五金`);
+            }
+
+            const heightAddon = CONFIG.heightAddons.find(addon => height > addon.range.min && height <= addon.range.max);
+            if (heightAddon) {
+                result.heightAddons = tagItems(heightAddon.items, 'height', '扇高增购');
+            }
+
+            if (width > CONFIG.widthAddons.range.min && width <= CONFIG.widthAddons.range.max) {
+                const recommendedOption = CONFIG.widthAddons.options[0];
+                result.widthAddons = tagItems(recommendedOption.items, 'width', '扇宽增购');
+                result.infos.push('扇宽增购有两种方案可选，当前显示推荐方案一。方案二可选：250mm延长端（无锁点）x1');
+            }
+
+            result.backLock = tagItems(CONFIG.backLockAddons[0].items, 'backlock', '背部锁（可选）');
+
+            if (height > 925) {
+                const rule = CONFIG.backLockAddons[1].heightRules.find(item => height > item.range.min && height <= item.range.max);
+                if (rule) {
+                    result.infos.push(`背部锁方案二可选：联动背部锁延长端，需增配 ${rule.sets} 套500mm延长端（防撬锁点）`);
                 }
             }
-            
+
+            if (width >= CONFIG.windBrace.minWidth) {
+                result.windBrace = tagItems([CONFIG.windBrace.item], 'wind', '风撑（可选）');
+            }
+
             return result;
         }
 
@@ -1398,90 +1337,7 @@
             const tbody = document.getElementById('hardwareBody');
             tbody.innerHTML = '';
             
-            // 合并所有配置项
-            let allItems = [
-                ...result.basic,
-                ...result.heightAddons,
-                ...result.widthAddons,
-                ...result.backLock,
-                ...result.windBrace
-            ];
-            
-            let itemsToRender = allItems;
-            if (!result.preserveRows) {
-                // 合并相同产品，处理L/R配对和延长端配对（都是二选一）
-                const mergedItems = {};
-                allItems.forEach(item => {
-                    // 检测是否是L/R配对的产品
-                    let baseName = item.name;
-                    let isOptionPair = false;
-                    let pairType = '';
-                    
-                    // 匹配名称末尾的 L 或 R（可能有空格）
-                    const lrMatch = item.name.match(/^(.+?)\s*[LR]$/i);
-                    if (lrMatch) {
-                        baseName = lrMatch[1].trim();
-                        isOptionPair = true;
-                        pairType = 'LR';
-                    }
-                    
-                    // 匹配延长端配对：如 "250mm延长端（无锁点）" 和 "250mm延长端（防撬锁点）"
-                    const extMatch = item.name.match(/^(.+?延长端)（.+）$/);
-                    if (extMatch) {
-                        baseName = extMatch[1].trim();
-                        isOptionPair = true;
-                        pairType = 'EXTEND';
-                    }
-                    
-                    // 匹配备注含"二选一"的产品：如勾边锁座和勾边可调锁座
-                    if (!isOptionPair && item.note && item.note.includes('二选一')) {
-                        // 提取名称中的共同前缀（去掉最后一个括号内容或后缀差异）
-                        const bracketMatch = item.name.match(/^(.+?)(可调)?(.+)$/);
-                        if (bracketMatch) {
-                            // 尝试找到同类产品
-                            const hasPair = allItems.some(other => 
-                                other !== item && 
-                                other.note && other.note.includes('二选一') &&
-                                other.name !== item.name &&
-                                (other.name.includes(bracketMatch[1]) || item.name.includes(other.name.replace('可调', '')))
-                            );
-                            if (hasPair) {
-                                // 用更通用的基础名称
-                                baseName = item.name.replace('可调', '');
-                                isOptionPair = true;
-                                pairType = 'NOTE_OPTION';
-                            }
-                        }
-                    }
-                    
-                    // 对于配对产品，使用基础名称作为key
-                    const key = isOptionPair ? `OPTION_PAIR|${pairType}|${baseName}` : `${item.name}|${item.code}`;
-                    
-                    if (mergedItems[key]) {
-                        if (isOptionPair) {
-                            // 配对产品，合并编号，数量保持1，备注"二选一"
-                            mergedItems[key].codes.push(item.code);
-                            mergedItems[key].note = '二选一';
-                        } else {
-                            // 普通产品，累加数量
-                            mergedItems[key].qty += item.qty;
-                            if (item.note && !mergedItems[key].note.includes(item.note)) {
-                                mergedItems[key].note = mergedItems[key].note 
-                                    ? mergedItems[key].note + '; ' + item.note 
-                                    : item.note;
-                            }
-                        }
-                    } else {
-                        mergedItems[key] = { 
-                            ...item, 
-                            name: isOptionPair ? baseName : item.name,
-                            codes: [item.code],
-                            note: isOptionPair ? '二选一' : item.note
-                        };
-                    }
-                });
-                itemsToRender = Object.values(mergedItems);
-            }
+            const itemsToRender = mergeResultItems(getResultItems(result), Boolean(result.preserveRows));
             
             // 转换为数组并渲染
             itemsToRender.forEach(item => {
@@ -1511,219 +1367,185 @@
                 `<div class="info-box"><p>💡 ${translateDisplayText(i)}</p></div>`
             ).join('');
             
-            // 更新输入摘要
-            const typeName = windowType === 'g24-sliding' ? 'G24窄边推拉门' : windowType === 'g45-sliding' ? 'G45推拉密封窗' : windowType === 'hanging-open' ? '悬挂外开窗' : 'UC槽内开内倒窗';
-            const displayTypeName = translateDisplayText(typeName);
-            if (windowType === 'g24-sliding' || windowType === 'g45-sliding' || windowType === 'hanging-open') {
-                document.getElementById('inputSummary').textContent = displayTypeName;
-            } else {
-                document.getElementById('inputSummary').textContent = 
-                    currentLanguage === 'en'
-                        ? `${displayTypeName} | Width: ${width}mm | Height: ${height}mm`
-                        : `${typeName} | 宽度: ${width}mm | 高度: ${height}mm`;
+            updateInputSummary(width, height, windowType);
+        }
+
+        function getInputSummary(width, height, windowType) {
+            if (isExcelConfigType(windowType) && currentExcelPlan) {
+                return `${localizeConfigLabel(currentExcelPlan.group)} | ${localizeConfigLabel(currentExcelPlan.name)}`;
             }
+
+            const plan = getStaticPlan(windowType);
+            const displayTypeName = translateDisplayText(plan.label);
+            if (!plan.requiresSize) return displayTypeName;
+
+            return currentLanguage === 'en'
+                ? `${displayTypeName} | Width: ${width}mm | Height: ${height}mm`
+                : `${plan.label} | 宽度: ${width}mm | 高度: ${height}mm`;
+        }
+
+        function updateInputSummary(width, height, windowType) {
+            document.getElementById('inputSummary').textContent = getInputSummary(width, height, windowType);
         }
 
         // ============== 事件处理 ==============
-        document.getElementById('configForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const type = document.getElementById('windowType').value;
-            const slidingConfig = document.getElementById('slidingConfig').value;
-            
-            // G24、G45、悬挂外开不需要输入尺寸，直接显示配置
-            let width, height;
-            if (type === 'g24-sliding' || type === 'g45-sliding' || type === 'hanging-open') {
-                width = 0;
-                height = 0;
-            } else {
-                // UC槽需要验证尺寸
-                width = parseInt(document.getElementById('windowWidth').value);
-                height = parseInt(document.getElementById('windowHeight').value);
-                
-                if (width < 455 || width > 970) {
-                    alert(currentLanguage === 'en' ? 'Sash width should be between 455mm and 970mm' : '门窗宽度应在 455mm ~ 970mm 范围内');
-                    return;
-                }
-                if (height < 655 || height > 3000) {
-                    alert(currentLanguage === 'en' ? 'Sash height should be between 655mm and 3000mm' : '门窗高度应在 655mm ~ 3000mm 范围内');
-                    return;
-                }
-            }
-            
-            // 计算配置
-            currentResult = calculateHardware(width, height, type, slidingConfig);
-            
-            // 渲染结果
-            renderResult(currentResult, width, height, type);
-            
-            // 显示结果区域
-            document.getElementById('resultSection').classList.add('show');
-            
-            // 滚动到结果
-            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        // 门窗类型切换事件
-        document.getElementById('windowType').addEventListener('change', function() {
-            const slidingConfigGroup = document.getElementById('slidingConfigGroup');
-            const slidingConfig = document.getElementById('slidingConfig');
-            const slidingConfigHint = document.getElementById('slidingConfigHint');
-            const sizeRangeGroup = document.getElementById('sizeRangeGroup');
-            const sizeRangeDisplay = document.getElementById('sizeRangeDisplay');
+        function setSizeInputsVisible(visible, plan = null) {
             const widthInputGroup = document.getElementById('widthInputGroup');
             const heightInputGroup = document.getElementById('heightInputGroup');
             const windowWidth = document.getElementById('windowWidth');
             const windowHeight = document.getElementById('windowHeight');
-            
-            if (this.value === 'g24-sliding') {
-                // G24: 显示配置选择，隐藏尺寸输入，显示适用范围
-                slidingConfigGroup.style.display = 'flex';
-                slidingConfig.innerHTML = '<option value="two-panel">两轨两扇</option><option value="four-panel">两轨四扇对碰</option>';
-                updateSelectLanguage();
-                slidingConfigHint.textContent = translateDisplayText('选择推拉门的配置方案');
-                sizeRangeGroup.style.display = 'flex';
-                sizeRangeDisplay.innerHTML = translateSizeRange('400 ~ 2500 mm', '600 ~ 2600 mm');
-                widthInputGroup.style.display = 'none';
-                heightInputGroup.style.display = 'none';
-                windowWidth.removeAttribute('required');
-                windowHeight.removeAttribute('required');
-            } else if (this.value === 'g45-sliding') {
-                // G45: 固定配置一，隐藏尺寸输入，显示适用范围
-                slidingConfigGroup.style.display = 'none';
-                sizeRangeGroup.style.display = 'flex';
-                sizeRangeDisplay.innerHTML = translateSizeRange('500 ~ 1050 mm', '800 ~ 2600 mm');
-                widthInputGroup.style.display = 'none';
-                heightInputGroup.style.display = 'none';
-                windowWidth.removeAttribute('required');
-                windowHeight.removeAttribute('required');
-            } else if (this.value === 'hanging-open') {
-                // 悬挂外开: 隐藏尺寸输入，显示适用范围
-                slidingConfigGroup.style.display = 'none';
-                sizeRangeGroup.style.display = 'flex';
-                sizeRangeDisplay.innerHTML = translateSizeRange('510 ~ 900 mm', '665 ~ 2000 mm');
-                widthInputGroup.style.display = 'none';
-                heightInputGroup.style.display = 'none';
-                windowWidth.removeAttribute('required');
-                windowHeight.removeAttribute('required');
-            } else {
-                slidingConfigGroup.style.display = 'none';
-                // UC槽: 显示尺寸输入，隐藏适用范围
-                slidingConfigGroup.style.display = 'none';
-                sizeRangeGroup.style.display = 'none';
-                widthInputGroup.style.display = 'flex';
-                heightInputGroup.style.display = 'flex';
-                windowWidth.setAttribute('required', 'required');
-                windowHeight.setAttribute('required', 'required');
-                windowWidth.min = 455;
-                windowWidth.max = 970;
-                windowHeight.min = 655;
-                windowHeight.max = 3000;
+
+            widthInputGroup.style.display = visible ? 'flex' : 'none';
+            heightInputGroup.style.display = visible ? 'flex' : 'none';
+            windowWidth.toggleAttribute('required', visible);
+            windowHeight.toggleAttribute('required', visible);
+
+            if (visible && plan) {
+                windowWidth.min = plan.width.min;
+                windowWidth.max = plan.width.max;
+                windowHeight.min = plan.height.min;
+                windowHeight.max = plan.height.max;
             }
+        }
+
+        function updateFormState(windowType = document.getElementById('windowType').value) {
+            const sizeRangeGroup = document.getElementById('sizeRangeGroup');
+            const sizeRangeDisplay = document.getElementById('sizeRangeDisplay');
+            document.getElementById('slidingConfigGroup').style.display = 'none';
+
+            if (isExcelConfigType(windowType)) {
+                currentExcelPlan = getExcelConfigPlan(windowType);
+                sizeRangeGroup.style.display = 'none';
+                setSizeInputsVisible(false);
+                return;
+            }
+
+            currentExcelPlan = null;
+            const plan = getStaticPlan(windowType);
+            const showSizeRange = Boolean(windowType);
+            sizeRangeGroup.style.display = showSizeRange ? 'flex' : 'none';
+            if (showSizeRange) {
+                sizeRangeDisplay.innerHTML = translateSizeRange(plan.width.label, plan.height.label);
+            }
+            setSizeInputsVisible(Boolean(windowType) && plan.requiresSize, plan);
+        }
+
+        function readStaticSize(plan) {
+            if (!plan.requiresSize) return { width: 0, height: 0 };
+
+            const width = Number(document.getElementById('windowWidth').value);
+            const height = Number(document.getElementById('windowHeight').value);
+            if (!Number.isFinite(width) || width < plan.width.min || width > plan.width.max) {
+                alert(currentLanguage === 'en'
+                    ? `Sash width should be between ${plan.width.min}mm and ${plan.width.max}mm`
+                    : `门窗宽度应在 ${plan.width.min}mm ~ ${plan.width.max}mm 范围内`);
+                return null;
+            }
+            if (!Number.isFinite(height) || height < plan.height.min || height > plan.height.max) {
+                alert(currentLanguage === 'en'
+                    ? `Sash height should be between ${plan.height.min}mm and ${plan.height.max}mm`
+                    : `门窗高度应在 ${plan.height.min}mm ~ ${plan.height.max}mm 范围内`);
+                return null;
+            }
+
+            return { width, height };
+        }
+
+        function showResult(result, width, height, windowType) {
+            currentResult = result;
+            renderResult(result, width, height, windowType);
+            const resultSection = document.getElementById('resultSection');
+            resultSection.classList.add('show');
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function handleConfigSubmit(e) {
+            e.preventDefault();
+
+            const type = document.getElementById('windowType').value;
+            if (!type) return;
+
+            if (isExcelConfigType(type)) {
+                const plan = getExcelConfigPlan(type);
+                if (!plan) return;
+                currentExcelPlan = plan;
+                showResult(buildExcelConfigResult(plan), 0, 0, type);
+                return;
+            }
+
+            const plan = getStaticPlan(type);
+            const size = readStaticSize(plan);
+            if (!size) return;
+
+            currentExcelPlan = null;
+            showResult(calculateHardware(size.width, size.height, type), size.width, size.height, type);
+        }
+
+        document.getElementById('configForm').addEventListener('submit', handleConfigSubmit);
+        document.getElementById('windowType').addEventListener('change', function() {
+            updateFormState(this.value);
         });
 
         // 导出功能
         function exportResult() {
-            if (!currentResult) return;
-            
-            const width = document.getElementById('windowWidth').value;
-            const height = document.getElementById('windowHeight').value;
-            
-            // 合并所有项目
-            let allItems = [
-                ...currentResult.basic,
-                ...currentResult.heightAddons,
-                ...currentResult.widthAddons,
-                ...currentResult.backLock,
-                ...currentResult.windBrace
-            ];
-            
-            // 合并相同产品，处理L/R配对和延长端配对（都是二选一）
-            const mergedItems = {};
-            allItems.forEach(item => {
-                // 检测是否是L/R配对的产品
-                let baseName = item.name;
-                let isOptionPair = false;
-                let pairType = '';
-                
-                const lrMatch = item.name.match(/^(.+?)\s*[LR]$/i);
-                if (lrMatch) {
-                    baseName = lrMatch[1].trim();
-                    isOptionPair = true;
-                    pairType = 'LR';
-                }
-                
-                // 匹配延长端配对
-                const extMatch = item.name.match(/^(.+?延长端)（.+）$/);
-                if (extMatch) {
-                    baseName = extMatch[1].trim();
-                    isOptionPair = true;
-                    pairType = 'EXTEND';
-                }
-                
-                const key = isOptionPair ? `OPTION_PAIR|${pairType}|${baseName}` : `${item.name}|${item.code}`;
-                
-                if (mergedItems[key]) {
-                    if (isOptionPair) {
-                        mergedItems[key].codes.push(item.code);
-                        mergedItems[key].note = '二选一';
-                    } else {
-                        mergedItems[key].qty += item.qty;
-                        if (item.note && !mergedItems[key].note.includes(item.note)) {
-                            mergedItems[key].note = mergedItems[key].note 
-                                ? mergedItems[key].note + '; ' + item.note 
-                                : item.note;
-                        }
-                    }
-                } else {
-                    mergedItems[key] = { 
-                        ...item, 
-                        name: isOptionPair ? baseName : item.name,
-                        codes: [item.code],
-                        note: isOptionPair ? '二选一' : item.note
-                    };
-                }
-            });
-            
+            if (!currentResult || !lastRenderContext) return;
+
+            const { width, height, windowType } = lastRenderContext;
+            const items = mergeResultItems(getResultItems(currentResult), Boolean(currentResult.preserveRows));
+            const excelPlan = isExcelConfigType(windowType) ? (currentExcelPlan || getExcelConfigPlan(windowType)) : null;
+            const staticPlan = excelPlan ? null : getStaticPlan(windowType);
+
             let text = `${translateDisplayText('HOPO 门窗五金配置清单')}\n`;
             text += `========================\n\n`;
-            text += `${translateDisplayText('门窗类型')}: ${translateDisplayText('UC槽内开内倒窗')}\n`;
-            text += `${translateDisplayText('门窗宽度')}: ${width}mm\n`;
-            text += `${translateDisplayText('门窗高度')}: ${height}mm\n\n`;
+            if (excelPlan) {
+                text += `${translateDisplayText('配置分组')}: ${localizeConfigLabel(excelPlan.group)}\n`;
+                text += `${translateDisplayText('配置方案')}: ${localizeConfigLabel(excelPlan.name)}\n\n`;
+            } else {
+                text += `${translateDisplayText('门窗类型')}: ${translateDisplayText(staticPlan.label)}\n`;
+                if (staticPlan.requiresSize) {
+                    text += `${translateDisplayText('门窗宽度')}: ${width}mm\n`;
+                    text += `${translateDisplayText('门窗高度')}: ${height}mm\n`;
+                }
+                text += `\n`;
+            }
             text += `========================\n\n`;
-            
+
             text += `【${translateDisplayText('五金配置清单')}】\n`;
-            Object.values(mergedItems).forEach(item => {
+            items.forEach(item => {
                 const codeDisplay = item.codes ? item.codes.join(' / ') : item.code;
+                const optionLabel = getLocalizedOptionLabel(item);
+                const nameDisplay = optionLabel ? `${optionLabel} - ${getLocalizedItemName(item)}` : getLocalizedItemName(item);
                 const note = getLocalizedItemNote(item);
                 const noteDisplay = note && note !== '-' ? ` (${note})` : '';
-                text += `${getLocalizedItemName(item)} | ${codeDisplay} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
+                text += `${nameDisplay} | ${codeDisplay} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
             });
-            
+
             if (currentResult.warnings.length > 0) {
                 text += `\n【${translateDisplayText('注意事项')}】\n`;
                 currentResult.warnings.forEach(w => {
                     text += `⚠️ ${translateDisplayText(w)}\n`;
                 });
             }
-            
+
             if (currentResult.infos.length > 0) {
                 text += `\n【${translateDisplayText('补充说明')}】\n`;
                 currentResult.infos.forEach(i => {
                     text += `💡 ${translateDisplayText(i)}\n`;
                 });
             }
-            
+
             text += `\n========================\n`;
             text += `${translateDisplayText('生成时间')}: ${new Date().toLocaleString()}\n`;
             text += `${translateDisplayText('HOPO 门窗五金智能选配系统')}\n`;
-            
-            // 下载文件
+
             const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
+            const fileLabel = excelPlan
+                ? localizeConfigLabel(excelPlan.name)
+                : (staticPlan.requiresSize ? `${width}x${height}` : translateDisplayText(staticPlan.label));
             a.href = url;
-            a.download = `HOPO五金配置_${width}x${height}.txt`;
+            a.download = `HOPO五金配置_${String(fileLabel).replace(/[\\/:*?"<>|]/g, '_').slice(0, 80)}.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1930,98 +1752,12 @@
             };
         }
 
-        function showExcelConfigFormState(plan) {
-            document.getElementById('slidingConfigGroup').style.display = 'none';
-            document.getElementById('sizeRangeGroup').style.display = 'none';
-            document.getElementById('widthInputGroup').style.display = 'none';
-            document.getElementById('heightInputGroup').style.display = 'none';
-            document.getElementById('windowWidth').removeAttribute('required');
-            document.getElementById('windowHeight').removeAttribute('required');
-            currentExcelPlan = plan;
-        }
-
-        document.getElementById('windowType').addEventListener('change', function(e) {
-            if (!isExcelConfigType(this.value)) {
-                currentExcelPlan = null;
-                return;
-            }
-
-            const plan = getExcelConfigPlan(this.value);
-            if (!plan) return;
-            e.stopImmediatePropagation();
-            showExcelConfigFormState(plan);
-        }, true);
-
-        document.getElementById('configForm').addEventListener('submit', function(e) {
-            const type = document.getElementById('windowType').value;
-            if (!isExcelConfigType(type)) return;
-
-            const plan = getExcelConfigPlan(type);
-            if (!plan) return;
-            e.preventDefault();
-            e.stopImmediatePropagation();
-
-            currentExcelPlan = plan;
-            currentResult = buildExcelConfigResult(plan);
-            renderResult(currentResult, 0, 0, type);
-            document.getElementById('inputSummary').textContent = `${localizeConfigLabel(plan.group)} | ${localizeConfigLabel(plan.name)}`;
-            document.getElementById('resultSection').classList.add('show');
-            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
-        }, true);
-
-        var exportOriginalResult = exportResult;
-        exportResult = function() {
-            if (!currentExcelPlan || !currentResult) {
-                exportOriginalResult();
-                return;
-            }
-
-            const allItems = [
-                ...currentResult.basic,
-                ...currentResult.heightAddons,
-                ...currentResult.widthAddons,
-                ...currentResult.backLock,
-                ...currentResult.windBrace
-            ];
-
-            let text = `${translateDisplayText('HOPO 门窗五金配置清单')}\n`;
-            text += `========================\n\n`;
-            text += `${translateDisplayText('配置分组')}: ${localizeConfigLabel(currentExcelPlan.group)}\n`;
-            text += `${translateDisplayText('配置方案')}: ${localizeConfigLabel(currentExcelPlan.name)}\n\n`;
-            text += `========================\n\n`;
-            text += `【${translateDisplayText('五金配置清单')}】\n`;
-            allItems.forEach(item => {
-                const optionLabel = getLocalizedOptionLabel(item);
-                const nameDisplay = optionLabel ? `${optionLabel} - ${getLocalizedItemName(item)}` : getLocalizedItemName(item);
-                const note = getLocalizedItemNote(item);
-                const noteDisplay = note && note !== '-' ? ` (${note})` : '';
-                text += `${nameDisplay} | ${item.code} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
-            });
-            if (currentResult.infos.length > 0) {
-                text += `\n【${translateDisplayText('补充说明')}】\n`;
-                currentResult.infos.forEach(i => { text += `💡 ${translateDisplayText(i)}\n`; });
-            }
-            text += `\n========================\n`;
-            text += `${translateDisplayText('生成时间')}: ${new Date().toLocaleString()}\n`;
-            text += `${translateDisplayText('HOPO 门窗五金智能选配系统')}\n`;
-
-            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            const safeName = localizeConfigLabel(currentExcelPlan.name).replace(/[\\/:*?"<>|]/g, '_').slice(0, 80);
-            a.href = url;
-            a.download = `HOPO五金配置_${safeName}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        };
-
         appendExcelConfigOptions();
         document.getElementById('langZh').addEventListener('click', () => setLanguage('zh'));
         document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
         applyLanguageToStaticText();
         updateSelectLanguage();
+        updateFormState();
         // ============== Excel导入配置库结束 ==============</script>
 </body>
 </html>
