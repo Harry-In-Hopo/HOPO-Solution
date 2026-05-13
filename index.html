@@ -833,16 +833,16 @@
             '选项组': 'choice group',
             '当前选项': 'current option',
             '请选择其中一项': 'choose one option',
-            '同一序列号': 'same sequence number',
+            '同组选项': 'same option group',
+            '同组存在多个可选项，请按项目需求选择': 'This group has multiple selectable items; choose according to project requirements',
             '存在多个可选项': 'has multiple selectable items',
-            '序列号': 'sequence number',
             '序号': 'No.',
             '单扇': 'single sash',
             '两扇': 'two sashes',
             '四扇': 'four sashes',
             '联动背部锁延长端': 'linked back-lock extension',
             '扇宽555mm-625mm需截取角传动器': 'for sash width 555mm-625mm, the corner transmission device must be cut',
-            '该方案已按Excel序列号整理，带选项组提示的行表示同一序列下的可选项。': 'This plan has been organized by Excel sequence numbers. Rows with choice-group hints are selectable items under the same sequence.'
+            '该方案已按同组可选项整理，带选项组提示的行表示同一组可选项。': 'This plan has been organized by option groups. Rows with choice-group hints are selectable items in the same group.'
         };
 
         let currentLanguage = localStorage.getItem('hopoLanguage') || 'zh';
@@ -1357,10 +1357,6 @@
             return note ? translateDisplayText(note) : '-';
         }
 
-        function getLocalizedOptionLabel(item) {
-            return item.optionLabel ? localizedPair(item.optionLabel) : '';
-        }
-
         function renderResult(result, width, height, windowType) {
             lastRenderContext = { result, width, height, windowType };
             const tbody = document.getElementById('hardwareBody');
@@ -1372,10 +1368,8 @@
             itemsToRender.forEach(item => {
                 const tr = document.createElement('tr');
                 const codeDisplay = item.codes ? item.codes.join(' / ') : item.code;
-                const optionLabel = getLocalizedOptionLabel(item);
-                const optionMarkup = optionLabel ? `<div class="option-meta">${escapeHtml(optionLabel)}</div>` : '';
                 tr.innerHTML = `
-                    <td>${optionMarkup}${escapeHtml(getLocalizedItemName(item))}</td>
+                    <td>${escapeHtml(getLocalizedItemName(item))}</td>
                     <td><span class="product-code">${escapeHtml(codeDisplay)}</span></td>
                     <td>${translateUnit(item.unit)}</td>
                     <td><strong>${item.qty}</strong></td>
@@ -1542,8 +1536,7 @@
             text += `【${translateDisplayText('五金配置清单')}】\n`;
             items.forEach(item => {
                 const codeDisplay = item.codes ? item.codes.join(' / ') : item.code;
-                const optionLabel = getLocalizedOptionLabel(item);
-                const nameDisplay = optionLabel ? `${optionLabel} - ${getLocalizedItemName(item)}` : getLocalizedItemName(item);
+                const nameDisplay = getLocalizedItemName(item);
                 const note = getLocalizedItemNote(item);
                 const noteDisplay = note && note !== '-' ? ` (${note})` : '';
                 text += `${nameDisplay} | ${codeDisplay} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
@@ -1717,23 +1710,14 @@
             return taggedItems.map(item => {
                 const group = item.serialBase ? groups.get(`${item.categoryName}|${item.serialBase}`) : null;
                 const isChoiceGroup = group && (group.hasMultipleOptions || group.hasSelectableItems);
-                const optionChoices = group ? group.optionLabels.join(' / ') : '';
-                const optionChoicesEn = group ? group.optionLabels.map(label => translateDisplayText(label)).join(' / ') : '';
-                const serialEn = translateDisplayText(item.effectiveSerial);
                 const optionMeta = isChoiceGroup
                     ? {
                         zh: group.hasMultipleOptions
-                            ? `选项组 ${item.serialBase}：请选择其中一项（${optionChoices}）；当前选项 ${item.effectiveSerial}`
-                            : `同一序列号 ${item.serialBase} 存在多个可选项，请按项目需求选择`,
+                            ? '同组选项：请选择其中一项'
+                            : '同组存在多个可选项，请按项目需求选择',
                         en: group.hasMultipleOptions
-                            ? `Choice group ${translateDisplayText(item.serialBase)}: choose one option (${optionChoicesEn}); current option ${serialEn}`
-                            : `Sequence ${translateDisplayText(item.serialBase)} has multiple selectable items; choose according to project requirements`
-                    }
-                    : null;
-                const optionLabel = item.effectiveSerial
-                    ? {
-                        zh: `序列号 ${item.effectiveSerial}`,
-                        en: `Sequence ${serialEn}`
+                            ? 'Choice group: choose one option'
+                            : 'This group has multiple selectable items; choose according to project requirements'
                     }
                     : null;
 
@@ -1745,8 +1729,7 @@
                     note: item.note || '',
                     category: 'basic',
                     categoryName: item.categoryName,
-                    optionMeta,
-                    optionLabel
+                    optionMeta
                 };
             });
         }
@@ -1776,7 +1759,7 @@
                 infos: [
                     `配置分组：${cleanConfigLabel(plan.group)}`,
                     '该方案按配置清单输出；尺寸范围、左右/轻重/颜色等选择请参考备注。',
-                    ...(hasOptionGroups ? ['该方案已按Excel序列号整理，带选项组提示的行表示同一序列下的可选项。'] : [])
+                    ...(hasOptionGroups ? ['该方案已按同组可选项整理，带选项组提示的行表示同一组可选项。'] : [])
                 ]
             };
         }
