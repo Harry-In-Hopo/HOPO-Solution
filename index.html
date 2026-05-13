@@ -39,6 +39,32 @@
             font-size: 1.1rem;
             opacity: 0.9;
         }
+
+        .language-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 18px;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 10px;
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #4f46e5;
+        }
         
         .main-card {
             background: white;
@@ -345,25 +371,29 @@
         <div class="header">
             <h1>🏠 HOPO 门窗五金智能选配系统</h1>
             <p>输入门窗尺寸，一键获取专业五金配置方案</p>
+            <div class="language-switch" aria-label="Language">
+                <button type="button" class="lang-btn active" id="langZh">中文</button>
+                <button type="button" class="lang-btn" id="langEn">English</button>
+            </div>
         </div>
         
         <div class="main-card">
             <div class="input-section">
-                <h2>📋 请输入门窗参数</h2>
+                <h2 id="formTitle">📋 请输入门窗参数</h2>
                 <form id="configForm">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="windowType">门窗类型</label>
+                            <label for="windowType" id="windowTypeLabel">门窗类型</label>
                             <select id="windowType" required>
                                 <option value="">请选择门窗类型</option>
                                 <option value="uc-tilt-turn" selected>UC槽 - 内开内倒窗</option>
                                 <option value="hanging-open">悬挂外开窗</option>
                             </select>
-                            <span class="hint">目前支持UC槽内开内倒窗、悬挂外开窗及新增配置方案</span>
+                            <span class="hint" id="windowTypeHint">目前支持UC槽内开内倒窗、悬挂外开窗及新增配置方案</span>
                         </div>
                         
                         <div class="form-group" id="slidingConfigGroup" style="display: none;">
-                            <label for="slidingConfig">配置方案</label>
+                            <label for="slidingConfig" id="slidingConfigLabel">配置方案</label>
                             <select id="slidingConfig">
                                 <option value="two-panel">两轨两扇</option>
                                 <option value="four-panel">两轨四扇对碰</option>
@@ -372,35 +402,35 @@
                         </div>
                         
                         <div class="form-group" id="sizeRangeGroup">
-                            <label>适用范围</label>
+                            <label id="sizeRangeLabel">适用范围</label>
                             <div id="sizeRangeDisplay" style="padding: 14px 16px; background: #f1f5f9; border-radius: 10px; border: 2px solid #e2e8f0; color: #475569;">
                                 扇宽: 455 ~ 970 mm<br>扇高: 655 ~ 3000 mm
                             </div>
-                            <span class="hint">若超出范围请联系技术支持</span>
+                            <span class="hint" id="sizeRangeHint">若超出范围请联系技术支持</span>
                         </div>
                         
                         <div class="form-group" id="widthInputGroup">
-                            <label for="windowWidth">门窗宽度 (mm)</label>
+                            <label for="windowWidth" id="widthLabel">门窗宽度 (mm)</label>
                             <input type="number" id="windowWidth" min="455" max="970" placeholder="例如: 600" required>
-                            <span class="hint">输入实际尺寸</span>
+                            <span class="hint" id="widthHint">输入实际尺寸</span>
                         </div>
                         
                         <div class="form-group" id="heightInputGroup">
-                            <label for="windowHeight">门窗高度 (mm)</label>
+                            <label for="windowHeight" id="heightLabel">门窗高度 (mm)</label>
                             <input type="number" id="windowHeight" min="655" max="3000" placeholder="例如: 1200" required>
-                            <span class="hint">输入实际尺寸</span>
+                            <span class="hint" id="heightHint">输入实际尺寸</span>
                         </div>
                     </div>
                     
                     <div style="text-align: center;">
-                        <button type="submit" class="btn-primary">🔍 查询五金配置</button>
+                        <button type="submit" class="btn-primary" id="queryButton">🔍 查询五金配置</button>
                     </div>
                 </form>
             </div>
             
             <div class="result-section" id="resultSection">
                 <div class="result-header">
-                    <h2>✅ 五金配置方案</h2>
+                    <h2 id="resultTitle">✅ 五金配置方案</h2>
                     <div class="input-summary" id="inputSummary"></div>
                 </div>
                 
@@ -410,11 +440,11 @@
                 <table class="hardware-table" id="hardwareTable">
                     <thead>
                         <tr>
-                            <th style="width: 220px;">产品名称</th>
-                            <th style="width: 180px;">产品编号</th>
-                            <th style="width: 80px;">单位</th>
-                            <th style="width: 80px;">数量</th>
-                            <th>备注说明</th>
+                            <th style="width: 220px;" id="thProductName">产品名称</th>
+                            <th style="width: 180px;" id="thProductCode">产品编号</th>
+                            <th style="width: 80px;" id="thUnit">单位</th>
+                            <th style="width: 80px;" id="thQty">数量</th>
+                            <th id="thNote">备注说明</th>
                         </tr>
                     </thead>
                     <tbody id="hardwareBody">
@@ -422,18 +452,307 @@
                 </table>
                 
                 <div style="text-align: center; margin-top: 30px;">
-                    <button class="export-btn" onclick="exportResult()">📥 导出配置清单</button>
+                    <button class="export-btn" id="exportButton" onclick="exportResult()">📥 导出配置清单</button>
                 </div>
             </div>
         </div>
         
         <div class="footer">
-            <p>© 2026 HOPO 门窗五金智能选配系统 | 专业 · 精准 · 高效</p>
+            <p id="footerText">© 2026 HOPO 门窗五金智能选配系统 | 专业 · 精准 · 高效</p>
         </div>
     </div>
 
     <script>
         // ============== 配置数据 ==============
+        // ============== 翻译词库 ==============
+        const TRANSLATION_TERMS = [{"zh":"露珠水槽盖（含Z466A和Z466B)","en":"Dewdrop sink cover(with Z466A \u0026 Z466B)"},{"zh":"提升推拉装饰盖（含Z465AB和毛条）","en":"lift-sliding decorative cover(Z465A \u0026 Z465B)"},{"zh":"内开门扇附件(H081250)堵盖-左","en":"inward casement door profile(H081250) jam cover-left"},{"zh":"内开门扇附件(H081250)堵盖-右","en":"inward casement door profile(H081250) jam cover-right"},{"zh":"外开门扇附件(H081249)堵盖-右","en":"outward casement door profile(H081249) jam cover-right"},{"zh":"外开门扇附件(H081249)堵盖-左","en":"outward casement door profile(H081249) jam cover-left"},{"zh":"70\u0026138中腔胶接角-H06616","en":"Middle profie corner gasket"},{"zh":"28*11.5*11.5中挺海绵垫","en":"Sponge mats of middle profile"},{"zh":"118/138 90°固定转角B","en":"Fix corner B"},{"zh":"H06601掩胶接角-(框用）","en":"Corner gasket (for frame)"},{"zh":"H06601掩胶接角-(扇用）","en":"Corner gasket (for sash)"},{"zh":"铝切削；用于转换框及玻扇拼接","en":"Aluminum cutting;For conversion frame and glass sash splicing"},{"zh":"118 135°固定转角B","en":"Fix corner B"},{"zh":"118 135°固定转角A","en":"Fix corner A"},{"zh":"138 135°固定转角B","en":"Fix corner B"},{"zh":"75 135°固定转角B","en":"135° corner connecting profile B (75 series)"},{"zh":"65/118内开加强中梃","en":"Reinforce Million (65/118 series)"},{"zh":"90度玻璃垫块（30宽）","en":"90 degree glass block(30 width)"},{"zh":"H06612玻外压胶接角","en":"Outside corner gasket"},{"zh":"108 135°固定转角","en":"B 135° corner connecting profile B (108 series)"},{"zh":"118 90°固定转角A","en":"Fix corner A"},{"zh":"65 135°固定转角B","en":"135° corner connecting profile B (65 series)"},{"zh":"通用 135°固定转角A","en":"Standard 135° corner connecting profile A (65 series)"},{"zh":"88 135°固定转角B","en":"135° corner connecting profile B (88 series)"},{"zh":"108 90°固定转角B","en":"Corner connecting profile B (108 series)"},{"zh":"90度玻璃垫块（28宽）","en":"Glass Block"},{"zh":"98 135°固定转角B","en":"135° corner connecting profile B (98 series)"},{"zh":"118内开纱辅框（内）","en":"118 inward opening screen frame"},{"zh":"65加强中梃 淘汰产品","en":"Reinforce million (65 series)"},{"zh":"60\u0026128中腔胶接角","en":"H06614"},{"zh":"88 90°固定转角B","en":"Corner connecting profile B (88 series)"},{"zh":"通用 90°固定转角A","en":"Strandard corner connecting profile A"},{"zh":"75 90°固定转角B","en":"Corner connecting profile B (75 series)"},{"zh":"窗中挺T连接注胶盖-左","en":"window middle frame T connector glue injection cover-left"},{"zh":"65 90°固定转角B","en":"Corner connecting profile B (65 series)"},{"zh":"138 90°转角辅料","en":"corner accessaries"},{"zh":"118外开纱辅框（外）","en":"118 outward opening screen frame"},{"zh":"窗中挺T连接注胶盖-右","en":"window middle frame T connector glue injection cover-right"},{"zh":"98 90°固定转角B","en":"Corner connecting profile B (98 series)"},{"zh":"4.5X30扇用爬升块","en":"4.5X30 Climbing block for sash"},{"zh":"65 90°固定转角","en":"Corner conecting profile (65 series)"},{"zh":"三轨扣盖（产品淘汰）","en":"Three tracks Buckle Cover"},{"zh":"窄边推拉门（非隔热）","en":"Slim sliding door (non-thermal break)"},{"zh":"118/138转换框","en":"118/138 transfer frame"},{"zh":"门槛毛刷（3*14）","en":"Hairbrush"},{"zh":"63折叠门（非隔热）","en":"63 bi-folding door(non-thermal break)"},{"zh":"窗下滑装饰盖（低轨）","en":"Bottom sliding low track cover"},{"zh":"138外开中梃（隐）","en":"138 outward opening middle frame(concealed)"},{"zh":"窗下滑装饰盖（高轨）","en":"Bottom sliding high track cover"},{"zh":"70系列复合挡水胶条","en":"70 series middle gasket"},{"zh":"65加强拼管（双侧）","en":"Reinforce Connecting proifle (Double side)"},{"zh":"勾企密封胶（非隔热）","en":"Interlock profile sealing gasket"},{"zh":"70加强拼管（双侧）","en":"reinforcement connection profile(Double side)"},{"zh":"118外开中梃（隐）","en":"118 outward opening middle frame (concealed)"},{"zh":"内开一体纱辅框（内）","en":"Inside open integral screen frame"},{"zh":"65加强拼管（单侧）","en":"Reinforce Connecting proifle (Singale side)"},{"zh":"勾企搭合胶（非隔热）","en":"interlock profile overlap gasket"},{"zh":"一体平齐外开中间胶条","en":"Together flush outward opening middle gasket"},{"zh":"提升推拉双面把手组件","en":"Double-side handle components"},{"zh":"7*12灰色硅化毛条","en":"Grey silicification Brush"},{"zh":"用于角码、连接件固定","en":"Used to corner cleat and connector for connect."},{"zh":"80加强拼管（单侧）","en":"reinforcement connection profile(single side)"},{"zh":"13*0.75组角片","en":"Corner support angle"},{"zh":"70加强拼管（单侧）","en":"reinforcement connection profile(single side)"},{"zh":"窄边平开窗（非隔热）","en":"Slim casement window(non-thermal break）"},{"zh":"63折叠窗（非隔热）","en":"63 bi-folding window(non-thermal break)"},{"zh":"118外开边框（隐）","en":"118 outward opening frame(concealed)"},{"zh":"窄边推拉窗（非隔热）","en":"Slim sliding window (non-thermal break)"},{"zh":"一体平齐外开中间胶角","en":"Together flush outward opening middle gasket"},{"zh":"108外开边框（隐）","en":"Frame profile with concel drain hole (108 series)"},{"zh":"7*20黑色硅化毛条","en":"7*20 Black silicification Brush"},{"zh":"80加强拼管（双侧）","en":"reinforcement connection profile(double side)"},{"zh":"7*7黑色硅化毛条","en":"Black silicification Brush"},{"zh":"两轨固定上框密封垫","en":"Two track fixed top frame gasket seal"},{"zh":"M5*22.5顶丝","en":"M5*22.5 screw"},{"zh":"各规格玻璃通用编号","en":"Glass specifications for each glass"},{"zh":"23.5*17压线","en":"Glassing beat"},{"zh":"M5*13.5顶丝","en":"M5*13.5 screw"},{"zh":"72.5*17压线","en":"Glassing beat"},{"zh":"63折叠窗（隔热）","en":"63 bi-folding window (thermal break)"},{"zh":"55外开扇（替换）","en":"Sash profile (55 series)"},{"zh":"35.5*17压线","en":"Glassing beat"},{"zh":"29.5*17压线","en":"Glassing beat"},{"zh":"三轨固定上框密封垫","en":"Three track fixed top frame gasket seal"},{"zh":"固定下框（非隔热）","en":"Fixed bottom frame(Non-thermal break)"},{"zh":"窄边推拉窗（隔热）","en":"Slim sliding window (thermal break)"},{"zh":"玻璃垫块（18宽）","en":"Glass Block"},{"zh":"扇密封胶条（隔热）","en":"Sash sealing gasket"},{"zh":"37.5*17压线","en":"Glassing beat"},{"zh":"5*6黑色硅化毛条","en":"Black silicification Brush"},{"zh":"39.5*17压线","en":"39.5*17 glassing beat"},{"zh":"7*5黑色硅化毛条","en":"Black silicification Brush"},{"zh":"两轨固定上框（大）","en":"Two tracks are fixed on the frame"},{"zh":"74.5*17压线","en":"Glassing beat"},{"zh":"折叠门专门玻璃垫块","en":"Glass block for folding doors"},{"zh":"窄边推拉门（隔热）","en":"Slim sliding door (thermal break)"},{"zh":"63折叠门（隔热）","en":"63 bi-folding door (thermal break)"},{"zh":"三轨固定下框密封垫","en":"Three track fixed bottom frame gasket seal"},{"zh":"边框盖板（非隔热）","en":"side frame cover（Non-thermal break）"},{"zh":"两轨固定下框密封垫","en":"Two track fixed bottom frame gasket seal"},{"zh":"窄边平开窗（隔热）","en":"Slim casement window(thermal break)"},{"zh":"压线辅料（非隔热）","en":"Accessories(Non-thermal break)"},{"zh":"31.5*17压线","en":"Glassing beat"},{"zh":"65外开中间胶角","en":"65 Outward opening middle gasket"},{"zh":"C槽HSA传动杆","en":"C groove HSA transmission rod"},{"zh":"75内开中间胶条","en":"75 Inward opening middle gasket"},{"zh":"固定隔断密封胶条","en":"Fixed partition sealant strip"},{"zh":"低门槛辅料封堵R","en":"Cover for low door track profile R"},{"zh":"75内开中间胶角","en":"75 Inward opening middle gasket"},{"zh":"用于中梃连接固定","en":"Used to middle profile for connect."},{"zh":"128角码（料）","en":"Corner cleat"},{"zh":"114中梃（隐）","en":"Frame(concealed)"},{"zh":"123中梃（隐）","en":"Frame(concealed)"},{"zh":"75固定挡水胶条","en":"75 Fix middle gasket"},{"zh":"低门槛辅料封堵L","en":"Cover for low door track profile L"},{"zh":"65固定挡水胶条","en":"65 Fix middle gasket"},{"zh":"两轨平下滑（大）","en":"Two tracks"},{"zh":"65HSA内开扇","en":"Inward HSA sash profile (65 series)"},{"zh":"105角码（料）","en":"105 corner cleat"},{"zh":"固定下框（隔热）","en":"Fixed bottom frame(thermal break)"},{"zh":"65内开中间胶条","en":"65 Inward opening middle gasket"},{"zh":"外开任意角度定位","en":"Casement window with sliding stay"},{"zh":"M5*9.5顶丝","en":"M5*9.5 screw"},{"zh":"内开框扇密封胶条","en":"Frame sealing gasket"},{"zh":"高门槛辅料封堵R","en":"height door frame accessory plugging R"},{"zh":"65中梃海绵垫B","en":"65 Middle frame Sponge mats B"},{"zh":"提升推拉滑轮组件","en":"Lift-sliding roller component"},{"zh":"两轨边框（电动）","en":"2 track frame(electrinoc)"},{"zh":"65外开中间胶条","en":"65 Outward opening middle gasket"},{"zh":"框扇齐平轻型铰链","en":"Frame leaf flush light hinge"},{"zh":"113中梃（隐）","en":"Middle frame(concealed)"},{"zh":"φ2.5圆棒胶条","en":"Round bar gasket"},{"zh":"玻璃垫块（绿色）","en":"Glass Block"},{"zh":"高门槛辅料封堵L","en":"height door frame accessory plugging L"},{"zh":"75外开中间胶角","en":"75 Outward opening middle gasket"},{"zh":"118外开纱辅框","en":"118 outward opening screen frame"},{"zh":"压线辅料（隔热）","en":"Accessories(thermal break)"},{"zh":"任意角度定位组件","en":"Sliding stay component"},{"zh":"104中梃（隐）","en":"Middle frame(concealed)"},{"zh":"勾企高低轨封堵B","en":"interlock high and low track plugging B"},{"zh":"108中梃（隐）","en":"Million with conceal drain hole (108 series)"},{"zh":"75外开中间胶条","en":"75 Outward opening middle gasket"},{"zh":"55转换中间胶条","en":"Transfer middle gasket"},{"zh":"90°活动扇转角","en":"Transfer Corner"},{"zh":"283角码（料）","en":"283 corner cleat"},{"zh":"65内开中间胶角","en":"65 Inward opening middle gasket"},{"zh":"251角码（料）","en":"251 Corner cleat"},{"zh":"138外开纱辅框","en":"138 outward opening screen frame"},{"zh":"勾企高低轨封堵A","en":"interlock high and low track plugging A"},{"zh":"侧框扣盖隔热辅料","en":"Side frame cover accessorry"},{"zh":"75中梃海绵垫B","en":"75 Middle frame Sponge mats B"},{"zh":"135角码（料）","en":"Corner cleat"},{"zh":"60系列挡水胶条","en":"60 series middle gasket"},{"zh":"勾企高低轨封堵C","en":"interlock high and low track plugging C"},{"zh":"70中梃海绵垫B","en":"70 Middle frame Sponge mats B"},{"zh":"侧框（非隔热）","en":"Side frame(Non-thermal break)"},{"zh":"勾企边框密封件","en":"Interlock side frame sealing"},{"zh":"外开一体纱辅框","en":"External open integral screen frame"},{"zh":"98中梃（隐）","en":"Million with conceal drain hole (98 series)"},{"zh":"100个/包；","en":"100pcs/bag;"},{"zh":"上框（非隔热）","en":"Top frame(Non-thermal break)"},{"zh":"推拉密封上滑轮","en":"Sliding sealing upper roller"},{"zh":"108外开边框","en":"Frame profile(108 series)"},{"zh":"Ø5*10销钉","en":"Ø5*10 Dowel"},{"zh":"11*20压线","en":"Glazing bead"},{"zh":"扇转搭合胶角L","en":"Sash sealing gasket Angle L"},{"zh":"门扇（非隔热）","en":"Door sash(Non-thermal break)"},{"zh":"窗扇（非隔热）","en":"Window sash (Non-thermal break)"},{"zh":"带注胶孔组角片","en":"Corner support angle"},{"zh":"118外开中梃","en":"118 outward opening middle frame"},{"zh":"下固定框密封垫","en":"Bottom fix frame seal block"},{"zh":"景观推拉门/窗","en":"Panorama sliding door/ window"},{"zh":"21*20压线","en":"Glazing bead"},{"zh":"37*20压线","en":"37*20 glassing beat"},{"zh":"窄边提升推拉门","en":"Slim lift sliding door"},{"zh":"65中梃（隐）","en":"Million with conceal drain hole (65 series)"},{"zh":"33*20压线","en":"Glazing bead"},{"zh":"88中梃（隐）","en":"Million with conceal drain hole (88 series)"},{"zh":"31*20压线","en":"Glazing bead"},{"zh":"29*20压线","en":"Glazing bead"},{"zh":"27*20压线","en":"Glazing bead"},{"zh":"M8*24顶丝","en":"M8*24 screw"},{"zh":"中间锁角传动器","en":"Middle lock corner transmission device"},{"zh":"118外开压线","en":"118 outward opening glazing bead"},{"zh":"勾企扇隔热辅料","en":"Interlock profile accessorry"},{"zh":"提升推拉传动器","en":"Lift-sliding gear case"},{"zh":"中梃（非隔热）","en":"Middle Frame (Non-thermal break)"},{"zh":"54*25压线","en":"Glazing bead"},{"zh":"75角码（料）","en":"Corner cleat"},{"zh":"提升推拉附件包","en":"Lift-sliding accessories"},{"zh":"64*25压线","en":"Glazing bead"},{"zh":"138外开压线","en":"138 outward glazing beat"},{"zh":"55中梃（隐）","en":"Million with conceal drain hole (55 series)"},{"zh":"T连接密封件R","en":"T seal connecter R"},{"zh":"90°纱扇转角","en":"90° screen sash corner"},{"zh":"80中梃（隐）","en":"Middle frame(concealed)"},{"zh":"118外开边框","en":"118 outward opening frame"},{"zh":"固定扇挡水胶条","en":"Glass gasket"},{"zh":"T连接密封件L","en":"T seal connecter L"},{"zh":"纱扇中梃封堵L","en":"Mosquito sash Cover for middle profile L"},{"zh":"17*20压线","en":"17*20 Glazing bead"},{"zh":"23*20压线","en":"Glazing bead"},{"zh":"铝合金偏心角码","en":"Aluminium alloy corner cleat; width:37.1mm, height:14mm"},{"zh":"下轨（非隔热）","en":"Botton track(Non-thermal break)"},{"zh":"边框盖板（大）","en":"Side frame cover"},{"zh":"扇转搭合胶角R","en":"Sash sealing gasket Angle R"},{"zh":"侧框发泡密封垫","en":"Side frame sponge block"},{"zh":"118内开边框","en":"frame profile (118 series)"},{"zh":"两轨下框密封垫","en":"Two track bottom frame gasket seal"},{"zh":"中梃室外封堵L","en":"Ourdoor Cover for middle profile L"},{"zh":"门下轨（隔热）","en":"Door bottom track(thermal break)"},{"zh":"两轨边框（大）","en":"Two tracks side frame"},{"zh":"黑色尼龙；无标","en":"Nylon, black, without logo"},{"zh":"门扇（隔热 )","en":"Door sash (thermal break)"},{"zh":"Ø5*20销钉","en":"Ø5*20 Dowel"},{"zh":"推拉密封门2代","en":"Sliding sealing door( second-generation )"},{"zh":"推拉密封门1代","en":"Sliding sealing door( first-generation )"},{"zh":"70中梃（隐）","en":"Middle frame(concealed)"},{"zh":"窗下轨（隔热）","en":"Window bottom track(thermal break)"},{"zh":"电动窄边推拉门","en":"Electric slim sliding door"},{"zh":"加强活动扇收口","en":"Enhanced Movable sash profile"},{"zh":"外开一体转换框","en":"External open integral convert frame"},{"zh":"60*25压线","en":"60*25 glassing beat"},{"zh":"低摩擦勾企胶条","en":"Interlock sealing gasket"},{"zh":"70*25压线","en":"70*25 glassing beat"},{"zh":"窄边提升推拉窗","en":"Slim lift sliding window"},{"zh":"138外开中梃","en":"138 outward opening middle frame"},{"zh":"55中梃海绵垫","en":"55 Middle frame Sponge mats"},{"zh":"75中梃（隐）","en":"Million with conceal drain hole (75 series)"},{"zh":"三轨下框密封垫","en":"Three track bottom frame gasket seal"},{"zh":"转接框密封胶条","en":"Connecting frame gasket"},{"zh":"67角码（料）","en":"Corner cleat"},{"zh":"专用框（外开）","en":"Frame"},{"zh":"提拉密封下滑轮","en":"Sliding sealing bottom roller"},{"zh":"51角码（料）","en":"Corner cleat"},{"zh":"槽口宽18mm","en":"18mm groove"},{"zh":"辅料中梃封堵R","en":"middle frame accessory plugging R"},{"zh":"44*25压线","en":"Glazing bead"},{"zh":"辅料中梃封堵L","en":"middle frame accessory plugging L"},{"zh":"75加强中梃","en":"Reinforce million (75 series)"},{"zh":"悬挂外开组件","en":"Top-hung casement component"},{"zh":"推拉扇（大）","en":"Sliding sash"},{"zh":"窗下框堵块R","en":"window bottom frame jam block R"},{"zh":"两轨固定下框","en":"2 track fixed bottom frame"},{"zh":"单勾盖（大）","en":"Single hook cover"},{"zh":"玻璃垫块辅料","en":"Glass block"},{"zh":"中梃隔热辅料","en":"Muillion Insulation accessories"},{"zh":"勾企搭合胶条","en":"Interlock overlap gasket"},{"zh":"外开一体中梃","en":"External open integral Middle frame"},{"zh":"勾企框上封堵","en":"Interlock top plugging"},{"zh":"锁辅勾企扣盖","en":"Cover for interlock and groove profile"},{"zh":"70加强中梃","en":"reinforcement middle frame"},{"zh":"三轨固定边框","en":"Three tracks are fixed on the side frame"},{"zh":"门槛密封胶条","en":"Bottom track sealing gasket"},{"zh":"55加强中梃","en":"Reinforce million (55 series)"},{"zh":"三轨固定下框","en":"Three tracks are fixed on the bottom frame"},{"zh":"门槛连接件R","en":"Threshold connector R"},{"zh":"纱扇压槽扣盖","en":"Cover for Screen sash"},{"zh":"一体标准纱扇","en":"Screen sash profile"},{"zh":"打胶玻外胶条","en":"Outside Gasket"},{"zh":"勾企端封堵L","en":"Interlock end plugging L"},{"zh":"窄推拉框压线","en":"Slim sliding frame glassing beat"},{"zh":"中间密封胶角","en":"Middle sealing gasket"},{"zh":"注胶组角钢片","en":"Corner support angle"},{"zh":"一体平齐纱扇","en":"Together flush screen sash"},{"zh":"勾企端封堵R","en":"Interlock end plugging R"},{"zh":"C槽安全锁座","en":"C groove security locking plate"},{"zh":"对碰收口封堵","en":"touching and closing interlock"},{"zh":"固定塑料件包","en":"Fixed plastic accessory"},{"zh":"毛刷辅料封堵","en":"Cover for Brush accessories"},{"zh":"假中梃封堵U","en":"fake middle frame plugging U"},{"zh":"边封（边框）","en":"Cover"},{"zh":"两轨固定下轨","en":"2 track fixed bottom track"},{"zh":"中间密封胶条","en":"Middle sealing gasket"},{"zh":"假中梃封堵D","en":"fake middle frame plugging D"},{"zh":"滑轮固定支架","en":"Roller fix support"},{"zh":"中梃海绵垫A","en":"Middle frame Sponge mats A"},{"zh":"窄推拉导向轮","en":"Narrow sliding guide roller"},{"zh":"加强扇端封堵","en":"reinforcement sash end plugging"},{"zh":"φ3圆棒胶条","en":"Round bar gasket"},{"zh":"框扇密封胶条","en":"sealing gasket"},{"zh":"下轨隔热辅料","en":"Bottom track accessorry"},{"zh":"窄推拉梃压线","en":"Slim sliding frame glassing beat"},{"zh":"窄推拉下滑轮","en":"Narrow sliding bottom roller"},{"zh":"Ø5*8销钉","en":"Ø5*8 Dowel"},{"zh":"窄推拉传动壳","en":"Narrow sliding gear case"},{"zh":"勾企防撞胶条","en":"bumper block gasket for sliding door"},{"zh":"侧框（隔热）","en":"Side frame(thermal break)"},{"zh":"80加强中梃","en":"reinforcement middle frame"},{"zh":"推拉扇（胶）","en":"Sliding sash"},{"zh":"门槛连接件L","en":"Threshold connector L"},{"zh":"上框（隔热）","en":"Top frame(thermal break)"},{"zh":"推拉扇（压）","en":"Sliding sash"},{"zh":"勾企密封胶条","en":"Interlock sealing gasket"},{"zh":"侧框隔热辅料","en":"Side frame accessorry"},{"zh":"推拉密封锁杆","en":"Sliding sealing locking rod"},{"zh":"三轨下轨扣盖","en":"three tracks Bottom Frame cover"},{"zh":"内开一体边框","en":"Inside open integral frame"},{"zh":"φ4圆棒胶条","en":"Round bar gasket"},{"zh":"框密封海绵条","en":"Frame sealed sponge strip"},{"zh":"纱扇中梃封堵","en":"Mosquito sash Cover for middle profile R"},{"zh":"推拉密封锁座","en":"Sliding sealing locking plate"},{"zh":"上轨隔热辅料","en":"Top track accessorry"},{"zh":"外开一体边框","en":"External open integral frame"},{"zh":"附加外开纱框","en":"Additional outer opening frame"},{"zh":"内开扇（胶）","en":"Inward sash"},{"zh":"两轨固定边框","en":"Two tracks are fixed on the side frame"},{"zh":"窄推拉防撞块","en":"Narrow sliding anti-bumping device"},{"zh":"固定扇上边框","en":"Fixed sash top frame"},{"zh":"附加内开纱框","en":"Additional inner opening frame"},{"zh":"扇下挡水封堵","en":"sash bottom water retaining plugging"},{"zh":"C槽安全锁杆","en":"C grove security lock rod"},{"zh":"横中梃密封垫","en":"Muillion sealing gasket"},{"zh":"窗扇（隔热）","en":"Window sash (thermal break)"},{"zh":"两轨固定上框","en":"2 track fixed top frame"},{"zh":"0.8mm厚","en":"Thickness：0.8mm"},{"zh":"内开扇（压）","en":"Inward sash"},{"zh":"窗下框堵块L","en":"window bottom frame jam block L"},{"zh":"单勾盖（胶）","en":"Single hook cover"},{"zh":"单勾盖（压）","en":"Single hook cover"},{"zh":"U型轨道U","en":"shape track"},{"zh":"框密封胶条","en":"Sealing gasket"},{"zh":"114中梃","en":"Middle frame"},{"zh":"欧式平开门","en":"Euro side-hung door"},{"zh":"下框密封垫","en":"Bottom frame gasket seal"},{"zh":"80假中梃","en":"Fake middle frame"},{"zh":"80外开扇","en":"Outward opening sash"},{"zh":"70转换框","en":"Transfer frame"},{"zh":"滑轮连接杆","en":"Roller connecting rod"},{"zh":"367角码","en":"367 Corner Cleat"},{"zh":"75外开扇","en":"Outward sash profile (75 series)"},{"zh":"108中梃","en":"Million (108 series)"},{"zh":"283角码","en":"283 Corner cleat"},{"zh":"227角码","en":"227 Corner Cleat"},{"zh":"104中梃","en":"Middle frame"},{"zh":"65转换框","en":"Connecting profile (65 series)"},{"zh":"65外开扇","en":"Outward sash profile (65 series)"},{"zh":"推拉密封门","en":"Sliding sealing door"},{"zh":"无基座执手","en":"Rosette free handle"},{"zh":"加强腔扣盖","en":"reinforcement profile corver"},{"zh":"勾企侧封堵","en":"Interlock side plugging"},{"zh":"自动门组件","en":"Automatic component"},{"zh":"折叠门/窗","en":"Bi-folding door/window Sliding folding door/window"},{"zh":"上框密封垫","en":"Top frame gasket seal"},{"zh":"护栏固定包","en":"Protective fense fixing package"},{"zh":"窄推拉角码","en":"Narrow sliding corner cleat"},{"zh":"推拉密封窗","en":"Sliding sealing window"},{"zh":"门槛密封胶","en":"Bottom track sealing gasket"},{"zh":"157角码","en":"157 Corner Cleat"},{"zh":"113中梃","en":"Middle frame"},{"zh":"55转换框","en":"Connecting profile (55 series)"},{"zh":"推拉门/窗","en":"Sliding door/window"},{"zh":"三轨平下滑","en":"3 flat bottom tracks"},{"zh":"185角码","en":"185 Corner cleat"},{"zh":"O型轨道O","en":"shape track"},{"zh":"单勾推拉扇","en":"Single hook Sliding sash"},{"zh":"窄推拉锁座","en":"Narrow sliding locking plate"},{"zh":"收口外开扇","en":"Addtional casement sash"},{"zh":"207角码","en":"207 Corner Cleat"},{"zh":"加强推拉扇","en":"Enhanced Sliding sash"},{"zh":"窄推拉锁杆","en":"Narrow sliding locking rod"},{"zh":"大槽传动杆","en":"Vat transmission rod"},{"zh":"中梃连接件","en":"Middle connection profile"},{"zh":"欧式平开窗","en":"Euro casement window"},{"zh":"门执手组件","en":"Double-side door handle set"},{"zh":"C槽传动杆","en":"C groove transfer rod"},{"zh":"中梃密封垫","en":"Middle frame seal block"},{"zh":"窄推拉锁芯","en":"Narrow sliding cylinder"},{"zh":"244角码","en":"244 corner cleat"},{"zh":"55假中梃","en":"Moveable million (55 series)"},{"zh":"密封门压线","en":"Sealing door glassing beat"},{"zh":"护栏封堵包","en":"Protective fense blocking package"},{"zh":"267角码","en":"267 Corner Cleat"},{"zh":"128角码","en":"128 Corner cleat"},{"zh":"下框海绵垫","en":"Bottom frame Sponge mats"},{"zh":"75内开扇","en":"Inward sash profile (75 series)"},{"zh":"70外开扇","en":"Outward opening sash"},{"zh":"上下框扣盖","en":"Buckle cover"},{"zh":"高门槛辅料","en":"High bottom addtional frame profile"},{"zh":"隐藏式铰链","en":"Conceal hinge"},{"zh":"通用低门槛","en":"Standard bottom frame profile"},{"zh":"平开限位器","en":"Opening restrictor"},{"zh":"80内开扇","en":"Inward opening sash"},{"zh":"C型轨道C","en":"shape track"},{"zh":"磁性密封条","en":"Magnetic Gasket"},{"zh":"111角码","en":"111 Corner cleat"},{"zh":"门下滑封胶","en":"Door bottom fame gasket"},{"zh":"105角码","en":"Corner cleat"},{"zh":"123中梃","en":"Middle frame"},{"zh":"两轨平下滑","en":"two flat bottom tracks"},{"zh":"55外开扇","en":"Sash profile (55 series)"},{"zh":"75转换框","en":"Connecting profile (75 series)"},{"zh":"257角码","en":"257 Corner Cleat"},{"zh":"两轨窗下轨","en":"Bottom track of 2 track window"},{"zh":"活动扇收口","en":"Addtional groove profile"},{"zh":"框隔热辅料","en":"frame accessorry"},{"zh":"安装连接件","en":"Connector"},{"zh":"勾企锁紧块","en":"Interlock tighten block"},{"zh":"65折叠门","en":"65 bi-folding door"},{"zh":"重型下横扇","en":"Heavy duty horizontal sash"},{"zh":"纱扇假中梃","en":"Screen sash moviable million"},{"zh":"65内开扇","en":"Inward sash profile (65 series)"},{"zh":"200角码","en":"200 Corner cleat"},{"zh":"排水槽扣盖","en":"Drain channel buckle cover"},{"zh":"70假中梃","en":"Fake middle frame"},{"zh":"窄推拉旋钮","en":"Narrow sliding button"},{"zh":"70内开扇","en":"Inward opening sash"},{"zh":"扇密封胶条","en":"Sash sealing gasket"},{"zh":"251角码","en":"Corner cleat"},{"zh":"固定竖压线","en":"Fixed vertical glassing beat"},{"zh":"HOPO标","en":"HOPO logo"},{"zh":"低门槛辅料","en":"Bottom addtional frame profile"},{"zh":"标准纱辅框","en":"Standard screen frame profile"},{"zh":"下框密封胶","en":"Bottom frame sealing gasket"},{"zh":"侧框密封垫","en":"Side frame seal block"},{"zh":"勾企防撞盖","en":"Interlock profile bumper cover"},{"zh":"密封窗压线","en":"Glazing bead"},{"zh":"80转换框","en":"Transfer frame"},{"zh":"勾企下封堵","en":"Interlock bottom plugging"},{"zh":"双勾推拉扇","en":"Double hook Sliding sash"},{"zh":"黑色PVC","en":"PVC, Black"},{"zh":"玻璃调节块","en":"Glass adjustal device"},{"zh":"助升挡水块","en":"lift water retaining block"},{"zh":"平开中铰链","en":"Middle hinge"},{"zh":"135角码","en":"1355 Corner cleat"},{"zh":"双向传动壳","en":"Double-direction Gear case"},{"zh":"线槽扣盖","en":"Fluting cover"},{"zh":"附加纱框","en":"Addtional screen frame"},{"zh":"80门槛","en":"Bottom track"},{"zh":"纱扇下轨","en":"Screen sash bottom track"},{"zh":"勾企硬胶","en":"Interlock accessorry"},{"zh":"纱扇中梃","en":"Screen sash middle frame"},{"zh":"合页组件","en":"Hinge component"},{"zh":"纱扇锁槽","en":"Screen sash lock groove"},{"zh":"三轨边框","en":"Three tracks side frame"},{"zh":"玻外胶条","en":"Outside Gasket"},{"zh":"内平开窗","en":"Inward opening window"},{"zh":"折叠滑轮","en":"Folding sliding roller"},{"zh":"上导轨槽","en":"Top guilding track groove"},{"zh":"65拼管","en":"Connecting profile"},{"zh":"纱扇压线","en":"Screen sash glazing beat"},{"zh":"70中梃","en":"Middle frame"},{"zh":"辅助滑轮","en":"Additional roller"},{"zh":"中梃锁座","en":"Middle frame locking plate"},{"zh":"组角钢片","en":"corner support angle"},{"zh":"毛刷辅料","en":"Profile for brush"},{"zh":"88中梃","en":"Million (88 series)"},{"zh":"下轨扣盖","en":"Bottom Frame cover"},{"zh":"门封口胶","en":"Gasket"},{"zh":"70拼管","en":"Connection profile"},{"zh":"摇臂组件","en":"Stay arm component"},{"zh":"加强中梃","en":"Enhanced Middle frame"},{"zh":"锁槽扣盖","en":"Cover for Addtional groove"},{"zh":"玻外胶角","en":"Outside gasket Angle"},{"zh":"门扇胶条","en":"Sash gasket"},{"zh":"玻外压胶","en":"Glass gasket"},{"zh":"中空玻璃","en":"Insulating glass"},{"zh":"80中梃","en":"Middle frame"},{"zh":"上框辅料","en":"Addtional Top frame profile"},{"zh":"底轨辅料","en":"Addtional track profile"},{"zh":"70门槛","en":"Bottom track"},{"zh":"标准C槽","en":"Standard c groove"},{"zh":"金钢纱网","en":"Diamond mesh"},{"zh":"合页拉手","en":"Hinge handle"},{"zh":"加强拼管","en":"reinforcement middle Connected Profile"},{"zh":"55门槛","en":"Bottom frame profile (55 series)"},{"zh":"两轨下轨","en":"Two tracks of Bottom tracks"},{"zh":"侧框锁槽","en":"Addtional groove profile"},{"zh":"大槽扣盖","en":"The big groove buckle cover"},{"zh":"压线压胶","en":"Glazing bead gasket"},{"zh":"C槽扣盖","en":"C groove cover"},{"zh":"可调角码","en":"Adjustable corner cleat"},{"zh":"97角码","en":"97 Corner cleat"},{"zh":"冲压模具","en":"Punching machine"},{"zh":"三轨扣盖","en":"Three tracks Buckle Cover"},{"zh":"三轨下轨","en":"Three tracks of Bottom tracks"},{"zh":"搭合胶条","en":"Overlap gasket"},{"zh":"护栏侧框","en":"Protective fense side frame"},{"zh":"纱扇压槽","en":"Glazing bead for Screen sash"},{"zh":"65门槛","en":"Bottom frame profile (65 series)"},{"zh":"转换组件","en":"Transfer component"},{"zh":"边框扣盖","en":"Frame buckle cover"},{"zh":"多系统；","en":"multi-system;"},{"zh":"多点锁体","en":"Multi-point Lock"},{"zh":"下滑轨槽","en":"Track groove"},{"zh":"柱式合页","en":"Column hinge"},{"zh":"75门槛","en":"Bottom frame profile (75 series)"},{"zh":"55中梃","en":"Million (55 series)"},{"zh":"中间锁点","en":"Middle Lock"},{"zh":"门框封胶","en":"Frame gasket"},{"zh":"98中梃","en":"Million (98 series)"},{"zh":"75角码","en":"Corner cleat"},{"zh":"纱扇扣盖","en":"Screen sash cover"},{"zh":"51角码","en":"51 Corner cleat"},{"zh":"附框扣盖","en":"Buckle cover"},{"zh":"中梃锁杆","en":"Middle frame locking rod"},{"zh":"勾企基座","en":"interlock profile plate"},{"zh":"外平开窗","en":"Outward opening window"},{"zh":"玻内胶条","en":"Inside Gasket"},{"zh":"定位风撑","en":"Open limit"},{"zh":"通用拼条","en":"Connecting profile"},{"zh":"纱扇勾盖","en":"Screen sash hook cover"},{"zh":"折叠合页","en":"Folding sliding hinge"},{"zh":"防撬锁座","en":"Anti-pry Locking plate/Security Locking plate"},{"zh":"固定中梃","en":"Fix mullion"},{"zh":"内开内倒","en":"Tilt-turn window"},{"zh":"附加勾盖","en":"Addtional hook cover"},{"zh":"两轨边框","en":"Two tracks side frame"},{"zh":"65中梃","en":"Million (65 series)"},{"zh":"锁辅扣盖","en":"Auxiliary lock cover"},{"zh":"75中梃","en":"Million (75 series)"},{"zh":"67角码","en":"Corner cleat"},{"zh":"纱扇压块","en":"Screen sash block"},{"zh":"内开纱扇","en":"Inward screen sash"},{"zh":"80拼管","en":"Connection profile"},{"zh":"小槽扣盖","en":"Cover accessorry"},{"zh":"双沟锁体","en":"Double-hook Lock"},{"zh":"纱扇收口","en":"Screen sash"},{"zh":"方轴执手","en":"Square spindle handle"},{"zh":"卡介风撑","en":"Open stay"},{"zh":"重型铰链","en":"Heavy-duty conceal hinge"},{"zh":"外开纱扇","en":"Outward screen sash"},{"zh":"悬挂外开","en":"Top-hung casement window / Turn out \u0026 Awning window"},{"zh":"插销锁座","en":"Shoot bolt locking plate"},{"zh":"摩擦铰链","en":"Friction hinge"},{"zh":"搭合胶角","en":"Sealing gasket Angle R"},{"zh":"拨叉执手","en":"Fork handle"},{"zh":"排水孔盖","en":"Drain hole cover"},{"zh":"扇槽扣盖","en":"Sash groove cover"},{"zh":"可调锁座","en":"Adjustable Locking plate"},{"zh":"滚套锁杆","en":"Rolling Locking rod"},{"zh":"活动角码","en":"Corner cleat"},{"zh":"装饰扣盖","en":"Cover"},{"zh":"传动组件","en":"Transmission component"},{"zh":"铰链组件","en":"Friction hinge component"},{"zh":"MA扣手","en":"MA driver"},{"zh":"传动辅料","en":"Transmission additional profile"},{"zh":"附加摇臂","en":"Additional stay arm"},{"zh":"防撬锁点","en":"Anti-pry Locking pin/ Security Locking pin"},{"zh":"上滑槽胶","en":"Top slidng groove"},{"zh":"传动杆","en":"Connector set"},{"zh":"矮边框","en":"Short side frame"},{"zh":"排水盖","en":"Draining cover"},{"zh":"密封胶","en":"Gasket"},{"zh":"单勾盖","en":"Single hook cover"},{"zh":"固定扇","en":"Fixed sash"},{"zh":"门锁座","en":"Door locking plate"},{"zh":"转换杆","en":"Transfer rod"},{"zh":"防摆块","en":"Anti-swing block"},{"zh":"双勾盖","en":"Double hook cover"},{"zh":"转换器","en":"Transmission device"},{"zh":"扇勾企","en":"Interlock profile"},{"zh":"防撞块","en":"Anti-bumping device"},{"zh":"高边框","en":"High side frame"},{"zh":"推拉扇","en":"Sliding sash"},{"zh":"扇压线","en":"sash glassing beat"},{"zh":"MA锁","en":"MA lock"},{"zh":"外开扇","en":"Outward sash"},{"zh":"平开窗","en":"Casement window / Side-hung window"},{"zh":"真中梃","en":"Real middle Frame"},{"zh":"传动壳","en":"Gear case"},{"zh":"活动扇","en":"Sash profile"},{"zh":"短锁体","en":"Mortise Lock"},{"zh":"大拉手","en":"Luxury pull handle"},{"zh":"自动门","en":"Auto-door"},{"zh":"假中梃","en":"Fake middle frame"},{"zh":"堵孔粒","en":"Jam hole grain"},{"zh":"扇锁槽","en":"Sash lock groove"},{"zh":"转换框","en":"convert frame"},{"zh":"加强腔","en":"reinforcement profile"},{"zh":"T字件","en":"T-type connector"},{"zh":"平开门","en":"Side-hung door"},{"zh":"附件包","en":"Accessory pack"},{"zh":"锁芯盖","en":"Cylinder cover"},{"zh":"端盖","en":"end cover"},{"zh":"边框","en":"Frame profile"},{"zh":"拼条","en":"Middle Connected Profile"},{"zh":"下滑","en":"Track"},{"zh":"雷达","en":"Radar"},{"zh":"丝杆","en":"Screw rod"},{"zh":"风撑","en":"Open stay"},{"zh":"封盖","en":"Cover"},{"zh":"锁舌","en":"Locking tongue"},{"zh":"勾企","en":"Interlock cover"},{"zh":"纱扇","en":"Screen sash"},{"zh":"拉手","en":"Pull handle"},{"zh":"锁体","en":"Mortise Lock"},{"zh":"角码","en":"corner cleat"},{"zh":"锁点","en":"Locking pin"},{"zh":"锁座","en":"Locking plate"},{"zh":"上框","en":"Top frame"},{"zh":"中梃","en":"Middle frame"},{"zh":"幕墙","en":"Curtain wall"},{"zh":"插销","en":"Shoot bolt"},{"zh":"滑轮","en":"Roller"},{"zh":"锁芯","en":"Cylinder"},{"zh":"Z梃","en":"frame"},{"zh":"碰扣","en":"Leaf catcher"},{"zh":"锁杆","en":"Locking rod"}];
+        // ============== 翻译词库结束 ==============
+
+        const MANUAL_TRANSLATIONS = {
+            'HOPO 门窗五金智能选配系统': 'HOPO Window & Door Hardware Selector',
+            '输入门窗尺寸，一键获取专业五金配置方案': 'Enter sash dimensions and get a professional hardware configuration instantly',
+            '请输入门窗参数': 'Enter Window/Door Parameters',
+            '门窗类型': 'Window/Door Type',
+            '请选择门窗类型': 'Select window/door type',
+            'UC槽 - 内开内倒窗': 'C Groove - Tilt-turn Window',
+            '悬挂外开窗': 'Top-hung Outward Opening Window',
+            '目前支持UC槽内开内倒窗、悬挂外开窗及新增配置方案': 'Supports C groove tilt-turn windows, top-hung outward opening windows, and added configurations',
+            '配置方案': 'Configuration Plan',
+            '两轨两扇': 'Two-track two-sash',
+            '两轨四扇对碰': 'Two-track four-sash meeting stile',
+            '选择推拉门的配置方案': 'Select the sliding door configuration plan',
+            '适用范围': 'Applicable Range',
+            '若超出范围请联系技术支持': 'Contact technical support if outside this range',
+            '门窗宽度 (mm)': 'Sash Width (mm)',
+            '门窗高度 (mm)': 'Sash Height (mm)',
+            '输入实际尺寸': 'Enter actual size',
+            '查询五金配置': 'Search Hardware Configuration',
+            '五金配置方案': 'Hardware Configuration',
+            'HOPO 门窗五金配置清单': 'HOPO Window & Door Hardware Configuration List',
+            '门窗类型': 'Window/Door Type',
+            '门窗宽度': 'Sash Width',
+            '门窗高度': 'Sash Height',
+            '产品名称': 'Product Name',
+            '产品编号': 'Product Code',
+            '单位': 'Unit',
+            '数量': 'Qty',
+            '备注说明': 'Remarks',
+            '导出配置清单': 'Export Configuration List',
+            '专业 · 精准 · 高效': 'Professional · Accurate · Efficient',
+            '配置分组': 'Configuration Group',
+            '该方案按配置清单输出；尺寸范围、左右/轻重/颜色等选择请参考备注。': 'This plan is generated from the configuration list. See remarks for size range, left/right, light/heavy duty, and color options.',
+            '五金配置清单': 'Hardware Configuration List',
+            '注意事项': 'Notes',
+            '补充说明': 'Additional Notes',
+            '生成时间': 'Generated at',
+            'UC槽内开内倒窗': 'C Groove Tilt-turn Window',
+            '基础配置': 'Basic Configuration',
+            '选配件': 'Optional Accessories',
+            '快装选配件': 'Quick-install Optional Accessories',
+            '玻扇配置': 'Glass Sash Configuration',
+            '纱窗配置': 'Screen Window Configuration',
+            '纱门配置': 'Screen Door Configuration',
+            '内开内倒配置方案': 'Tilt-turn Configuration Plan',
+            '内开内倒窗': 'Tilt-turn Window',
+            '配置方案': 'Configuration Plan',
+            '欧标': 'Euro',
+            '常规': 'Standard',
+            '隐藏式': 'Concealed',
+            '微调': 'adjustable',
+            '小摇臂': 'small stay arm',
+            'C槽': 'C groove',
+            '执手': 'Handle',
+            '有基座执手': 'Handle with base',
+            '无基座执手': 'Rosette-free handle',
+            '儿童锁执手': 'Child-lock handle',
+            '传动壳': 'Gear case',
+            '角传动器': 'Corner transmission device',
+            '中间角传动器': 'Middle corner transmission device',
+            '传动组件': 'Transmission component',
+            '铰链组件': 'Hinge component',
+            '铰链': 'Hinge',
+            '锁座': 'Locking plate',
+            '锁杆': 'Locking rod',
+            '方轴': 'Spindle',
+            '外露轴长': 'exposed spindle length',
+            '中心距': 'backset',
+            '窄边': 'Slim',
+            '提升推拉': 'Lift-sliding',
+            '推拉': 'Sliding',
+            '二选一': 'Choose one of two',
+            '表内序号': 'Sheet No.',
+            '宽度': 'Width',
+            '高度': 'Height',
+            '扇宽': 'Sash width',
+            '扇高': 'Sash height',
+            '增配': 'additional configuration',
+            '可选项': 'optional item',
+            '原表数量为0': 'original sheet quantity is 0',
+            '开启角度': 'Opening angle',
+            '最大承重': 'Max load',
+            '承重': 'Load capacity',
+            '不含背部锁': 'Back lock not included',
+            '左边': 'left side',
+            '右边': 'right side',
+            '左': 'Left',
+            '右': 'Right',
+            '个': 'pc',
+            '套': 'set',
+            '支': 'pc',
+            '付': 'pair',
+            '扇': 'sash',
+            '黑色': 'black',
+            '银色': 'silver',
+            '白轮': 'white roller',
+            '不锈钢': 'stainless steel',
+            '无标': 'no logo',
+            '真锁': 'active lock',
+            '假锁': 'dummy lock',
+            '被动扇': 'passive sash',
+            '主动扇': 'active sash',
+            '安装': 'installation',
+            '选择': 'selection',
+            '可选': 'optional',
+            '颜色': 'color',
+            '规格': 'specification',
+            '长度': 'length',
+            '带锁芯': 'with cylinder',
+            '不带锁芯': 'without cylinder',
+            '有基座': 'with base',
+            '无基座': 'without base',
+            '儿童锁': 'child lock',
+            '防误操作': 'mishandling prevention',
+            '锁闭力': 'locking force',
+            '密封性': 'sealing performance',
+            '安全性': 'safety',
+            '根据实际': 'according to actual',
+            '数量': 'quantity',
+            '范围': 'range',
+            '方案': 'plan'
+        };
+
+        let currentLanguage = localStorage.getItem('hopoLanguage') || 'zh';
+        let lastRenderContext = null;
+
+        function escapeRegExp(text) {
+            return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function normalizeText(text) {
+            return String(text || '').replace(/\s+/g, ' ').trim();
+        }
+
+        function translateDisplayText(text) {
+            if (currentLanguage !== 'en' || text === null || text === undefined) return text;
+            let output = String(text);
+            const normalized = normalizeText(output);
+            if (MANUAL_TRANSLATIONS[normalized]) return MANUAL_TRANSLATIONS[normalized];
+
+            const manualTerms = Object.keys(MANUAL_TRANSLATIONS).sort((a, b) => b.length - a.length);
+            manualTerms.forEach(term => {
+                if (!term || term === normalized) return;
+                output = output.replace(new RegExp(escapeRegExp(term), 'g'), MANUAL_TRANSLATIONS[term]);
+            });
+
+            TRANSLATION_TERMS.forEach(({ zh, en }) => {
+                if (!zh || !en) return;
+                output = output.replace(new RegExp(escapeRegExp(zh), 'g'), en);
+            });
+
+            return output
+                .replace(/（/g, ' (')
+                .replace(/）/g, ')')
+                .replace(/，/g, ', ')
+                .replace(/；/g, '; ')
+                .replace(/：/g, ': ')
+                .replace(/、/g, ', ')
+                .replace(/配置分组:/g, 'Configuration Group:')
+                .replace(/表内序号/g, 'Sheet No.')
+                .replace(/([\u4e00-\u9fff])([A-Za-z0-9])/g, '$1 $2')
+                .replace(/([A-Za-z0-9])([\u4e00-\u9fff])/g, '$1 $2')
+                .replace(/([a-z])(\d)/g, '$1 $2')
+                .replace(/(\d)([a-z])/g, '$1 $2')
+                .replace(/(\d+°)([A-Za-z])/g, '$1 $2')
+                .replace(/(\d)([A-Z][a-z])/g, '$1 $2')
+                .replace(/([a-z])([A-Z])/g, '$1 $2')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function translateUnit(unit) {
+            return currentLanguage === 'en' ? (MANUAL_TRANSLATIONS[unit] || translateDisplayText(unit)) : unit;
+        }
+
+        function translateSizeRange(widthLabel, heightLabel) {
+            return currentLanguage === 'en'
+                ? `Sash width: ${widthLabel}<br>Sash height: ${heightLabel}`
+                : `扇宽: ${widthLabel}<br>扇高: ${heightLabel}`;
+        }
+
+        function setText(id, zhText, prefix = '') {
+            const element = document.getElementById(id);
+            if (!element) return;
+            const translated = translateDisplayText(zhText);
+            element.textContent = prefix ? `${prefix} ${translated}` : translated;
+        }
+
+        function setLanguage(language) {
+            currentLanguage = language;
+            localStorage.setItem('hopoLanguage', language);
+            applyLanguageToStaticText();
+            updateSelectLanguage();
+            if (lastRenderContext) {
+                renderResult(lastRenderContext.result, lastRenderContext.width, lastRenderContext.height, lastRenderContext.windowType);
+                if (currentExcelPlan) {
+                    document.getElementById('inputSummary').textContent = `${localizeConfigLabel(currentExcelPlan.group)} | ${localizeConfigLabel(currentExcelPlan.name)}`;
+                }
+            }
+        }
+
+        function applyLanguageToStaticText() {
+            const title = document.querySelector('.header h1');
+            const subtitle = document.querySelector('.header p');
+            if (title) title.textContent = `🏠 ${translateDisplayText('HOPO 门窗五金智能选配系统')}`;
+            if (subtitle) subtitle.textContent = translateDisplayText('输入门窗尺寸，一键获取专业五金配置方案');
+            setText('formTitle', '请输入门窗参数', '📋');
+            setText('windowTypeLabel', '门窗类型');
+            setText('windowTypeHint', `目前支持UC槽内开内倒窗、悬挂外开窗及新增配置方案`);
+            setText('slidingConfigLabel', '配置方案');
+            setText('slidingConfigHint', '选择推拉门的配置方案');
+            setText('sizeRangeLabel', '适用范围');
+            setText('sizeRangeHint', '若超出范围请联系技术支持');
+            setText('widthLabel', '门窗宽度 (mm)');
+            setText('widthHint', '输入实际尺寸');
+            setText('heightLabel', '门窗高度 (mm)');
+            setText('heightHint', '输入实际尺寸');
+            setText('queryButton', '查询五金配置', '🔍');
+            setText('resultTitle', '五金配置方案', '✅');
+            setText('thProductName', '产品名称');
+            setText('thProductCode', '产品编号');
+            setText('thUnit', '单位');
+            setText('thQty', '数量');
+            setText('thNote', '备注说明');
+            setText('exportButton', '导出配置清单', '📥');
+            const footer = document.getElementById('footerText');
+            if (footer) footer.textContent = `© 2026 ${translateDisplayText('HOPO 门窗五金智能选配系统')} | ${translateDisplayText('专业 · 精准 · 高效')}`;
+            const widthInput = document.getElementById('windowWidth');
+            const heightInput = document.getElementById('windowHeight');
+            if (widthInput) widthInput.placeholder = currentLanguage === 'en' ? 'e.g. 600' : '例如: 600';
+            if (heightInput) heightInput.placeholder = currentLanguage === 'en' ? 'e.g. 1200' : '例如: 1200';
+            const sizeRangeDisplay = document.getElementById('sizeRangeDisplay');
+            if (sizeRangeDisplay && sizeRangeDisplay.closest('#sizeRangeGroup')?.style.display !== 'none') {
+                const selectedType = document.getElementById('windowType')?.value;
+                if (selectedType === 'g24-sliding') {
+                    sizeRangeDisplay.innerHTML = translateSizeRange('400 ~ 2500 mm', '600 ~ 2600 mm');
+                } else if (selectedType === 'g45-sliding') {
+                    sizeRangeDisplay.innerHTML = translateSizeRange('500 ~ 1050 mm', '800 ~ 2600 mm');
+                } else if (selectedType === 'hanging-open') {
+                    sizeRangeDisplay.innerHTML = translateSizeRange('510 ~ 900 mm', '665 ~ 2000 mm');
+                } else {
+                    sizeRangeDisplay.innerHTML = translateSizeRange('455 ~ 970 mm', '655 ~ 3000 mm');
+                }
+            }
+            const zhButton = document.getElementById('langZh');
+            const enButton = document.getElementById('langEn');
+            if (zhButton) zhButton.classList.toggle('active', currentLanguage === 'zh');
+            if (enButton) enButton.classList.toggle('active', currentLanguage === 'en');
+        }
+
+        function updateSelectLanguage() {
+            const select = document.getElementById('windowType');
+            if (!select) return;
+            Array.from(select.options).forEach(option => {
+                if (option.value === '') option.textContent = translateDisplayText('请选择门窗类型');
+                if (option.value === 'uc-tilt-turn') option.textContent = translateDisplayText('UC槽 - 内开内倒窗');
+                if (option.value === 'hanging-open') option.textContent = translateDisplayText('悬挂外开窗');
+                if (isExcelConfigType(option.value)) {
+                    const plan = getExcelConfigPlan(option.value);
+                    if (plan) option.textContent = localizeConfigLabel(plan.name);
+                }
+            });
+            Array.from(select.children).forEach(child => {
+                if (child.tagName === 'OPTGROUP') {
+                    const firstOption = child.querySelector('option');
+                    const plan = firstOption ? getExcelConfigPlan(firstOption.value) : null;
+                    if (plan) child.label = localizeConfigLabel(plan.group);
+                }
+            });
+            const slidingConfig = document.getElementById('slidingConfig');
+            if (slidingConfig) {
+                Array.from(slidingConfig.options).forEach(option => {
+                    if (option.value === 'two-panel') option.textContent = translateDisplayText('两轨两扇');
+                    if (option.value === 'four-panel') option.textContent = translateDisplayText('两轨四扇对碰');
+                });
+            }
+            const hint = document.getElementById('windowTypeHint');
+            if (hint && Array.isArray(window.EXCEL_CONFIG_PLANS)) {
+                const visibleCount = window.EXCEL_CONFIG_PLANS.filter(plan => shouldShowInWindowType(plan)).length;
+                hint.textContent = currentLanguage === 'en'
+                    ? `Original smart types + ${visibleCount} added configuration plans`
+                    : `原有智能计算类型 + ${visibleCount} 个新增配置方案`;
+            }
+        }
+
         const CONFIG = {
             // 基础配置范围
             basicRange: {
@@ -801,6 +1120,7 @@
 
         // ============== UI 渲染 ==============
         function renderResult(result, width, height, windowType) {
+            lastRenderContext = { result, width, height, windowType };
             const tbody = document.getElementById('hardwareBody');
             tbody.innerHTML = '';
             
@@ -890,11 +1210,11 @@
                 const tr = document.createElement('tr');
                 const codeDisplay = item.codes ? item.codes.join(' / ') : item.code;
                 tr.innerHTML = `
-                    <td>${item.name}</td>
+                    <td>${translateDisplayText(item.name)}</td>
                     <td><span class="product-code">${codeDisplay}</span></td>
-                    <td>${item.unit}</td>
+                    <td>${translateUnit(item.unit)}</td>
                     <td><strong>${item.qty}</strong></td>
-                    <td><span class="note-text">${item.note || '-'}</span></td>
+                    <td><span class="note-text">${item.note ? translateDisplayText(item.note) : '-'}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -904,20 +1224,23 @@
             const infoBox = document.getElementById('infoBox');
             
             warningBox.innerHTML = result.warnings.map(w => 
-                `<div class="warning-box"><p>⚠️ ${w}</p></div>`
+                `<div class="warning-box"><p>⚠️ ${translateDisplayText(w)}</p></div>`
             ).join('');
             
             infoBox.innerHTML = result.infos.map(i => 
-                `<div class="info-box"><p>💡 ${i}</p></div>`
+                `<div class="info-box"><p>💡 ${translateDisplayText(i)}</p></div>`
             ).join('');
             
             // 更新输入摘要
             const typeName = windowType === 'g24-sliding' ? 'G24窄边推拉门' : windowType === 'g45-sliding' ? 'G45推拉密封窗' : windowType === 'hanging-open' ? '悬挂外开窗' : 'UC槽内开内倒窗';
+            const displayTypeName = translateDisplayText(typeName);
             if (windowType === 'g24-sliding' || windowType === 'g45-sliding' || windowType === 'hanging-open') {
-                document.getElementById('inputSummary').textContent = typeName;
+                document.getElementById('inputSummary').textContent = displayTypeName;
             } else {
                 document.getElementById('inputSummary').textContent = 
-                    `${typeName} | 宽度: ${width}mm | 高度: ${height}mm`;
+                    currentLanguage === 'en'
+                        ? `${displayTypeName} | Width: ${width}mm | Height: ${height}mm`
+                        : `${typeName} | 宽度: ${width}mm | 高度: ${height}mm`;
             }
         }
 
@@ -939,11 +1262,11 @@
                 height = parseInt(document.getElementById('windowHeight').value);
                 
                 if (width < 455 || width > 970) {
-                    alert('门窗宽度应在 455mm ~ 970mm 范围内');
+                    alert(currentLanguage === 'en' ? 'Sash width should be between 455mm and 970mm' : '门窗宽度应在 455mm ~ 970mm 范围内');
                     return;
                 }
                 if (height < 655 || height > 3000) {
-                    alert('门窗高度应在 655mm ~ 3000mm 范围内');
+                    alert(currentLanguage === 'en' ? 'Sash height should be between 655mm and 3000mm' : '门窗高度应在 655mm ~ 3000mm 范围内');
                     return;
                 }
             }
@@ -977,9 +1300,10 @@
                 // G24: 显示配置选择，隐藏尺寸输入，显示适用范围
                 slidingConfigGroup.style.display = 'flex';
                 slidingConfig.innerHTML = '<option value="two-panel">两轨两扇</option><option value="four-panel">两轨四扇对碰</option>';
-                slidingConfigHint.textContent = '选择推拉门的配置方案';
+                updateSelectLanguage();
+                slidingConfigHint.textContent = translateDisplayText('选择推拉门的配置方案');
                 sizeRangeGroup.style.display = 'flex';
-                sizeRangeDisplay.innerHTML = '扇宽: 400 ~ 2500 mm<br>扇高: 600 ~ 2600 mm';
+                sizeRangeDisplay.innerHTML = translateSizeRange('400 ~ 2500 mm', '600 ~ 2600 mm');
                 widthInputGroup.style.display = 'none';
                 heightInputGroup.style.display = 'none';
                 windowWidth.removeAttribute('required');
@@ -988,7 +1312,7 @@
                 // G45: 固定配置一，隐藏尺寸输入，显示适用范围
                 slidingConfigGroup.style.display = 'none';
                 sizeRangeGroup.style.display = 'flex';
-                sizeRangeDisplay.innerHTML = '扇宽: 500 ~ 1050 mm<br>扇高: 800 ~ 2600 mm';
+                sizeRangeDisplay.innerHTML = translateSizeRange('500 ~ 1050 mm', '800 ~ 2600 mm');
                 widthInputGroup.style.display = 'none';
                 heightInputGroup.style.display = 'none';
                 windowWidth.removeAttribute('required');
@@ -997,7 +1321,7 @@
                 // 悬挂外开: 隐藏尺寸输入，显示适用范围
                 slidingConfigGroup.style.display = 'none';
                 sizeRangeGroup.style.display = 'flex';
-                sizeRangeDisplay.innerHTML = '扇宽: 510 ~ 900 mm<br>扇高: 665 ~ 2000 mm';
+                sizeRangeDisplay.innerHTML = translateSizeRange('510 ~ 900 mm', '665 ~ 2000 mm');
                 widthInputGroup.style.display = 'none';
                 heightInputGroup.style.display = 'none';
                 windowWidth.removeAttribute('required');
@@ -1081,37 +1405,37 @@
                 }
             });
             
-            let text = `HOPO 门窗五金配置清单\n`;
+            let text = `${translateDisplayText('HOPO 门窗五金配置清单')}\n`;
             text += `========================\n\n`;
-            text += `门窗类型: UC槽内开内倒窗\n`;
-            text += `门窗宽度: ${width}mm\n`;
-            text += `门窗高度: ${height}mm\n\n`;
+            text += `${translateDisplayText('门窗类型')}: ${translateDisplayText('UC槽内开内倒窗')}\n`;
+            text += `${translateDisplayText('门窗宽度')}: ${width}mm\n`;
+            text += `${translateDisplayText('门窗高度')}: ${height}mm\n\n`;
             text += `========================\n\n`;
             
-            text += `【五金配置清单】\n`;
+            text += `【${translateDisplayText('五金配置清单')}】\n`;
             Object.values(mergedItems).forEach(item => {
                 const codeDisplay = item.codes ? item.codes.join(' / ') : item.code;
-                const noteDisplay = item.note ? ` (${item.note})` : '';
-                text += `${item.name} | ${codeDisplay} | ${item.qty}${item.unit}${noteDisplay}\n`;
+                const noteDisplay = item.note ? ` (${translateDisplayText(item.note)})` : '';
+                text += `${translateDisplayText(item.name)} | ${codeDisplay} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
             });
             
             if (currentResult.warnings.length > 0) {
-                text += `\n【注意事项】\n`;
+                text += `\n【${translateDisplayText('注意事项')}】\n`;
                 currentResult.warnings.forEach(w => {
-                    text += `⚠️ ${w}\n`;
+                    text += `⚠️ ${translateDisplayText(w)}\n`;
                 });
             }
             
             if (currentResult.infos.length > 0) {
-                text += `\n【补充说明】\n`;
+                text += `\n【${translateDisplayText('补充说明')}】\n`;
                 currentResult.infos.forEach(i => {
-                    text += `💡 ${i}\n`;
+                    text += `💡 ${translateDisplayText(i)}\n`;
                 });
             }
             
             text += `\n========================\n`;
-            text += `生成时间: ${new Date().toLocaleString()}\n`;
-            text += `HOPO 门窗五金智能选配系统\n`;
+            text += `${translateDisplayText('生成时间')}: ${new Date().toLocaleString()}\n`;
+            text += `${translateDisplayText('HOPO 门窗五金智能选配系统')}\n`;
             
             // 下载文件
             const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
@@ -1152,6 +1476,11 @@
                 .trim();
         }
 
+        function localizeConfigLabel(text) {
+            const label = cleanConfigLabel(text);
+            return currentLanguage === 'en' ? translateDisplayText(label) : label;
+        }
+
         function shouldShowInWindowType(plan) {
             const group = cleanConfigLabel(plan.group);
             const name = cleanConfigLabel(plan.name);
@@ -1189,18 +1518,22 @@
 
             groups.forEach((entries, groupName) => {
                 const optgroup = document.createElement('optgroup');
-                optgroup.label = cleanConfigLabel(groupName);
+                optgroup.label = localizeConfigLabel(groupName);
                 entries.forEach(({ plan, index }) => {
                     const option = document.createElement('option');
                     option.value = `excel-config-${index}`;
-                    option.textContent = cleanConfigLabel(plan.name);
+                    option.textContent = localizeConfigLabel(plan.name);
                     optgroup.appendChild(option);
                 });
                 select.appendChild(optgroup);
             });
 
             const hint = select.parentElement.querySelector('.hint');
-            if (hint) hint.textContent = `原有智能计算类型 + ${visiblePlans.length} 个新增配置方案`;
+            if (hint) {
+                hint.textContent = currentLanguage === 'en'
+                    ? `Original smart types + ${visiblePlans.length} added configuration plans`
+                    : `原有智能计算类型 + ${visiblePlans.length} 个新增配置方案`;
+            }
             select.dataset.excelConfigsLoaded = 'true';
         }
 
@@ -1273,7 +1606,7 @@
             currentExcelPlan = plan;
             currentResult = buildExcelConfigResult(plan);
             renderResult(currentResult, 0, 0, type);
-            document.getElementById('inputSummary').textContent = `${cleanConfigLabel(plan.group)} | ${cleanConfigLabel(plan.name)}`;
+            document.getElementById('inputSummary').textContent = `${localizeConfigLabel(plan.group)} | ${localizeConfigLabel(plan.name)}`;
             document.getElementById('resultSection').classList.add('show');
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }, true);
@@ -1293,28 +1626,28 @@
                 ...currentResult.windBrace
             ];
 
-            let text = `HOPO 门窗五金配置清单\n`;
+            let text = `${translateDisplayText('HOPO 门窗五金配置清单')}\n`;
             text += `========================\n\n`;
-            text += `配置分组: ${cleanConfigLabel(currentExcelPlan.group)}\n`;
-            text += `配置方案: ${cleanConfigLabel(currentExcelPlan.name)}\n\n`;
+            text += `${translateDisplayText('配置分组')}: ${localizeConfigLabel(currentExcelPlan.group)}\n`;
+            text += `${translateDisplayText('配置方案')}: ${localizeConfigLabel(currentExcelPlan.name)}\n\n`;
             text += `========================\n\n`;
-            text += `【五金配置清单】\n`;
+            text += `【${translateDisplayText('五金配置清单')}】\n`;
             allItems.forEach(item => {
-                const noteDisplay = item.note ? ` (${item.note})` : '';
-                text += `${item.name} | ${item.code} | ${item.qty}${item.unit}${noteDisplay}\n`;
+                const noteDisplay = item.note ? ` (${translateDisplayText(item.note)})` : '';
+                text += `${translateDisplayText(item.name)} | ${item.code} | ${item.qty}${translateUnit(item.unit)}${noteDisplay}\n`;
             });
             if (currentResult.infos.length > 0) {
-                text += `\n【补充说明】\n`;
-                currentResult.infos.forEach(i => { text += `💡 ${i}\n`; });
+                text += `\n【${translateDisplayText('补充说明')}】\n`;
+                currentResult.infos.forEach(i => { text += `💡 ${translateDisplayText(i)}\n`; });
             }
             text += `\n========================\n`;
-            text += `生成时间: ${new Date().toLocaleString()}\n`;
-            text += `HOPO 门窗五金智能选配系统\n`;
+            text += `${translateDisplayText('生成时间')}: ${new Date().toLocaleString()}\n`;
+            text += `${translateDisplayText('HOPO 门窗五金智能选配系统')}\n`;
 
             const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            const safeName = cleanConfigLabel(currentExcelPlan.name).replace(/[\\/:*?"<>|]/g, '_').slice(0, 80);
+            const safeName = localizeConfigLabel(currentExcelPlan.name).replace(/[\\/:*?"<>|]/g, '_').slice(0, 80);
             a.href = url;
             a.download = `HOPO五金配置_${safeName}.txt`;
             document.body.appendChild(a);
@@ -1324,8 +1657,14 @@
         };
 
         appendExcelConfigOptions();
+        document.getElementById('langZh').addEventListener('click', () => setLanguage('zh'));
+        document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
+        applyLanguageToStaticText();
+        updateSelectLanguage();
         // ============== Excel导入配置库结束 ==============</script>
 </body>
 </html>
+
+
 
 
