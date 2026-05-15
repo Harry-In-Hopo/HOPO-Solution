@@ -386,6 +386,7 @@
             <div class="language-switch" aria-label="Language">
                 <button type="button" class="lang-btn active" id="langZh">中文</button>
                 <button type="button" class="lang-btn" id="langEn">English</button>
+                <button type="button" class="lang-btn" id="langIt">Italiano</button>
             </div>
         </div>
         
@@ -839,39 +840,226 @@
             '扇宽555mm-625mm需截取角传动器': 'for sash width 555mm-625mm, the corner transmission device must be cut'
         };
 
-        let currentLanguage = localStorage.getItem('hopoLanguage') || 'zh';
+        const ITALIAN_TRANSLATIONS = {
+            'HOPO 门窗五金智能选配系统': 'Sistema intelligente HOPO per la scelta della ferramenta per porte e finestre',
+            '输入门窗尺寸，一键获取专业五金配置方案': 'Inserisci le dimensioni e ottieni subito una configurazione professionale della ferramenta',
+            '请输入门窗参数': 'Inserisci i parametri di porte e finestre',
+            '门窗类型': 'Tipo porta/finestra',
+            '请选择门窗类型': 'Seleziona il tipo di porta/finestra',
+            'UC槽 - 内开内倒窗': 'Scanalatura UC - finestra anta-ribalta',
+            '悬挂外开窗': "Finestra a sporgere con apertura verso l'esterno",
+            '目前支持UC槽内开内倒窗、悬挂外开窗及新增配置方案': 'Supporta finestre anta-ribalta con scanalatura UC, finestre a sporgere verso l’esterno e configurazioni aggiunte',
+            '配置方案': 'Soluzione di configurazione',
+            '选择推拉门的配置方案': 'Seleziona la soluzione per porta scorrevole',
+            '适用范围': 'Campo applicabile',
+            '若超出范围请联系技术支持': 'Se fuori intervallo, contattare il supporto tecnico',
+            '门窗宽度 (mm)': 'Larghezza anta (mm)',
+            '门窗高度 (mm)': 'Altezza anta (mm)',
+            '门窗宽度': 'Larghezza anta',
+            '门窗高度': 'Altezza anta',
+            '输入实际尺寸': 'Inserisci la misura effettiva',
+            '查询五金配置': 'Cerca configurazione ferramenta',
+            '五金配置方案': 'Soluzione ferramenta',
+            'HOPO 门窗五金配置清单': 'Elenco configurazione ferramenta HOPO per porte e finestre',
+            '产品名称': 'Nome prodotto',
+            '产品编号': 'Codice prodotto',
+            '单位': 'Unita',
+            '数量': 'Qta',
+            '备注说明': 'Note',
+            '导出配置清单': 'Esporta elenco configurazione',
+            '专业 · 精准 · 高效': 'Professionale · Preciso · Efficiente',
+            '配置分组': 'Gruppo configurazione',
+            '该方案按配置清单输出；尺寸范围、左右/轻重/颜色等选择请参考备注。': 'Questa soluzione viene generata dalla distinta di configurazione. Per intervalli dimensionali, sinistra/destra, leggero/pesante e colori, vedere le note.',
+            '五金配置清单': 'Elenco ferramenta',
+            '注意事项': 'Avvertenze',
+            '补充说明': 'Note aggiuntive',
+            '生成时间': 'Generato il',
+            '基础配置': 'Configurazione base',
+            '选配件': 'Accessori opzionali',
+            '快装选配件': 'Accessori opzionali a montaggio rapido',
+            '玻扇配置': 'Configurazione anta vetro',
+            '纱窗配置': 'Configurazione zanzariera finestra',
+            '纱门配置': 'Configurazione zanzariera porta',
+            '内开内倒配置方案': 'Soluzione anta-ribalta',
+            '内开内倒窗': 'Finestra anta-ribalta',
+            'UC槽内开内倒窗': 'Finestra anta-ribalta con scanalatura UC',
+            'UC槽': 'scanalatura UC',
+            'C槽': 'scanalatura C',
+            '执手': 'maniglia',
+            '传动壳': 'scatola di trasmissione',
+            '角传动器': 'rinvio angolare',
+            '中间角传动器': 'rinvio angolare centrale',
+            '传动组件': 'gruppo trasmissione',
+            '铰链组件': 'gruppo cerniera',
+            '铰链': 'cerniera',
+            '锁座': 'incontro serratura',
+            '锁杆': 'asta di chiusura',
+            '方轴': 'quadro maniglia',
+            '窄边': 'bordo sottile',
+            '提升推拉': 'alzante scorrevole',
+            '推拉': 'scorrevole',
+            '可选项': 'opzione',
+            '选配': 'opzionale',
+            '可选': 'opzionale',
+            '左': 'sinistra',
+            '右': 'destra',
+            '左边': 'lato sinistro',
+            '右边': 'lato destro',
+            '个': 'pz',
+            '套': 'set',
+            '支': 'pz',
+            '付': 'coppia',
+            '扇': 'anta',
+            '黑色': 'nero',
+            '银色': 'argento',
+            '白色': 'bianco',
+            '深古铜色': 'bronzo scuro',
+            '不锈钢': 'acciaio inox',
+            '宽度': 'larghezza',
+            '高度': 'altezza',
+            '扇宽': 'larghezza anta',
+            '扇高': 'altezza anta',
+            '颜色': 'colore',
+            '规格': 'specifica',
+            '长度': 'lunghezza',
+            '带锁': 'con serratura',
+            '不带锁': 'senza serratura',
+            '带锁芯': 'con cilindro',
+            '不带锁芯': 'senza cilindro',
+            '隔热': 'taglio termico',
+            '非隔热': 'senza taglio termico',
+            '主推': 'consigliato',
+            '非主推': 'alternativo',
+            '推荐': 'consigliato',
+            '开启角度': 'angolo di apertura',
+            '最大承重': 'portata massima',
+            '承重': 'portata',
+            '安装': 'installazione',
+            '选择': 'selezione',
+            '原表数量为0': 'quantita originale in tabella pari a 0',
+            '存在多个可选项': 'sono presenti piu opzioni selezionabili',
+            '序号': 'N.',
+            '单扇': 'anta singola',
+            '两扇': 'due ante',
+            '四扇': 'quattro ante',
+            '联动背部锁延长端': 'estensione serratura posteriore collegata',
+            '扇宽555mm-625mm需截取角传动器': 'per larghezza anta 555mm-625mm occorre tagliare il rinvio angolare',
+            'Sash width': 'Larghezza anta',
+            'Sash height': 'Altezza anta',
+            'Width': 'Larghezza',
+            'Height': 'Altezza',
+            'Window/Door Type': 'Tipo porta/finestra',
+            'Product Name': 'Nome prodotto',
+            'Product Code': 'Codice prodotto',
+            'Qty': 'Qta',
+            'Remarks': 'Note',
+            'Hardware Configuration List': 'Elenco ferramenta',
+            'Configuration Group': 'Gruppo configurazione',
+            'Configuration Plan': 'Soluzione di configurazione',
+            'Original smart types': 'Tipi intelligenti originali',
+            'added configuration plans': 'configurazioni aggiunte',
+            'Basic Configuration': 'Configurazione base',
+            'Optional Accessories': 'Accessori opzionali',
+            'Tilt-turn Window': 'Finestra anta-ribalta',
+            'Top-hung Outward Opening Window': "Finestra a sporgere con apertura verso l'esterno",
+            'UC groove': 'scanalatura UC',
+            'C groove': 'scanalatura C',
+            'Handle': 'maniglia',
+            'Gear case': 'scatola di trasmissione',
+            'Corner transmission device': 'rinvio angolare',
+            'Hinge component': 'gruppo cerniera',
+            'Hinge': 'cerniera',
+            'Locking plate': 'incontro serratura',
+            'Locking rod': 'asta di chiusura',
+            'Spindle': 'quadro maniglia',
+            'Sliding': 'scorrevole',
+            'sliding': 'scorrevole',
+            'Roller': 'ruota',
+            'roller': 'ruota',
+            'Guide roller': 'ruota guida',
+            'guide roller': 'ruota guida',
+            'heavy-duty': 'pesante',
+            'light-duty': 'leggero',
+            'optional': 'opzionale',
+            'recommended': 'consigliato',
+            'alternative': 'alternativo',
+            'black': 'nero',
+            'silver': 'argento',
+            'white': 'bianco',
+            'dark bronze': 'bronzo scuro',
+            'stainless steel': 'acciaio inox',
+            'with lock': 'con serratura',
+            'without lock': 'senza serratura',
+            'with cylinder': 'con cilindro',
+            'without cylinder': 'senza cilindro',
+            'thermal break': 'taglio termico',
+            'non-thermal break': 'senza taglio termico',
+            'left side': 'lato sinistro',
+            'right side': 'lato destro',
+            'Left': 'Sinistra',
+            'Right': 'Destra',
+            'pc': 'pz',
+            'set': 'set',
+            'pair': 'coppia',
+            'sash': 'anta'
+        };
+
+        const SUPPORTED_LANGUAGES = ['zh', 'en', 'it'];
+        const savedLanguage = localStorage.getItem('hopoLanguage') || 'zh';
+        let currentLanguage = SUPPORTED_LANGUAGES.includes(savedLanguage) ? savedLanguage : 'zh';
         let lastRenderContext = null;
 
         function normalizeText(text) {
             return String(text || '').replace(/\s+/g, ' ').trim();
         }
 
-        const MANUAL_TRANSLATION_ENTRIES = Object.entries(MANUAL_TRANSLATIONS)
-            .filter(([zh, en]) => zh && en)
-            .map(([zh, en]) => ({ zh, en, normalized: normalizeText(zh) }))
-            .sort((a, b) => b.zh.length - a.zh.length);
+        function buildTranslationEntries(dictionary) {
+            return Object.entries(dictionary)
+                .filter(([source, target]) => source && target)
+                .map(([source, target]) => ({ source, target, normalized: normalizeText(source) }))
+                .sort((a, b) => b.source.length - a.source.length);
+        }
+
+        const MANUAL_TRANSLATION_ENTRIES = buildTranslationEntries(MANUAL_TRANSLATIONS);
 
         const MANUAL_TRANSLATION_MAP = new Map(
-            MANUAL_TRANSLATION_ENTRIES.map(({ normalized, en }) => [normalized, en])
+            MANUAL_TRANSLATION_ENTRIES.map(({ normalized, target }) => [normalized, target])
+        );
+
+        const ITALIAN_TRANSLATION_ENTRIES = buildTranslationEntries(ITALIAN_TRANSLATIONS);
+
+        const ITALIAN_TRANSLATION_MAP = new Map(
+            ITALIAN_TRANSLATION_ENTRIES.map(({ normalized, target }) => [normalized, target])
         );
 
         const TRANSLATION_TERM_ENTRIES = TRANSLATION_TERMS
             .filter(({ zh, en }) => zh && en)
-            .map(({ zh, en }) => ({ zh, en }))
-            .sort((a, b) => b.zh.length - a.zh.length);
+            .map(({ zh, en }) => ({ source: zh, target: en }))
+            .sort((a, b) => b.source.length - a.source.length);
 
         const TRANSLATION_CACHE = new Map();
+        const ITALIAN_TRANSLATION_CACHE = new Map();
 
         function replaceAllText(text, search, replacement) {
             return text.includes(search) ? text.split(search).join(replacement) : text;
         }
 
-        function replaceResidualChinese(text) {
-            return String(text).replace(/[\u4e00-\u9fff]+/g, match => MANUAL_TRANSLATION_MAP.get(match) || '');
+        function replaceResidualChinese(text, translationMap = MANUAL_TRANSLATION_MAP) {
+            return String(text).replace(/[\u4e00-\u9fff]+/g, match => translationMap.get(normalizeText(match)) || MANUAL_TRANSLATION_MAP.get(normalizeText(match)) || '');
         }
 
-        function translateDisplayText(text) {
-            if (currentLanguage !== 'en' || text === null || text === undefined) return text;
+        function cleanupTranslatedText(text) {
+            return String(text)
+                .replace(/\s+([,.;:)])/g, '$1')
+                .replace(/([(])\s+/g, '$1')
+                .replace(/,\s*,/g, ',')
+                .replace(/:\s*,/g, ':')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function translateToEnglish(text) {
+            if (text === null || text === undefined) return text;
             const raw = String(text);
             if (TRANSLATION_CACHE.has(raw)) return TRANSLATION_CACHE.get(raw);
 
@@ -883,13 +1071,13 @@
                 return exactTranslation;
             }
 
-            MANUAL_TRANSLATION_ENTRIES.forEach(({ zh, en, normalized: termNormalized }) => {
+            MANUAL_TRANSLATION_ENTRIES.forEach(({ source, target, normalized: termNormalized }) => {
                 if (termNormalized === normalized) return;
-                output = replaceAllText(output, zh, ` ${en} `);
+                output = replaceAllText(output, source, ` ${target} `);
             });
 
-            TRANSLATION_TERM_ENTRIES.forEach(({ zh, en }) => {
-                output = replaceAllText(output, zh, ` ${en} `);
+            TRANSLATION_TERM_ENTRIES.forEach(({ source, target }) => {
+                output = replaceAllText(output, source, ` ${target} `);
             });
 
             output = output
@@ -912,25 +1100,48 @@
                 .replace(/\s+/g, ' ')
                 .trim();
 
-            const translated = replaceResidualChinese(output)
-                .replace(/\s+([,.;:)])/g, '$1')
-                .replace(/([(])\s+/g, '$1')
-                .replace(/,\s*,/g, ',')
-                .replace(/:\s*,/g, ':')
-                .replace(/\s+/g, ' ')
-                .trim();
+            const translated = cleanupTranslatedText(replaceResidualChinese(output));
 
             TRANSLATION_CACHE.set(raw, translated);
             return translated;
         }
 
+        function translateToItalian(text) {
+            if (text === null || text === undefined) return text;
+            const raw = String(text);
+            if (ITALIAN_TRANSLATION_CACHE.has(raw)) return ITALIAN_TRANSLATION_CACHE.get(raw);
+
+            const normalized = normalizeText(raw);
+            const directTranslation = ITALIAN_TRANSLATION_MAP.get(normalized);
+            if (directTranslation) {
+                ITALIAN_TRANSLATION_CACHE.set(raw, directTranslation);
+                return directTranslation;
+            }
+
+            let output = translateToEnglish(raw);
+            const exactFromEnglish = ITALIAN_TRANSLATION_MAP.get(normalizeText(output));
+            if (exactFromEnglish) output = exactFromEnglish;
+
+            ITALIAN_TRANSLATION_ENTRIES.forEach(({ source, target }) => {
+                output = replaceAllText(output, source, ` ${target} `);
+            });
+
+            const translated = cleanupTranslatedText(replaceResidualChinese(output, ITALIAN_TRANSLATION_MAP));
+            ITALIAN_TRANSLATION_CACHE.set(raw, translated);
+            return translated;
+        }
+
+        function translateDisplayText(text) {
+            if (currentLanguage === 'zh' || text === null || text === undefined) return text;
+            return currentLanguage === 'it' ? translateToItalian(text) : translateToEnglish(text);
+        }
+
         function translateUnit(unit) {
-            return currentLanguage === 'en'
-                ? (MANUAL_TRANSLATION_MAP.get(normalizeText(unit)) || translateDisplayText(unit))
-                : unit;
+            return currentLanguage === 'zh' ? unit : translateDisplayText(unit);
         }
 
         function translateSizeRange(widthLabel, heightLabel) {
+            if (currentLanguage === 'it') return `Larghezza anta: ${widthLabel}<br>Altezza anta: ${heightLabel}`;
             return currentLanguage === 'en'
                 ? `Sash width: ${widthLabel}<br>Sash height: ${heightLabel}`
                 : `扇宽: ${widthLabel}<br>扇高: ${heightLabel}`;
@@ -944,6 +1155,7 @@
         }
 
         function setLanguage(language) {
+            if (!SUPPORTED_LANGUAGES.includes(language)) language = 'zh';
             currentLanguage = language;
             localStorage.setItem('hopoLanguage', language);
             applyLanguageToStaticText();
@@ -984,8 +1196,9 @@
             if (footer) footer.textContent = `© 2026 ${translateDisplayText('HOPO 门窗五金智能选配系统')} | ${translateDisplayText('专业 · 精准 · 高效')}`;
             const widthInput = document.getElementById('windowWidth');
             const heightInput = document.getElementById('windowHeight');
-            if (widthInput) widthInput.placeholder = currentLanguage === 'en' ? 'e.g. 600' : '例如: 600';
-            if (heightInput) heightInput.placeholder = currentLanguage === 'en' ? 'e.g. 1200' : '例如: 1200';
+            const placeholderPrefix = currentLanguage === 'zh' ? '例如' : currentLanguage === 'it' ? 'es.' : 'e.g.';
+            if (widthInput) widthInput.placeholder = `${placeholderPrefix}: 600`;
+            if (heightInput) heightInput.placeholder = `${placeholderPrefix}: 1200`;
             const sizeRangeDisplay = document.getElementById('sizeRangeDisplay');
             if (sizeRangeDisplay && sizeRangeDisplay.closest('#sizeRangeGroup')?.style.display !== 'none') {
                 const selectedType = document.getElementById('windowType')?.value;
@@ -996,13 +1209,18 @@
             }
             const zhButton = document.getElementById('langZh');
             const enButton = document.getElementById('langEn');
+            const itButton = document.getElementById('langIt');
             if (zhButton) {
-                zhButton.textContent = currentLanguage === 'en' ? 'Chinese' : '中文';
+                zhButton.textContent = '中文';
                 zhButton.classList.toggle('active', currentLanguage === 'zh');
             }
             if (enButton) {
                 enButton.textContent = 'English';
                 enButton.classList.toggle('active', currentLanguage === 'en');
+            }
+            if (itButton) {
+                itButton.textContent = 'Italiano';
+                itButton.classList.toggle('active', currentLanguage === 'it');
             }
         }
 
@@ -1028,9 +1246,13 @@
             const hint = document.getElementById('windowTypeHint');
             if (hint) {
                 const visibleCount = VISIBLE_EXCEL_CONFIGS.length;
-                hint.textContent = currentLanguage === 'en'
-                    ? `Original smart types + ${visibleCount} added configuration plans`
-                    : `原有智能计算类型 + ${visibleCount} 个新增配置方案`;
+                if (currentLanguage === 'it') {
+                    hint.textContent = `Tipi intelligenti originali + ${visibleCount} configurazioni aggiunte`;
+                } else {
+                    hint.textContent = currentLanguage === 'en'
+                        ? `Original smart types + ${visibleCount} added configuration plans`
+                        : `原有智能计算类型 + ${visibleCount} 个新增配置方案`;
+                }
             }
         }
 
@@ -1410,6 +1632,9 @@
             const displayTypeName = translateDisplayText(plan.label);
             if (!plan.requiresSize) return displayTypeName;
 
+            if (currentLanguage === 'it') {
+                return `${displayTypeName} | Larghezza: ${width}mm | Altezza: ${height}mm`;
+            }
             return currentLanguage === 'en'
                 ? `${displayTypeName} | Width: ${width}mm | Height: ${height}mm`
                 : `${plan.label} | 宽度: ${width}mm | 高度: ${height}mm`;
@@ -1467,15 +1692,23 @@
             const width = Number(document.getElementById('windowWidth').value);
             const height = Number(document.getElementById('windowHeight').value);
             if (!Number.isFinite(width) || width < plan.width.min || width > plan.width.max) {
-                alert(currentLanguage === 'en'
-                    ? `Sash width should be between ${plan.width.min}mm and ${plan.width.max}mm`
-                    : `门窗宽度应在 ${plan.width.min}mm ~ ${plan.width.max}mm 范围内`);
+                if (currentLanguage === 'it') {
+                    alert(`La larghezza anta deve essere tra ${plan.width.min}mm e ${plan.width.max}mm`);
+                } else {
+                    alert(currentLanguage === 'en'
+                        ? `Sash width should be between ${plan.width.min}mm and ${plan.width.max}mm`
+                        : `门窗宽度应在 ${plan.width.min}mm ~ ${plan.width.max}mm 范围内`);
+                }
                 return null;
             }
             if (!Number.isFinite(height) || height < plan.height.min || height > plan.height.max) {
-                alert(currentLanguage === 'en'
-                    ? `Sash height should be between ${plan.height.min}mm and ${plan.height.max}mm`
-                    : `门窗高度应在 ${plan.height.min}mm ~ ${plan.height.max}mm 范围内`);
+                if (currentLanguage === 'it') {
+                    alert(`L'altezza anta deve essere tra ${plan.height.min}mm e ${plan.height.max}mm`);
+                } else {
+                    alert(currentLanguage === 'en'
+                        ? `Sash height should be between ${plan.height.min}mm and ${plan.height.max}mm`
+                        : `门窗高度应在 ${plan.height.min}mm ~ ${plan.height.max}mm 范围内`);
+                }
                 return null;
             }
 
@@ -1575,7 +1808,12 @@
                 ? localizeConfigLabel(excelPlan.name)
                 : (staticPlan.requiresSize ? `${width}x${height}` : translateDisplayText(staticPlan.label));
             a.href = url;
-            a.download = `HOPO五金配置_${String(fileLabel).replace(/[\\/:*?"<>|]/g, '_').slice(0, 80)}.txt`;
+            const exportPrefix = currentLanguage === 'it'
+                ? 'Configurazione_ferramenta_HOPO'
+                : currentLanguage === 'en'
+                    ? 'HOPO_Hardware_Config'
+                    : 'HOPO五金配置';
+            a.download = `${exportPrefix}_${String(fileLabel).replace(/[\\/:*?"<>|]/g, '_').slice(0, 80)}.txt`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1612,7 +1850,7 @@
 
         function localizeConfigLabel(text) {
             const label = cleanConfigLabel(text);
-            return currentLanguage === 'en' ? translateDisplayText(label) : label;
+            return currentLanguage === 'zh' ? label : translateDisplayText(label);
         }
 
         function shouldShowInWindowType(plan) {
@@ -1664,9 +1902,13 @@
 
             const hint = select.parentElement.querySelector('.hint');
             if (hint) {
-                hint.textContent = currentLanguage === 'en'
-                    ? `Original smart types + ${VISIBLE_EXCEL_CONFIGS.length} added configuration plans`
-                    : `原有智能计算类型 + ${VISIBLE_EXCEL_CONFIGS.length} 个新增配置方案`;
+                if (currentLanguage === 'it') {
+                    hint.textContent = `Tipi intelligenti originali + ${VISIBLE_EXCEL_CONFIGS.length} configurazioni aggiunte`;
+                } else {
+                    hint.textContent = currentLanguage === 'en'
+                        ? `Original smart types + ${VISIBLE_EXCEL_CONFIGS.length} added configuration plans`
+                        : `原有智能计算类型 + ${VISIBLE_EXCEL_CONFIGS.length} 个新增配置方案`;
+                }
             }
             select.dataset.excelConfigsLoaded = 'true';
         }
@@ -1722,6 +1964,7 @@
         appendExcelConfigOptions();
         document.getElementById('langZh').addEventListener('click', () => setLanguage('zh'));
         document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
+        document.getElementById('langIt').addEventListener('click', () => setLanguage('it'));
         applyLanguageToStaticText();
         updateSelectLanguage();
         updateFormState();
