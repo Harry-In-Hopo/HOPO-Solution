@@ -43,6 +43,87 @@
             color: #475569;
         }
 
+        .handle-showcase {
+            display: flex;
+            justify-content: center;
+            margin: 22px 0 4px;
+            perspective: 700px;
+        }
+
+        .handle-button {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+
+        .handle-door {
+            position: absolute;
+            inset: 8px 28px 8px 8px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-left: 7px solid #991b1b;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%);
+            box-shadow: 0 18px 45px rgba(127, 29, 29, 0.14);
+            transform-origin: left center;
+            transition: transform 0.55s cubic-bezier(.2,.8,.2,1), box-shadow 0.55s ease;
+        }
+
+        .handle-rosette {
+            position: absolute;
+            left: 50px;
+            top: 64px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #fee2e2 36%, #dc2626 100%);
+            border: 2px solid #7f1d1d;
+            box-shadow: 0 5px 14px rgba(127, 29, 29, 0.22);
+            z-index: 2;
+        }
+
+        .handle-lever {
+            position: absolute;
+            left: 62px;
+            top: 73px;
+            width: 62px;
+            height: 13px;
+            border-radius: 999px 10px 10px 999px;
+            background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 45%, #64748b 100%);
+            border: 1px solid #475569;
+            box-shadow: 0 7px 15px rgba(15, 23, 42, 0.22);
+            transform-origin: 4px center;
+            transition: transform 0.42s cubic-bezier(.2,.8,.2,1);
+            z-index: 3;
+        }
+
+        .handle-lever::after {
+            content: '';
+            position: absolute;
+            right: 6px;
+            top: 3px;
+            width: 24px;
+            height: 3px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        .handle-button:hover .handle-door {
+            box-shadow: 0 22px 55px rgba(127, 29, 29, 0.18);
+        }
+
+        .handle-button.is-turning .handle-door {
+            transform: rotateY(-16deg) translateX(4px);
+            box-shadow: 0 26px 65px rgba(127, 29, 29, 0.22);
+        }
+
+        .handle-button.is-turning .handle-lever {
+            transform: rotate(58deg);
+        }
+
         .language-switch {
             display: inline-flex;
             align-items: center;
@@ -486,6 +567,13 @@
         <div class="header">
             <h1>🏠 HOPO 门窗五金智能选配系统</h1>
             <p>输入门窗尺寸，一键获取专业五金配置方案</p>
+            <div class="handle-showcase">
+                <button type="button" class="handle-button" id="handleDemo" aria-label="执手开门动画">
+                    <span class="handle-door"></span>
+                    <span class="handle-rosette"></span>
+                    <span class="handle-lever"></span>
+                </button>
+            </div>
             <div class="language-switch" aria-label="Language">
                 <button type="button" class="lang-btn active" id="langZh">中文</button>
                 <button type="button" class="lang-btn" id="langEn">English</button>
@@ -2320,6 +2408,16 @@
         document.getElementById('langZh').addEventListener('click', () => setLanguage('zh'));
         document.getElementById('langEn').addEventListener('click', () => setLanguage('en'));
         document.getElementById('langIt').addEventListener('click', () => setLanguage('it'));
+        document.getElementById('handleDemo').addEventListener('click', event => {
+            const handle = event.currentTarget;
+            handle.classList.remove('is-turning');
+            void handle.offsetWidth;
+            handle.classList.add('is-turning');
+            clearTimeout(handle.resetTimer);
+            handle.resetTimer = setTimeout(() => {
+                handle.classList.remove('is-turning');
+            }, 900);
+        });
         applyLanguageToStaticText();
         updateSelectLanguage();
         updateFormState();
