@@ -2132,11 +2132,16 @@
         ].join(', ');
 
         let customCursorEnabled = false;
+        let customCursorSuspended = false;
         let customCursorLastPointerAt = 0;
         let customCursorTurnPromise = Promise.resolve();
 
         function getCustomCursorTarget(node) {
             return node instanceof Element ? node.closest(CUSTOM_CURSOR_INTERACTIVE_SELECTOR) : null;
+        }
+
+        function getNativeSelectControl(node) {
+            return node instanceof Element ? node.closest('select') : null;
         }
 
         function shouldUseCustomCursorPointer(event) {
@@ -2145,7 +2150,7 @@
 
         function playCustomCursorTurn() {
             const cursor = document.getElementById('customCursor');
-            if (!cursor || !customCursorEnabled) return Promise.resolve();
+            if (!cursor || !customCursorEnabled || customCursorSuspended) return Promise.resolve();
 
             cursor.classList.remove('is-clicking');
             void cursor.offsetWidth;
@@ -2171,6 +2176,7 @@
             return Boolean(
                 element &&
                 customCursorEnabled &&
+                !customCursorSuspended &&
                 Date.now() - customCursorLastPointerAt < 650 &&
                 !window.matchMedia('(prefers-reduced-motion: reduce)').matches
             );
@@ -2220,14 +2226,35 @@
             const finePointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
             const root = document.documentElement;
 
+            const hideCursor = () => {
+                root.classList.remove('custom-cursor-ready');
+                cursor.classList.remove('is-visible', 'is-hovering', 'is-clicking');
+            };
+
+            const suspendForNativeSelect = selectElement => {
+                customCursorSuspended = true;
+                hideCursor();
+
+                const resume = () => {
+                    customCursorSuspended = false;
+                };
+
+                selectElement.addEventListener('blur', resume, { once: true });
+                selectElement.addEventListener('change', () => window.setTimeout(resume, 80), { once: true });
+            };
+
             const updateAvailability = () => {
                 customCursorEnabled = finePointerQuery.matches;
-                if (!customCursorEnabled) root.classList.remove('custom-cursor-ready');
-                cursor.classList.remove('is-visible', 'is-hovering', 'is-clicking');
+                customCursorSuspended = false;
+                hideCursor();
             };
 
             const updateCursorPosition = (event) => {
                 if (!customCursorEnabled || !shouldUseCustomCursorPointer(event)) return;
+                if (customCursorSuspended) {
+                    if (getNativeSelectControl(event.target)) return;
+                    customCursorSuspended = false;
+                }
 
                 cursor.style.setProperty('--cursor-x', `${event.clientX}px`);
                 cursor.style.setProperty('--cursor-y', `${event.clientY}px`);
@@ -2251,6 +2278,13 @@
 
                 cursor.style.setProperty('--cursor-x', `${event.clientX}px`);
                 cursor.style.setProperty('--cursor-y', `${event.clientY}px`);
+
+                const nativeSelect = getNativeSelectControl(event.target);
+                if (nativeSelect) {
+                    suspendForNativeSelect(nativeSelect);
+                    return;
+                }
+
                 root.classList.add('custom-cursor-ready');
                 cursor.classList.add('is-visible');
 
