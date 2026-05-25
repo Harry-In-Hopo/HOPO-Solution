@@ -529,17 +529,9 @@
             min-width: 0;
         }
 
-        .hinge-meta {
-            display: inline-block;
-            flex: 0 0 auto;
-            padding: 2px 8px;
-            border-radius: 999px;
-            background: #fee2e2;
-            border: 1px solid #fecaca;
+        .side-option-name {
             color: #7f1d1d;
-            font-size: 0.76rem;
             font-weight: 800;
-            font-style: normal;
         }
         
         .warning-box {
@@ -1905,20 +1897,26 @@
             return item.note ? translateDisplayText(item.note) : '-';
         }
 
-        function cleanSideOptionDisplayName(item, includeHinge = true) {
+        function cleanSideOptionDisplayName(item) {
             let text = cleanConfigLabel(item.optionGroupLabel || item.name || '');
             text = text
                 .replace(/（\s*[左右]\s*）/g, '')
                 .replace(/\(\s*[左右]\s*\)/g, '')
                 .replace(/[左右](?=（|\(|$|\s)/g, '')
-                .replace(/铰链/g, '')
                 .replace(/\bPro\b/gi, '')
+                .replace(/[（(]\s*[)）]/g, '')
                 .replace(/\s+/g, ' ')
                 .trim();
 
             const hingeText = `${text} ${item.name || ''} ${item.code || ''}`;
-            if (includeHinge && !/铰链|hinge/i.test(text) && /悬挂|铰链|合页|CATT|CTA/i.test(hingeText)) {
-                text = `${text}铰链`;
+            if (/悬挂|铰链|合页|CATT|CTA/i.test(hingeText) && !/铰链|hinge/i.test(text)) {
+                if (/^组件$/i.test(text)) text = '铰链组件';
+                else if (/组件/.test(text)) text = text.replace(/组件/, '铰链组件');
+                else if (text) text = `${text}铰链`;
+            }
+
+            if (!text) {
+                text = '铰链';
             }
 
             return translateDisplayText(text);
@@ -2030,11 +2028,11 @@
 
         function renderItemName(item) {
             const name = escapeHtml(item.optionKind === 'side'
-                ? cleanSideOptionDisplayName(item, false)
+                ? cleanSideOptionDisplayName(item)
                 : getLocalizedItemName(item));
             if (!item.optionGroup) return name;
             if (item.optionKind === 'side') {
-                return `<span class="item-name-line"><span class="hinge-meta">${escapeHtml(translateDisplayText('铰链'))}</span><span class="option-name-text">${name}</span></span>`;
+                return `<span class="item-name-line"><span class="option-name-text side-option-name">${name}</span></span>`;
             }
 
             return `<span class="item-name-line"><span class="option-meta">${escapeHtml(getExcelOptionChoiceLabel(item))}</span><span class="option-name-text">${name}</span></span>`;
