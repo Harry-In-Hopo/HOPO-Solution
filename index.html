@@ -1558,8 +1558,13 @@
         }
 
         function buildHangingOpenResult() {
+            const basicItems = applySideOptionPairs(
+                tagItems(CONFIG.hangingOpen.basic, 'basic', '基础配置'),
+                'static-hanging-open-side'
+            );
+
             return createResult({
-                basic: tagItems(CONFIG.hangingOpen.basic, 'basic', '基础配置'),
+                basic: basicItems,
                 backLock: tagItems(CONFIG.hangingOpen.optional, 'optional', '选配件'),
                 infos: ['隐藏式悬挂外开（左）/（右）二选一，根据安装位置选择']
             });
@@ -1627,6 +1632,13 @@
         }
 
         function getExcelOptionGroupTitle(item) {
+            if (item.optionKind === 'side') {
+                const label = translateDisplayText(item.optionGroupLabel || '左右');
+                if (currentLanguage === 'it') return `${label}: scelta sinistra/destra`;
+                if (currentLanguage === 'en') return `${label}: left/right selection`;
+                return `${label}：左右选择`;
+            }
+
             const categoryName = translateDisplayText(item.categoryName || '基础配置');
             if (currentLanguage === 'it') return `${categoryName} ${item.optionGroup}: combinazioni selezionabili`;
             if (currentLanguage === 'en') return `${categoryName} ${item.optionGroup}: selectable combinations`;
@@ -1634,6 +1646,13 @@
         }
 
         function getExcelOptionChoiceLabel(item) {
+            if (item.optionKind === 'side') {
+                const side = item.optionChoiceLabel === '右' ? 'right' : 'left';
+                if (currentLanguage === 'it') return side === 'right' ? 'Destra' : 'Sinistra';
+                if (currentLanguage === 'en') return side === 'right' ? 'Right' : 'Left';
+                return side === 'right' ? '右' : '左';
+            }
+
             if (currentLanguage === 'it') return `Opzione ${item.optionChoiceLabel}`;
             if (currentLanguage === 'en') return `Option ${item.optionChoiceLabel}`;
             return `选项 ${item.optionChoiceLabel}`;
@@ -1702,7 +1721,10 @@
         function renderOptionSelect(scope, group) {
             const options = [...group.choices.values()].map(choice => {
                 const selected = selectedExcelOptions[scope] === choice.value ? ' selected' : '';
-                const label = getExcelOptionChoiceLabel({ optionChoiceLabel: choice.label });
+                const label = getExcelOptionChoiceLabel({
+                    optionKind: group.titleItem.optionKind,
+                    optionChoiceLabel: choice.label
+                });
                 const summary = getExcelOptionChoiceSummary(choice.items);
                 const text = summary ? `${label} - ${summary}` : label;
                 return `<option value="${escapeHtml(choice.value)}"${selected}>${escapeHtml(text)}</option>`;
@@ -2088,10 +2110,76 @@
             return String(choice);
         }
 
+        function getSideChoiceInfo(item) {
+            const name = String(item.name || '');
+            const note = String(item.note || '');
+            const sideText = `${name} ${note}`;
+
+            if (/（\s*左\s*）|\(\s*左\s*\)|左边|左侧|左(?=（|\(|$|\s)/.test(sideText)) {
+                return { value: 'left', label: '左' };
+            }
+
+            if (/（\s*右\s*）|\(\s*右\s*\)|右边|右侧|右(?=（|\(|$|\s)/.test(sideText)) {
+                return { value: 'right', label: '右' };
+            }
+
+            return null;
+        }
+
+        function getSideBaseLabel(item) {
+            return cleanConfigLabel(item.name)
+                .replace(/（\s*[左右]\s*）/g, '')
+                .replace(/\(\s*[左右]\s*\)/g, '')
+                .replace(/[左右](?=（|\(|$|\s)/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function canGroupSideItems(leftItem, rightItem) {
+            if (!leftItem || !rightItem) return false;
+            if (leftItem.optionScope || rightItem.optionScope) return false;
+            if ((leftItem.categoryName || '') !== (rightItem.categoryName || '')) return false;
+
+            const leftSide = getSideChoiceInfo(leftItem);
+            const rightSide = getSideChoiceInfo(rightItem);
+            if (!leftSide || !rightSide || leftSide.value === rightSide.value) return false;
+
+            const leftBase = getSideBaseLabel(leftItem);
+            const rightBase = getSideBaseLabel(rightItem);
+            return Boolean(leftBase && rightBase && leftBase === rightBase);
+        }
+
+        function applySideOptionPairs(items, scopePrefix = 'side-option') {
+            const output = items.map(item => ({ ...item }));
+
+            for (let index = 0; index < output.length - 1; index += 1) {
+                const first = output[index];
+                const second = output[index + 1];
+                if (!canGroupSideItems(first, second)) continue;
+
+                const baseLabel = getSideBaseLabel(first);
+                const optionScope = `${scopePrefix}|${first.categoryName || ''}|${baseLabel}|${index}`;
+                [first, second].forEach(item => {
+                    const side = getSideChoiceInfo(item);
+                    Object.assign(item, {
+                        optionKind: 'side',
+                        optionGroup: '左右',
+                        optionGroupLabel: baseLabel,
+                        optionChoice: side.value,
+                        optionChoiceLabel: side.label,
+                        optionScope
+                    });
+                });
+                index += 1;
+            }
+
+            return output;
+        }
+
         function buildExcelOptionItems(rawItems) {
             let activeOption = null;
 
-            return rawItems.map(item => {
+            const items = rawItems.map(item => {
                 const categoryName = item.category || '基础配置';
                 const serial = String(item.serial || '').trim();
                 const optionSerial = parseExcelOptionSerial(serial);
@@ -2124,6 +2212,8 @@
                     ...optionMeta
                 };
             });
+
+            return applySideOptionPairs(items, 'excel-side-option');
         }
 
         function buildExcelConfigResult(plan) {
