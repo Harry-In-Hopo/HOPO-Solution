@@ -404,12 +404,27 @@
         }
         
         .option-highlight td {
-            background: #fffbf5 !important;
-            border-color: #fed7aa !important;
+            background: #fffdfa !important;
+            border-color: #fde2bf !important;
+            padding: 8px 12px !important;
+            vertical-align: middle;
         }
 
         .option-highlight td:first-child {
-            border-left: 4px solid #f97316;
+            border-left: 3px solid #f59e0b;
+        }
+
+        .option-highlight .product-code {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.86rem;
+        }
+
+        .option-highlight .note-text {
+            color: #64748b;
+            font-size: 0.82rem;
+            font-style: normal;
+            line-height: 1.35;
         }
 
         .option-set-row td {
@@ -470,15 +485,27 @@
 
         .option-meta {
             display: inline-block;
-            margin-bottom: 6px;
-            padding: 4px 10px;
+            flex: 0 0 auto;
+            padding: 2px 8px;
             border-radius: 999px;
             background: #fff1f2;
             border: 1px solid #fecdd3;
             color: #991b1b;
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             font-weight: 700;
             font-style: normal;
+        }
+
+        .item-name-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            line-height: 1.35;
+        }
+
+        .option-name-text {
+            min-width: 0;
         }
         
         .warning-box {
@@ -1940,10 +1967,10 @@
         }
 
         function renderItemName(item) {
-            const optionMeta = item.optionGroup
-                ? `<span class="option-meta">${escapeHtml(getExcelOptionChoiceLabel(item))}</span><br>`
-                : '';
-            return `${optionMeta}${escapeHtml(getLocalizedItemName(item))}`;
+            const name = escapeHtml(getLocalizedItemName(item));
+            if (!item.optionGroup) return name;
+
+            return `<span class="item-name-line"><span class="option-meta">${escapeHtml(getExcelOptionChoiceLabel(item))}</span><span class="option-name-text">${name}</span></span>`;
         }
 
         function renderResultRows(items, optionGroups) {
