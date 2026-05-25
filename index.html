@@ -1894,7 +1894,10 @@
         }
 
         function getLocalizedItemNote(item) {
-            return item.note ? translateDisplayText(item.note) : '-';
+            const note = item.optionKind === 'side' && item.optionSharedNote
+                ? item.optionSharedNote
+                : item.note;
+            return note ? translateDisplayText(note) : '-';
         }
 
         function cleanSideOptionDisplayName(item) {
@@ -2631,6 +2634,22 @@
                 .trim();
         }
 
+        function cleanSideOptionNote(note) {
+            return String(note || '')
+                .replace(/[；;，,、\s]*可选项[（(]\s*原表数量为0\s*[)）]/g, '')
+                .replace(/\s*\n\s*/g, '\n')
+                .replace(/[ \t]+/g, ' ')
+                .trim();
+        }
+
+        function applySideLabelToNote(note, sideLabel) {
+            return cleanSideOptionNote(note)
+                .replace(/左边|右边/g, `${sideLabel}边`)
+                .replace(/左侧|右侧/g, `${sideLabel}侧`)
+                .replace(/（\s*[左右]\s*）/g, `（${sideLabel}）`)
+                .replace(/\(\s*[左右]\s*\)/g, `（${sideLabel}）`);
+        }
+
         function canGroupSideItems(leftItem, rightItem) {
             if (!leftItem || !rightItem) return false;
             if (leftItem.optionScope || rightItem.optionScope) return false;
@@ -2655,6 +2674,9 @@
 
                 const baseLabel = getSideBaseLabel(first);
                 const optionScope = `${scopePrefix}|${first.categoryName || ''}|${baseLabel}|${index}`;
+                const sharedNote = [first.note, second.note]
+                    .map(cleanSideOptionNote)
+                    .sort((a, b) => b.length - a.length)[0] || '';
                 [first, second].forEach(item => {
                     const side = getSideChoiceInfo(item);
                     Object.assign(item, {
@@ -2663,6 +2685,7 @@
                         optionGroupLabel: baseLabel,
                         optionChoice: side.value,
                         optionChoiceLabel: side.label,
+                        optionSharedNote: applySideLabelToNote(sharedNote, side.label),
                         optionScope
                     });
                 });
