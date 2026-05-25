@@ -13,31 +13,34 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+            background:
+                radial-gradient(circle at 10% 0%, rgba(220, 38, 38, 0.14), transparent 30%),
+                linear-gradient(180deg, #fff7f7 0%, #f8fafc 42%, #eef2f7 100%);
+            color: #0f172a;
             min-height: 100vh;
-            padding: 20px;
+            padding: 24px;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1380px;
             margin: 0 auto;
         }
         
         .header {
             text-align: center;
-            color: white;
+            color: #7f1d1d;
             margin-bottom: 30px;
         }
         
         .header h1 {
-            font-size: 2.5rem;
+            font-size: 2.35rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: none;
         }
         
         .header p {
             font-size: 1.1rem;
-            opacity: 0.9;
+            color: #475569;
         }
 
         .language-switch {
@@ -46,15 +49,16 @@
             gap: 4px;
             margin-top: 18px;
             padding: 4px;
-            background: rgba(255, 255, 255, 0.18);
-            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(220, 38, 38, 0.18);
             border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(127, 29, 29, 0.08);
         }
 
         .lang-btn {
             border: none;
             background: transparent;
-            color: white;
+            color: #991b1b;
             padding: 8px 14px;
             border-radius: 7px;
             cursor: pointer;
@@ -62,20 +66,21 @@
         }
 
         .lang-btn.active {
-            background: white;
-            color: #b91c1c;
+            background: #dc2626;
+            color: #ffffff;
         }
 
         .main-card {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 1px solid rgba(220, 38, 38, 0.12);
+            border-radius: 18px;
+            box-shadow: 0 24px 70px rgba(127, 29, 29, 0.14);
             overflow: hidden;
         }
         
         .input-section {
             padding: 40px;
-            background: #f8fafc;
+            background: linear-gradient(180deg, #ffffff 0%, #fff7f7 100%);
             border-bottom: 1px solid #e2e8f0;
         }
         
@@ -153,6 +158,7 @@
         .result-section {
             padding: 40px;
             display: none;
+            background: #fbfaf8;
         }
         
         .result-section.show {
@@ -174,11 +180,13 @@
         }
         
         .input-summary {
-            background: #f1f5f9;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 999px;
             font-size: 0.95rem;
             color: #475569;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
         }
         
         .result-tabs {
@@ -211,30 +219,54 @@
         
         .hardware-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0 8px;
             margin-bottom: 30px;
         }
         
         .hardware-table th {
-            background: #1e293b;
+            background: #7f1d1d;
             color: white;
-            padding: 15px;
+            padding: 14px 16px;
             text-align: left;
             font-weight: 600;
+            font-size: 0.88rem;
+            letter-spacing: 0;
+            white-space: nowrap;
+        }
+
+        .hardware-table th:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .hardware-table th:last-child {
+            border-radius: 0 12px 12px 0;
         }
         
         .hardware-table td {
-            padding: 15px;
-            border-bottom: 1px solid #e2e8f0;
+            background: #ffffff;
+            padding: 16px;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
             vertical-align: top;
+        }
+
+        .hardware-table td:first-child {
+            border-left: 1px solid #e5e7eb;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .hardware-table td:last-child {
+            border-right: 1px solid #e5e7eb;
+            border-radius: 0 12px 12px 0;
         }
         
         .hardware-table tr:nth-child(even) {
-            background: #f8fafc;
+            background: transparent;
         }
         
-        .hardware-table tr:hover {
-            background: #f1f5f9;
+        .hardware-table tbody tr:hover td {
+            background: #f8fafc;
         }
         
         .category-badge {
@@ -253,10 +285,13 @@
         
         .product-code {
             font-family: 'Courier New', monospace;
-            background: #f1f5f9;
-            padding: 4px 8px;
-            border-radius: 4px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            padding: 5px 10px;
+            border-radius: 7px;
             font-size: 0.9rem;
+            color: #111827;
+            white-space: nowrap;
         }
         
         .option-tag {
@@ -271,15 +306,25 @@
             vertical-align: middle;
         }
         
-        .option-highlight {
-            background: #fff7ed !important;
+        .option-highlight td {
+            background: #fffbf5 !important;
+            border-color: #fed7aa !important;
+        }
+
+        .option-highlight td:first-child {
+            border-left: 4px solid #f97316;
         }
 
         .option-set-row td {
-            background: #fee2e2 !important;
-            color: #991b1b;
+            background: linear-gradient(135deg, #ffffff 0%, #fff7f7 100%) !important;
+            border: 1px solid #fecaca !important;
+            border-left: 6px solid #dc2626 !important;
+            border-radius: 16px !important;
+            color: #7f1d1d;
             font-weight: 800;
             letter-spacing: 0;
+            padding: 14px 18px !important;
+            box-shadow: 0 12px 30px rgba(127, 29, 29, 0.08);
         }
 
         .option-set-header {
@@ -291,37 +336,48 @@
         }
 
         .option-choice-select {
-            min-width: min(360px, 100%);
+            min-width: min(430px, 100%);
             max-width: 100%;
-            padding: 12px 44px 12px 16px;
-            border: 3px solid #dc2626;
-            border-radius: 16px;
-            background: #ffffff;
+            padding: 11px 42px 11px 16px;
+            border: 2px solid #dc2626;
+            border-radius: 14px;
+            background-color: #ffffff;
+            background-image:
+                linear-gradient(45deg, transparent 50%, #7f1d1d 50%),
+                linear-gradient(135deg, #7f1d1d 50%, transparent 50%);
+            background-position:
+                calc(100% - 22px) 50%,
+                calc(100% - 15px) 50%;
+            background-size: 7px 7px, 7px 7px;
+            background-repeat: no-repeat;
             color: #7f1d1d;
             font-size: 0.95rem;
             font-weight: 700;
             outline: none;
-            box-shadow: 0 0 0 5px rgba(220, 38, 38, 0.14);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
             cursor: pointer;
+            appearance: none;
         }
 
         .option-choice-select:focus {
             border-color: #b91c1c;
-            box-shadow: 0 0 0 6px rgba(220, 38, 38, 0.2);
+            box-shadow: 0 0 0 5px rgba(220, 38, 38, 0.16);
         }
         
         .note-text {
             font-size: 0.85rem;
             color: #64748b;
             font-style: italic;
+            line-height: 1.55;
         }
 
         .option-meta {
             display: inline-block;
             margin-bottom: 6px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            background: #fee2e2;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
             color: #991b1b;
             font-size: 0.78rem;
             font-weight: 700;
@@ -370,8 +426,7 @@
         .footer {
             text-align: center;
             padding: 30px;
-            color: white;
-            opacity: 0.8;
+            color: #64748b;
             font-size: 0.9rem;
         }
         
@@ -386,10 +441,23 @@
             
             .hardware-table {
                 font-size: 0.9rem;
+                min-width: 760px;
             }
             
             .hardware-table th, .hardware-table td {
                 padding: 10px;
+            }
+
+            .result-section {
+                overflow-x: auto;
+            }
+
+            .option-set-header {
+                align-items: stretch;
+            }
+
+            .option-choice-select {
+                min-width: 100%;
             }
         }
         
