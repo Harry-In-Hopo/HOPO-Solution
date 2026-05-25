@@ -39,11 +39,11 @@
                 left: 0;
                 z-index: 99999;
                 display: block;
-                width: 46px;
-                height: 46px;
+                width: 54px;
+                height: 64px;
                 pointer-events: none;
                 opacity: 0;
-                transform: translate3d(var(--cursor-x), var(--cursor-y), 0) translate(-23px, -23px);
+                transform: translate3d(var(--cursor-x), var(--cursor-y), 0) translate(-29px, -18px);
                 transition: opacity 0.16s ease;
                 will-change: transform;
             }
@@ -56,7 +56,7 @@
                 width: 100%;
                 height: 100%;
                 overflow: visible;
-                transform-origin: 50% 50%;
+                transform-origin: 54% 28%;
                 filter: drop-shadow(0 6px 8px rgba(127, 29, 29, 0.26));
                 transition: filter 0.18s ease, transform 0.18s ease;
             }
@@ -89,10 +89,10 @@
                 transform: rotate(0deg) scale(1.08);
             }
             62% {
-                transform: rotate(105deg) scale(0.98);
+                transform: rotate(82deg) scale(0.98);
             }
             100% {
-                transform: rotate(92deg) scale(1);
+                transform: rotate(72deg) scale(1);
             }
         }
 
@@ -577,21 +577,35 @@
     <div class="custom-cursor" id="customCursor" aria-hidden="true">
         <svg class="custom-cursor__handle" viewBox="0 0 64 64" focusable="false">
             <defs>
-                <linearGradient id="cursorHandleMetal" x1="12" y1="16" x2="54" y2="48" gradientUnits="userSpaceOnUse">
-                    <stop offset="0" stop-color="#fff7f7"/>
-                    <stop offset="0.38" stop-color="#ef4444"/>
+                <linearGradient id="cursorHandleFace" x1="22" y1="16" x2="47" y2="58" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#ffb3b3"/>
+                    <stop offset="0.34" stop-color="#ef4444"/>
+                    <stop offset="0.72" stop-color="#b91c1c"/>
                     <stop offset="1" stop-color="#7f1d1d"/>
                 </linearGradient>
-                <linearGradient id="cursorHandleBase" x1="12" y1="18" x2="36" y2="46" gradientUnits="userSpaceOnUse">
-                    <stop offset="0" stop-color="#ffffff"/>
-                    <stop offset="1" stop-color="#fecaca"/>
+                <linearGradient id="cursorHandleSide" x1="38" y1="12" x2="60" y2="30" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#fecaca"/>
+                    <stop offset="0.45" stop-color="#dc2626"/>
+                    <stop offset="1" stop-color="#7f1d1d"/>
                 </linearGradient>
+                <linearGradient id="cursorHandleHighlight" x1="25" y1="21" x2="35" y2="56" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+                    <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.18"/>
+                    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+                </linearGradient>
+                <filter id="cursorHandleSoftShadow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feDropShadow dx="1.4" dy="2.4" stdDeviation="1.3" flood-color="#7f1d1d" flood-opacity="0.28"/>
+                </filter>
             </defs>
-            <rect x="12" y="19" width="19" height="26" rx="6" fill="url(#cursorHandleBase)" stroke="#991b1b" stroke-width="2.5"/>
-            <circle cx="31" cy="32" r="8.5" fill="#ffffff" stroke="#7f1d1d" stroke-width="2.5"/>
-            <rect x="30" y="27" width="27" height="10" rx="5" fill="url(#cursorHandleMetal)" stroke="#7f1d1d" stroke-width="2.5"/>
-            <circle cx="31" cy="32" r="3" fill="#7f1d1d"/>
-            <path d="M17 25h8M17 32h8M17 39h8" stroke="#dc2626" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <g filter="url(#cursorHandleSoftShadow)">
+                <path d="M31 18 C31 13.5 34.4 10.5 40.1 10.5 L51 10.5 C55.7 10.5 58.8 13.2 58.8 17.4 L58.8 21.8 C58.8 26 55.8 28.6 51 28.6 L42.4 28.6 C38.2 28.6 36.8 31 36.8 34.5 L36.8 52.6 C36.8 59.3 32.7 62.5 28.7 62.5 L27.1 62.5 C22.7 62.5 19.6 59.1 19.6 53.7 L19.6 25.6 C19.6 20.6 22.6 18 27.1 18 Z" fill="#7f1d1d" opacity="0.4"/>
+                <path d="M31 16.3 C31 12.2 34.3 9.2 39.8 9.2 L50.2 9.2 C54.6 9.2 57.6 11.9 57.6 16 L57.6 20.3 C57.6 24.3 54.7 26.9 50.2 26.9 L42.1 26.9 C37.2 26.9 34.7 30 34.7 35.2 L34.7 52.2 C34.7 58.1 31.4 61.4 26.7 61.4 C22 61.4 18.7 58.1 18.7 52.2 L18.7 25.4 C18.7 19.8 22 16.3 26.7 16.3 Z" fill="url(#cursorHandleFace)" stroke="#7f1d1d" stroke-width="2"/>
+                <path d="M34.2 16.6 C35.3 13.7 37.5 12.2 41 12.2 L50.3 12.2 C53.4 12.2 55.3 13.9 55.3 16.6 L55.3 20 C55.3 22.8 53.5 24.3 50.5 24.3 L41.7 24.3 C38.8 24.3 36.6 25.5 35.2 27.7 Z" fill="url(#cursorHandleSide)" opacity="0.92"/>
+                <path d="M23.2 24.8 C23.2 21.6 24.9 19.8 27.1 19.8 C29.3 19.8 31 21.6 31 24.8 L31 52.3 C31 55.8 29.4 57.9 27.1 57.9 C24.8 57.9 23.2 55.8 23.2 52.3 Z" fill="url(#cursorHandleHighlight)"/>
+                <path d="M36.5 14.2 C39.6 12.8 43.9 12.6 50.1 12.9" fill="none" stroke="#fff7f7" stroke-width="1.6" stroke-linecap="round" opacity="0.42"/>
+                <path d="M22.4 25.2 C22.4 21.3 24.3 18.9 27.4 18.9" fill="none" stroke="#fff7f7" stroke-width="1.4" stroke-linecap="round" opacity="0.5"/>
+                <path d="M34.7 34.8 L34.7 52.2 C34.7 58.1 31.4 61.4 26.7 61.4" fill="none" stroke="#450a0a" stroke-width="1.2" stroke-linecap="round" opacity="0.42"/>
+            </g>
         </svg>
     </div>
     <div class="container">
