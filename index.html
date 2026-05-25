@@ -2162,8 +2162,8 @@
 
                 if (getCustomCursorTarget(event.target)) {
                     customCursorLastPointerAt = Date.now();
-                    playCustomCursorTurn();
                 }
+                playCustomCursorTurn();
             }, { capture: true, passive: true });
 
             document.addEventListener('click', event => {
