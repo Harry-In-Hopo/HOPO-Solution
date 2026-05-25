@@ -316,10 +316,17 @@
         
         .hardware-table {
             width: 100%;
+            table-layout: fixed;
             border-collapse: separate;
             border-spacing: 0 8px;
             margin-bottom: 30px;
         }
+
+        .hardware-table col:nth-child(1) { width: 30%; }
+        .hardware-table col:nth-child(2) { width: 19%; }
+        .hardware-table col:nth-child(3) { width: 8%; }
+        .hardware-table col:nth-child(4) { width: 8%; }
+        .hardware-table col:nth-child(5) { width: 35%; }
         
         .hardware-table th {
             background: #7f1d1d;
@@ -357,6 +364,13 @@
             border-right: 1px solid #e5e7eb;
             border-radius: 0 12px 12px 0;
         }
+
+        .hardware-table th:nth-child(3),
+        .hardware-table th:nth-child(4),
+        .hardware-table td:nth-child(3),
+        .hardware-table td:nth-child(4) {
+            text-align: center;
+        }
         
         .hardware-table tr:nth-child(even) {
             background: transparent;
@@ -381,6 +395,8 @@
         .category-wind { background: #e0e7ff; color: #3730a3; }
         
         .product-code {
+            display: inline-block;
+            max-width: 100%;
             font-family: 'Courier New', monospace;
             background: #f3f4f6;
             border: 1px solid #e5e7eb;
@@ -388,7 +404,7 @@
             border-radius: 7px;
             font-size: 0.9rem;
             color: #111827;
-            white-space: nowrap;
+            overflow-wrap: anywhere;
         }
         
         .option-tag {
@@ -425,6 +441,11 @@
             font-size: 0.82rem;
             font-style: normal;
             line-height: 1.35;
+        }
+
+        .option-highlight td:nth-child(3),
+        .option-highlight td:nth-child(4) {
+            text-align: center;
         }
 
         .option-set-row td {
@@ -506,6 +527,19 @@
 
         .option-name-text {
             min-width: 0;
+        }
+
+        .hinge-meta {
+            display: inline-block;
+            flex: 0 0 auto;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #7f1d1d;
+            font-size: 0.76rem;
+            font-weight: 800;
+            font-style: normal;
         }
         
         .warning-box {
@@ -719,12 +753,19 @@
                 <div id="infoBox"></div>
                 
                 <table class="hardware-table" id="hardwareTable">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
                     <thead>
                         <tr>
-                            <th style="width: 220px;" id="thProductName">产品名称</th>
-                            <th style="width: 180px;" id="thProductCode">产品编号</th>
-                            <th style="width: 80px;" id="thUnit">单位</th>
-                            <th style="width: 80px;" id="thQty">数量</th>
+                            <th id="thProductName">产品名称</th>
+                            <th id="thProductCode">产品编号</th>
+                            <th id="thUnit">单位</th>
+                            <th id="thQty">数量</th>
                             <th id="thNote">备注说明</th>
                         </tr>
                     </thead>
@@ -1864,9 +1905,28 @@
             return item.note ? translateDisplayText(item.note) : '-';
         }
 
+        function cleanSideOptionDisplayName(item, includeHinge = true) {
+            let text = cleanConfigLabel(item.optionGroupLabel || item.name || '');
+            text = text
+                .replace(/（\s*[左右]\s*）/g, '')
+                .replace(/\(\s*[左右]\s*\)/g, '')
+                .replace(/[左右](?=（|\(|$|\s)/g, '')
+                .replace(/铰链/g, '')
+                .replace(/\bPro\b/gi, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+
+            const hingeText = `${text} ${item.name || ''} ${item.code || ''}`;
+            if (includeHinge && !/铰链|hinge/i.test(text) && /悬挂|铰链|合页|CATT|CTA/i.test(hingeText)) {
+                text = `${text}铰链`;
+            }
+
+            return translateDisplayText(text);
+        }
+
         function getExcelOptionGroupTitle(item) {
             if (item.optionKind === 'side') {
-                const label = translateDisplayText(item.optionGroupLabel || '左右');
+                const label = cleanSideOptionDisplayName(item);
                 if (currentLanguage === 'it') return `${label}: scelta sinistra/destra`;
                 if (currentLanguage === 'en') return `${label}: left/right selection`;
                 return `${label}：左右选择`;
@@ -1892,6 +1952,8 @@
         }
 
         function getExcelOptionChoiceSummary(items) {
+            if (items.some(item => item.optionKind === 'side')) return '';
+
             const names = [...new Set(items.map(getLocalizedItemName).filter(Boolean))];
             if (!names.length) return '';
             const suffix = names.length > 2
@@ -1967,8 +2029,13 @@
         }
 
         function renderItemName(item) {
-            const name = escapeHtml(getLocalizedItemName(item));
+            const name = escapeHtml(item.optionKind === 'side'
+                ? cleanSideOptionDisplayName(item, false)
+                : getLocalizedItemName(item));
             if (!item.optionGroup) return name;
+            if (item.optionKind === 'side') {
+                return `<span class="item-name-line"><span class="hinge-meta">${escapeHtml(translateDisplayText('铰链'))}</span><span class="option-name-text">${name}</span></span>`;
+            }
 
             return `<span class="item-name-line"><span class="option-meta">${escapeHtml(getExcelOptionChoiceLabel(item))}</span><span class="option-name-text">${name}</span></span>`;
         }
